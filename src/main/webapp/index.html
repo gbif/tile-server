@@ -1,0 +1,201 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- TODO: title -->
+  <title></title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="robots" content="noindex">
+
+  <!-- TODO: metas -->
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="DC.title" content="">
+  <meta property="og:title" content=""/>
+  <meta property="og:description" content=""/> 
+  <meta property="og:type" content="Visualization"/>
+  <meta property="og:url" content=""/>
+  <meta property="og:image" content=""/>
+
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  <link rel="stylesheet" href="styles/vendor/leaflet.css" />
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+    <link rel="stylesheet" href="styles/vendor/leaflet.ie.css" />
+  <![endif]-->
+  <link rel="stylesheet" href="styles/vendor/leaflet.draw.css" />
+  <link rel="stylesheet" href="styles/main.css">
+
+  <script src="scripts/vendor/modernizr.custom.82536.js"></script>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="map"></div>
+    <div class="selectors"></div>
+    <div class="backdrop"></div>
+    <div class="tipsy">
+      <span></span>
+      <div class="arrow"></div>
+    </div>
+  </div>
+
+  <!-- TODO: Google Analytics -->
+  <!-- script>
+    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src='https://www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script -->
+
+  <script src="scripts/vendor/jquery-1.10.2.min.js"></script>
+  <script src="scripts/vendor/jquery-migrate-1.2.1.min.js"></script>
+  <script src="scripts/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="scripts/vendor/underscore-min.js"></script>
+  <script src="scripts/vendor/backbone-min.js"></script>
+<!--[if !(IE 8)]><!-->
+    <script src="scripts/vendor/d3.min.js"></script>
+    <script src="scripts/vendor/carto.js"></script>  
+<!--<![endif]-->  
+
+  <script src="scripts/vendor/leaflet.js"></script>
+  <script src="scripts/vendor/leaflet-custom.js"></script>
+<!--[if !(IE 8)]><!-->
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.uncompressed.js"></script>
+  <script src="scripts/vendor/torque.uncompressed.js"></script>
+<!--<![endif]-->  
+  
+
+  <script src="scripts/gbif.js"></script>
+  <script src="scripts/gbif-leaflet.js"></script>
+
+  <script src="scripts/core/log.js"></script>
+  <script src="scripts/core/profiler.js"></script>
+  <script src="scripts/core/template.js"></script>
+  <script src="scripts/core/view.js"></script>
+  <script src="scripts/core/god.js"></script>
+
+  <script src="scripts/ui/analysis.js"></script>
+  <script src="scripts/ui/timeline_tooltip.js"></script>
+  <script src="scripts/ui/timeline.js"></script>
+  <script src="scripts/ui/layer_selector.js"></script>
+  <script src="scripts/ui/resolution_selector.js"></script>
+
+  <script src="scripts/helpers.js"></script>
+<!--[if !(IE 8)]><!-->
+  <script src="scripts/app.js"></script>
+<!--<![endif]-->  
+<!--[if lte IE 8]>
+  <script src="scripts/app-ie8.js"></script>
+<![endif]-->
+  
+  
+
+  <!-- controls -->
+  <script id="analysis_control-template" type="text/x-underscore-template">
+    <div class="analysis_explanation"><p>Close the polygon by clicking on the first vertex to submit it</p></div>
+    <a href="#analysis" id="analysis_control" class="button analysis"><i></i><span>Report an error</span></a>
+  </script>
+
+  <script id="timeline_control-template" type="text/x-underscore-template">
+    <a href="#fullscreen" id="fullscreen" class="button fullscreen"></a>
+  </script>
+
+  <!-- timeline -->
+  <script id="timeline-template" type="text/x-underscore-template">
+    <div class="hamburger">
+      <a href="#"></a>
+    </div>
+
+    <div class="legend">
+      <h1><strong class="title"><%= current_title %></strong> - <span class="desc">Showing data from <span class="right_year">1900</span> to <span class="leaf_year">2020</span> (<span class="records">0</span> records)</span></h1>
+    </div>
+
+    <div class="slider">
+      <div class="time">
+        <div class="trail">
+          <div class="handle left"></div>
+          <div class="handle right"></div>
+        </div>
+
+        <ul class="years">
+          <li class="noyear"><a href="#"></a></li>
+          <li class="preyear"><a href="#"></a></li>
+          <li class="year"><a href="#" data-year="1900"></a></li>
+          <li class="year"><a href="#" data-year="1910"></a></li>
+          <li class="year"><a href="#" data-year="1920"></a></li>
+          <li class="year"><a href="#" data-year="1930"></a></li>
+          <li class="year"><a href="#" data-year="1940"></a></li>
+          <li class="year"><a href="#" data-year="1950"></a></li>
+          <li class="year"><a href="#" data-year="1960"></a></li>
+          <li class="year"><a href="#" data-year="1970"></a></li>
+          <li class="year"><a href="#" data-year="1980"></a></li>
+          <li class="year"><a href="#" data-year="1990"></a></li>
+          <li class="year"><a href="#" data-year="2000"></a></li>
+          <li class="year"><a href="#" data-year="2010"></a></li>
+        </ul>
+
+        <div class="range">
+          <div class="line"></div>
+          <div class="square"></div>
+        </div>
+
+        <div class="visible_years">
+          <div class="noyear"></div>
+          <div class="preyear"></div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- timeline_tooltip -->
+  <script id="timeline_tooltip-template" type="text/x-underscore-template">
+    <ul></ul>
+
+    <span class="tip"></span>
+  </script>
+
+  <!-- timeline_tooltip_cat -->
+  <script id="timeline_tooltip_cat-template" type="text/x-underscore-template">
+    <li><a href="#<%= key %>" data-title="<%= title %>" data-key="<%= key %>" class="timeline_tooltip_link <%= selected ? 'selected' : '' %>"><i></i><%= title %></a></li>
+  </script>
+
+  <!-- analysis_subscribe -->
+  <script id="analysis_subscribe-template" type="text/x-underscore-template">
+    <form action="/analysis" method="post">
+      <input id="area_latlngs" name="area[latlngs]" type="hidden">
+      <h1 class="title">Submit your comment</h1>
+      <textarea rows="4" class="textarea"></textarea>
+      <a href="#cancel" class="cancel">Cancel</a>
+      <a href="#send" class="send">
+        <span>Submit my comments</span>
+      </a>
+    </form>
+  </script>
+
+  <!-- layer selector -->
+  <script id="layer_selector-template" type="text/x-underscore-template">
+    <ul class="selected_layer"></ul>
+    <ul class="layers"></ul>
+  </script>
+
+  <script id="layer-template" type="text/x-underscore-template">
+    <li id="<%= name %>" class="<%= name %> <%= selected ? 'selected' : '' %>">
+      <a href="#" style="background-image: url(<%= thumbnail %>);"></a>
+    </li>
+  </script>
+
+  <!-- resolution selector -->
+  <script id="resolution_selector-template" type="text/x-underscore-template">
+    <ul class="selected_resolution"></ul>
+    <ul class="resolutions"></ul>
+  </script>
+
+  <script id="resolution-template" type="text/x-underscore-template">
+    <li id="<%= name %>" class="<%= name %> <%= selected ? 'selected' : '' %>">
+      <a href="#"></a>
+    </li>
+  </script>
+</body>
+</html>

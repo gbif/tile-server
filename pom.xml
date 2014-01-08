@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2012 Global Biodiversity Information Facility (GBIF)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.gbif</groupId>
+    <artifactId>motherpom</artifactId>
+    <version>14</version>
+  </parent>
+
+  <groupId>org.gbif</groupId>
+  <artifactId>tile-server</artifactId>
+  <version>0.11-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>tile-server</name>
+  <description>A web service that can write map tiles very quickly</description>
+  <url>http://github.org/gbif/tile-server</url>
+
+  <scm>
+    <connection>scm:git:git@github.com:gbif/tile-server.git</connection>
+    <url>https://github.com/gbif/tile-server</url>
+    <developerConnection>scm:git:git@github.com:gbif/tile-server.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>gbif-thirdparty</id>
+      <url>http://repository.gbif.org/content/repositories/thirdparty</url>
+    </repository>
+    <repository>
+      <id>gbif-all</id>
+      <url>http://repository.gbif.org/content/groups/gbif</url>
+    </repository>
+    <repository>
+      <id>repository.cloudera.com</id>
+      <url>https://repository.cloudera.com/content/repositories/releases/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <properties>
+    <slf4j.version>1.7.5</slf4j.version>
+    <logback.version>1.0.13</logback.version>
+    <cube.version>0.11</cube.version>
+    <servlet-api.version>2.4</servlet-api.version>
+    <guice.version>3.0</guice.version>
+    <metrics.version>2.2.0</metrics.version>
+    <guava.version>14.0.1</guava.version>
+    <datacube.version>1.2.4-GIT-20130903</datacube.version>
+    <hbase.version>0.94.2-cdh4.2.1</hbase.version>
+    <hadoopMR.version>2.0.0-mr1-cdh4.2.1</hadoopMR.version>
+    <junit.version>4.11</junit.version>
+    <jackson.version>1.9.12</jackson.version>
+    <jaxb-api.version>2.2.11</jaxb-api.version>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gbif.metrics</groupId>
+      <artifactId>cube</artifactId>
+      <version>${cube.version}</version>
+      <!--  Brought in transitively from HBase.  We ship this to logback below. -->
+      <exclusions>
+        <exclusion>
+          <artifactId>org.slf4j</artifactId>
+          <groupId>slf4j-log4j12</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>log4j</artifactId>
+          <groupId>log4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>slf4j-log4j12</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jsp-api-2.1</artifactId>
+          <groupId>org.mortbay.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>servlet-api-2.5</artifactId>
+          <groupId>org.mortbay.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jsp-api</artifactId>
+          <groupId>javax.servlet.jsp</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!--
+      Note: this is in the GBIF repository referenced above
+      See https://github.com/urbanairship/datacube/issues/21
+    -->
+    <dependency>
+      <groupId>com.urbanairship</groupId>
+      <artifactId>datacube</artifactId>
+      <version>${datacube.version}</version>
+      <classifier>hbase${hbase.version}-hadoop${hadoopMR.version}</classifier>
+      <exclusions>
+        <!--
+          Overwrite the version of HBase
+          DataCube has a profile always activated to 0.90.4
+        -->
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jsp-api-2.1</artifactId>
+          <groupId>org.mortbay.jetty</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>${guice.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-servlet</artifactId>
+      <version>${guice.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-ganglia</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-guice</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <!-- Logging implementation for Runtime -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- To ship JUL (e.g. Guice) logging to SLF4J -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Required for compilation of servlets but provided by runtime container -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>${jaxb-api.version}</version>
+    </dependency>
+  </dependencies>
+  <profiles>
+    <profile>
+      <!--
+        A profile suitable for deployment in the GBIF development environment
+      -->
+      <id>dev</id>
+      <properties>
+        <ganglia.server>130.226.238.237</ganglia.server>
+        <ganglia.port>8649</ganglia.port>
+        <density-cube.table>dev_maps_cube</density-cube.table>
+      </properties>
+    </profile>
+
+    <profile>
+      <!--
+        A profile suitable for deployment in the GBIF production environment
+      -->
+      <id>prod</id>
+      <properties>
+        <ganglia.server>130.226.238.237</ganglia.server>
+        <ganglia.port>8649</ganglia.port>
+        <density-cube.table>uat_maps_cube</density-cube.table>
+      </properties>
+    </profile>
+  </profiles>
+</project>

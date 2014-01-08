@@ -1,0 +1,92 @@
+@import "compass/utilities/sprites/base";
+
+// General Sprite Defaults
+// You can override them before you import this file.
+$button-icons-sprite-base-class: ".button-icons-sprite" !default;
+$button-icons-sprite-dimensions: false !default;
+$button-icons-position: 0% !default;
+$button-icons-spacing: 0 !default;
+$button-icons-repeat: no-repeat !default;
+$button-icons-prefix: '' !default;
+$button-icons-clean-up: true !default;
+$button-icons-layout:vertical !default;
+$button-icons-inline: false !default;
+
+  
+ // These variables control the generated sprite output
+ // You can override them selectively before you import this file.
+ 
+   $button-icons-analysis-position: $button-icons-position !default;
+   $button-icons-analysis-spacing:  $button-icons-spacing !default;
+   $button-icons-analysis-repeat:   $button-icons-repeat !default;
+ 
+   $button-icons-fullscreen-position: $button-icons-position !default;
+   $button-icons-fullscreen-spacing:  $button-icons-spacing !default;
+   $button-icons-fullscreen-repeat:   $button-icons-repeat !default;
+ 
+
+ $button-icons-sprites: sprite-map("button-icons/*.png",
+ 
+   $button-icons-analysis-position: $button-icons-analysis-position, 
+   $button-icons-analysis-spacing:  $button-icons-analysis-spacing, 
+   $button-icons-analysis-repeat:   $button-icons-analysis-repeat,
+ 
+   $button-icons-fullscreen-position: $button-icons-fullscreen-position, 
+   $button-icons-fullscreen-spacing:  $button-icons-fullscreen-spacing, 
+   $button-icons-fullscreen-repeat:   $button-icons-fullscreen-repeat,
+ 
+ $layout: $button-icons-layout,
+ $cleanup: $button-icons-clean-up
+ );
+
+
+// All sprites should extend this class
+// The button-icons-sprite mixin will do so for you.
+@if $button-icons-inline {
+  #{$button-icons-sprite-base-class} {
+    background-image: inline-sprite($button-icons-sprites);
+  } 
+} @else {
+  #{$button-icons-sprite-base-class} {
+    background: $button-icons-sprites no-repeat;
+  }
+}
+//sass functions to return the dimensions of a sprite image as units
+
+  @function button-icons-sprite-width($name) {
+    $file: sprite_file($button-icons-sprites, $name);
+    @return image-width($file);
+  }
+
+  @function button-icons-sprite-height($name) {
+    $file: sprite_file($button-icons-sprites, $name);
+    @return image-height($file);
+  }
+
+
+// Use this to set the dimensions of an element
+// based on the size of the original image.
+@mixin button-icons-sprite-dimensions($name) {
+  @include sprite-dimensions($button-icons-sprites, $name)
+}
+
+// Move the background position to display the sprite.
+@mixin button-icons-sprite-position($name, $offset-x: 0, $offset-y: 0) {
+  @include sprite-background-position($button-icons-sprites, $name, $offset-x, $offset-y)
+}
+
+// Extends the sprite base class and set the background position for the desired sprite.
+// It will also apply the image dimensions if $dimensions is true.
+@mixin button-icons-sprite($name, $dimensions: $button-icons-sprite-dimensions, $offset-x: 0, $offset-y: 0) {
+  @extend #{$button-icons-sprite-base-class};
+  @include sprite($button-icons-sprites, $name, $dimensions, $offset-x, $offset-y)
+}
+
+@mixin button-icons-sprites($sprite-names, $dimensions: $button-icons-sprite-dimensions, $prefix: sprite-map-name($button-icons-sprites), $offset-x: 0, $offset-y: 0) {
+  @include sprites($button-icons-sprites, $sprite-names, $button-icons-sprite-base-class, $dimensions, $prefix, $offset-x, $offset-y)
+}
+
+// Generates a class for each sprited image.
+@mixin all-button-icons-sprites($dimensions: $button-icons-sprite-dimensions, $prefix: sprite-map-name($button-icons-sprites), $offset-x: 0, $offset-y: 0) {
+  @include button-icons-sprites(analysis fullscreen, $dimensions, $prefix, $offset-x, $offset-y);
+}

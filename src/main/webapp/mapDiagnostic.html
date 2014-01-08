@@ -1,0 +1,93 @@
+
+<style>
+  img {position: relative;}
+  canvas {width: 256px; height:256px;}
+</style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<h3>Utility to verify that the PNG renderers and the TileCube json correlate</h3>
+<img id="image" src="density/tile/density/tile?key=1&x=0&y=0&z=0&type=TAXON&palette=diagnostic"></img>
+<pre id="output"></pre>
+
+<script>
+
+resolution = 4;
+// decode into a javascript strcuture the array
+function decode_row(row) {
+  var HEADER_SIZE = 3;
+  var o = {
+    x: row.data[0],
+    y: row.data[1],
+    valuesCount: row.data[2],
+    times: [],
+    values: [],
+  };
+  for (var s = 0; s < o.valuesCount; ++s) {
+     o.times.push(row.data[HEADER_SIZE + s]);
+     o.values.push(row.data[HEADER_SIZE + o.valuesCount + s]);
+  }
+  return o
+}
+
+
+var pixels = null;
+
+$.getJSON('density/tile/density/tile.tcjson?key=1&x=0&y=0&z=0&type=TAXON', function(data) {
+
+  var rows = data.rows;
+
+  // create a matrix
+  pixels = [];
+  var i = (256/resolution)|0; while(i--) pixels.push([]);
+
+
+  // decode all the rows
+  for (r = 0; r < rows.length; ++r) {
+    var row = rows[r] = decode_row(rows[r]);
+    pixels[row.x][row.y] = row;
+  }
+
+
+});
+
+function sum(ar) {
+  var c = 0; 
+  for(var i = 0; i < ar.length; ++i) {
+    c += ar[i];
+  }
+  return c;
+}
+
+var img = $('img')[0];
+img.crossOrigin = "Anonymous";
+
+$('img').mousemove(function(e) {
+	this.style.cursor="crosshair";
+    if(!this.canvas) {
+        this.canvas = $('<canvas/>')[0]; 
+        this.canvas.height=256;
+        this.canvas.width=256;
+        this.canvas.getContext('2d').drawImage(this, 0, 0, 256, 256);
+    }
+    
+    var pixelData = this.canvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    
+    
+    var html = 'X,Y: ' + event.offsetX + "," +  event.offsetY + '<br>R: ' + pixelData[0] + '<br>G: ' + pixelData[1] + '<br>B: ' + pixelData[2] 
+    + '<br>Count: ' + ((pixelData[0]<<16) + (pixelData[1]<<8) + pixelData[2]);
+
+    if(pixels) {
+      //offsetY = (DensityTile.TILE_SIZE / clusterSize) - offsetY - 1;
+      var offsetY = (event.offsetY/resolution) | 0;
+      offsetY = -offsetY + (256/resolution) - 1;
+
+      
+      var row = pixels[(event.offsetX/resolution)|0][offsetY];
+      html += '<br>Count JSON: ' + (row ? sum(row.values): 'no value')
+    }
+    $('#output').html(html);
+    
+});        
+
+</script>
