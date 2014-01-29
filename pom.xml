@@ -236,6 +236,18 @@
   <profiles>
     <profile>
       <!--
+        A profile suitable for deployment in the GBIF uat environment
+      -->
+      <id>uat</id>
+      <properties>
+        <ganglia.server>130.226.238.237</ganglia.server>
+        <ganglia.port>8649</ganglia.port>
+        <density-cube.table>uat_maps_cube</density-cube.table>
+      </properties>
+    </profile>
+
+    <profile>
+      <!--
         A profile suitable for deployment in the GBIF development environment
       -->
       <id>dev</id>
