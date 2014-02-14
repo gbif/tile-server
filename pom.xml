@@ -254,7 +254,7 @@
       <properties>
         <ganglia.server>130.226.238.237</ganglia.server>
         <ganglia.port>8649</ganglia.port>
-        <density-cube.table>appdev_maps_cube</density-cube.table>
+        <density-cube.table>dev_maps_cube</density-cube.table>
       </properties>
     </profile>
 
