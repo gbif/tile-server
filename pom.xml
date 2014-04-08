@@ -58,9 +58,9 @@
   </repositories>
 
   <properties>
-    <slf4j.version>1.7.5</slf4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <cube.version>0.11</cube.version>
+    <cube.version>0.13</cube.version>
     <servlet-api.version>2.4</servlet-api.version>
     <guice.version>3.0</guice.version>
     <metrics.version>2.2.0</metrics.version>
