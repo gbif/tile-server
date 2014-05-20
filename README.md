@@ -14,3 +14,11 @@ To assist in development, there is an implementation of a memory backed cube whi
 Please see the example in /conf which has detailed comments.  The memory backed cube expects a GZipped CSV file containing latitude,
 longitude and numRecords, which is then read into memory and assembled into the cube.  This is not meant for production use, but only
 to assist those developing rendering services.
+
+Acknowledgements
+----------------
+YourKit is kindly supporting open source projects with its full-featured Java Profiler. YourKit, LLC is the creator of innovative and intelligent tools for profiling Java and .NET applications.
+
+Take a look at YourKit's leading software products: <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a> and <a href="http://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>.
+
+JetBrains is also a big supporter of open source projects and has kindly provided licenses for their fantastic IDE IntelliJ to GBIF. Learn more at <a href="http://www.jetbrains.com/idea/">the IntelliJ site</a>.
