@@ -60,10 +60,10 @@
   <properties>
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <cube.version>0.13</cube.version>
+    <gbif-metrics.version>0.15</gbif-metrics.version>
     <servlet-api.version>2.4</servlet-api.version>
     <guice.version>3.0</guice.version>
-    <metrics.version>2.2.0</metrics.version>
+    <yammer-metrics.version>2.2.0</yammer-metrics.version>
     <datacube.version>1.2.4-GIT-20130903</datacube.version>
     <hbase.version>0.94.2-cdh4.2.1</hbase.version>
     <hadoopMR.version>2.0.0-mr1-cdh4.2.1</hadoopMR.version>
@@ -91,7 +91,7 @@
     <dependency>
       <groupId>org.gbif.metrics</groupId>
       <artifactId>cube</artifactId>
-      <version>${cube.version}</version>
+      <version>${gbif-metrics.version}</version>
       <!--  Brought in transitively from HBase.  We ship this to logback below. -->
       <exclusions>
         <exclusion>
@@ -161,17 +161,17 @@
     <dependency>
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-core</artifactId>
-      <version>${metrics.version}</version>
+      <version>${yammer-metrics.version}</version>
     </dependency>
     <dependency>
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-ganglia</artifactId>
-      <version>${metrics.version}</version>
+      <version>${yammer-metrics.version}</version>
     </dependency>
     <dependency>
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-guice</artifactId>
-      <version>${metrics.version}</version>
+      <version>${yammer-metrics.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
