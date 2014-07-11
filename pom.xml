@@ -23,7 +23,6 @@
     <version>16</version>
   </parent>
 
-  <groupId>org.gbif</groupId>
   <artifactId>tile-server</artifactId>
   <version>0.12-SNAPSHOT</version>
   <packaging>war</packaging>
@@ -60,7 +59,7 @@
   <properties>
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <gbif-metrics.version>0.15</gbif-metrics.version>
+    <gbif-metrics.version>0.16</gbif-metrics.version>
     <servlet-api.version>2.4</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
