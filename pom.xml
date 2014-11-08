@@ -59,13 +59,14 @@
   <properties>
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <gbif-metrics.version>0.16</gbif-metrics.version>
+    <gbif-metrics.version>0.17-SNAPSHOT</gbif-metrics.version>
     <servlet-api.version>2.4</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
-    <datacube.version>1.2.4-GIT-20130903</datacube.version>
-    <hbase.version>0.94.2-cdh4.2.1</hbase.version>
-    <hadoopMR.version>2.0.0-mr1-cdh4.2.1</hadoopMR.version>
+    <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
+    <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
+    <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
+    <hbase.version>0.98.6-cdh5.2.0</hbase.version>
     <guava.version>14.0.1</guava.version>
     <junit.version>4.11</junit.version>
     <jackson.version>1.9.12</jackson.version>
@@ -131,21 +132,17 @@
       <groupId>com.urbanairship</groupId>
       <artifactId>datacube</artifactId>
       <version>${datacube.version}</version>
-      <classifier>hbase${hbase.version}-hadoop${hadoopMR.version}</classifier>
-      <exclusions>
-        <!--
-          Overwrite the version of HBase
-          DataCube has a profile always activated to 0.90.4
-        -->
+      <classifier>${datacube.classifier}</classifier>
+      <!--exclusions>
         <exclusion>
           <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase</artifactId>
+          <artifactId>hbase-client</artifactId>
         </exclusion>
         <exclusion>
           <artifactId>jsp-api-2.1</artifactId>
           <groupId>org.mortbay.jetty</groupId>
         </exclusion>
-      </exclusions>
+      </exclusions-->
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -243,9 +240,10 @@
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>prod_a_maps_cube</density-cube.table>
 
-        <datacube.version>1.2.4-GIT-20130903</datacube.version>
-        <hbase.version>0.94.2-cdh4.2.1</hbase.version>
-        <hadoopMR.version>2.0.0-mr1-cdh4.2.1</hadoopMR.version>
+        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
+        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
+        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
+        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
 
         <!-- cluster -->
         <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
@@ -263,9 +261,10 @@
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>uat_maps_cube</density-cube.table>
 
-        <datacube.version>1.2.4-GIT-20130903</datacube.version>
-        <hbase.version>0.94.2-cdh4.2.1</hbase.version>
-        <hadoopMR.version>2.0.0-mr1-cdh4.2.1</hadoopMR.version>
+        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
+        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
+        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
+        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
 
         <!-- cluster -->
         <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
@@ -283,9 +282,10 @@
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>dev_maps_cube</density-cube.table>
 
-        <datacube.version>1.3.1-GIT-20140520</datacube.version>
-        <hbase.version>0.94.15-cdh4.6.0</hbase.version>
-        <hadoopMR.version>2.0.0-mr1-cdh4.6.0</hadoopMR.version>
+        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
+        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
+        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
+        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
 
         <!-- cluster -->
         <zookeeper.quorum>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</zookeeper.quorum>
