@@ -25,7 +25,7 @@
 
   <artifactId>tile-server</artifactId>
   <version>0.13-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
 
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
@@ -60,7 +60,7 @@
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
     <gbif-metrics.version>0.17-SNAPSHOT</gbif-metrics.version>
-    <servlet-api.version>2.4</servlet-api.version>
+    <servlet-api.version>2.5</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
     <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
@@ -71,6 +71,10 @@
     <junit.version>4.11</junit.version>
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
+    <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+    <gbif-microservice.version>0.1-SNAPSHOT</gbif-microservice.version>
+    <gbif-common.version>0.17-SNAPSHOT</gbif-common.version>
+    <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
   </properties>
 
   <build>
@@ -79,7 +83,61 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>src/main/webapp</directory>
+        <filtering>true</filtering>
+        <targetPath>webapp</targetPath>
+      </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.gbif.ws.app.Application</mainClass>
+                </transformer>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>org.jruby:jruby-complete</artifact>
+                  <excludes>
+                    <exclude>org/joda/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <!--Exclude configuration file that are not required in the output jar file -->
+                  <artifact>org.gbif:tile-server</artifact>
+                  <excludes>
+                    <exclude>application.properties</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -227,6 +285,23 @@
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
       <version>${jaxb-api.version}</version>
+    </dependency>
+
+    <!-- GBIF microservice dependencies-->
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-microservice</artifactId>
+      <version>${gbif-microservice.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-common</artifactId>
+      <version>${gbif-common.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jsp-api-2.1</artifactId>
+      <version>${jsp-api-2.1.version}</version>
     </dependency>
   </dependencies>
   <profiles>
