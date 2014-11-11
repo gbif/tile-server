@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2012 Global Biodiversity Information Facility (GBIF)
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+~ Copyright 2012 Global Biodiversity Information Facility (GBIF)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -25,8 +25,7 @@
 
   <artifactId>tile-server</artifactId>
   <version>0.13-SNAPSHOT</version>
-  <packaging>war</packaging>
-
+  <packaging>jar</packaging>
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
   <url>http://github.org/gbif/tile-server</url>
@@ -71,6 +70,10 @@
     <junit.version>4.11</junit.version>
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
+    <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+    <gbif-microservice.version>0.1-SNAPSHOT</gbif-microservice.version>
+    <gbif-common.version>0.17-SNAPSHOT</gbif-common.version>
+    <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
   </properties>
 
   <build>
@@ -79,7 +82,62 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>src/main/webapp</directory>
+        <filtering>true</filtering>
+        <targetPath>webapp</targetPath>
+      </resource>
     </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.gbif.ws.app.Application</mainClass>
+                </transformer>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>org.jruby:jruby-complete</artifact>
+                  <excludes>
+                    <exclude>org/joda/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <!--Exclude configuration file that are not required in the output jar file -->
+                  <artifact>org.gbif:tile-server</artifact>
+                  <excludes>
+                    <exclude>application.properties</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -92,7 +150,7 @@
       <groupId>org.gbif.metrics</groupId>
       <artifactId>cube</artifactId>
       <version>${gbif-metrics.version}</version>
-      <!--  Brought in transitively from HBase.  We ship this to logback below. -->
+      <!-- Brought in transitively from HBase. We ship this to logback below. -->
       <exclusions>
         <exclusion>
           <artifactId>org.slf4j</artifactId>
@@ -125,8 +183,8 @@
       </exclusions>
     </dependency>
     <!--
-      Note: this is in the GBIF repository referenced above
-      See https://github.com/urbanairship/datacube/issues/21
+    Note: this is in the GBIF repository referenced above
+    See https://github.com/urbanairship/datacube/issues/21
     -->
     <dependency>
       <groupId>com.urbanairship</groupId>
@@ -134,14 +192,14 @@
       <version>${datacube.version}</version>
       <classifier>${datacube.classifier}</classifier>
       <!--exclusions>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jsp-api-2.1</artifactId>
-          <groupId>org.mortbay.jetty</groupId>
-        </exclusion>
+      <exclusion>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      </exclusion>
+      <exclusion>
+      <artifactId>jsp-api-2.1</artifactId>
+      <groupId>org.mortbay.jetty</groupId>
+      </exclusion>
       </exclusions-->
     </dependency>
     <dependency>
@@ -228,65 +286,74 @@
       <artifactId>jaxb-api</artifactId>
       <version>${jaxb-api.version}</version>
     </dependency>
+    <!-- GBIF microservice dependencies-->
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-microservice</artifactId>
+      <version>${gbif-microservice.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-common</artifactId>
+      <version>${gbif-common.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jsp-api-2.1</artifactId>
+      <version>${jsp-api-2.1.version}</version>
+    </dependency>
   </dependencies>
+
   <profiles>
     <profile>
       <!--
-        A profile suitable for deployment in the GBIF production environment
+      A profile suitable for deployment in the GBIF production environment
       -->
       <id>prod_a</id>
       <properties>
         <ganglia.server>130.226.238.237</ganglia.server>
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>prod_a_maps_cube</density-cube.table>
-
         <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
         <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
         <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
         <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-
         <!-- cluster -->
         <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
       </properties>
     </profile>
-
     <profile>
       <!--
-        A profile suitable for deployment in the GBIF uat environment
+      A profile suitable for deployment in the GBIF uat environment
       -->
       <id>uat</id>
       <properties>
         <ganglia.server>130.226.238.237</ganglia.server>
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>uat_maps_cube</density-cube.table>
-
         <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
         <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
         <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
         <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-
         <!-- cluster -->
         <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
       </properties>
     </profile>
-
     <profile>
       <!--
-        A profile suitable for deployment in the GBIF development environment
+      A profile suitable for deployment in the GBIF development environment
       -->
       <id>dev</id>
       <properties>
         <ganglia.server>130.226.238.237</ganglia.server>
         <ganglia.port>8649</ganglia.port>
         <density-cube.table>dev_maps_cube</density-cube.table>
-
         <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
         <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
         <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
         <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-
         <!-- cluster -->
         <zookeeper.quorum>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n1.gbif.org:8020</hdfs.namenode>
@@ -294,3 +361,4 @@
     </profile>
   </profiles>
 </project>
+
