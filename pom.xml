@@ -59,7 +59,7 @@
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
     <gbif-metrics.version>0.17-SNAPSHOT</gbif-metrics.version>
-    <servlet-api.version>2.4</servlet-api.version>
+    <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
     <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
@@ -261,9 +261,8 @@
     <!-- Required for compilation of servlets but provided by runtime container -->
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
+      <artifactId>javax.servlet-api</artifactId>
       <version>${servlet-api.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
