@@ -56,8 +56,10 @@
   </repositories>
 
   <properties>
+    <jdkLevel>1.7</jdkLevel>
+
     <slf4j.version>1.7.7</slf4j.version>
-    <logback.version>1.0.13</logback.version>
+    <logback.version>1.1.2</logback.version>
     <gbif-metrics.version>0.17-SNAPSHOT</gbif-metrics.version>
     <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
@@ -66,13 +68,13 @@
     <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
     <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
     <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-    <guava.version>14.0.1</guava.version>
+    <guava.version>17.0</guava.version>
     <junit.version>4.11</junit.version>
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
     <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
     <gbif-microservice.version>0.1-SNAPSHOT</gbif-microservice.version>
-    <gbif-common.version>0.17-SNAPSHOT</gbif-common.version>
+    <gbif-common.version>0.17</gbif-common.version>
     <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
   </properties>
 
@@ -315,57 +317,15 @@
 
   <profiles>
     <profile>
-      <!--
-      A profile suitable for deployment in the GBIF production environment
-      -->
-      <id>prod_a</id>
-      <properties>
-        <ganglia.server>130.226.238.237</ganglia.server>
-        <ganglia.port>8649</ganglia.port>
-        <density-cube.table>prod_a_maps_cube</density-cube.table>
-        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
-        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
-        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
-        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-        <!-- cluster -->
-        <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
-        <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
-      </properties>
-    </profile>
-    <profile>
-      <!--
-      A profile suitable for deployment in the GBIF uat environment
-      -->
-      <id>uat</id>
-      <properties>
-        <ganglia.server>130.226.238.237</ganglia.server>
-        <ganglia.port>8649</ganglia.port>
-        <density-cube.table>uat_maps_cube</density-cube.table>
-        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
-        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
-        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
-        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
-        <!-- cluster -->
-        <zookeeper.quorum>c1n10.gbif.org:2181,c1n9.gbif.org:2181,c1n8.gbif.org:2181</zookeeper.quorum>
-        <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
-      </properties>
-    </profile>
-    <profile>
-      <!--
-      A profile suitable for deployment in the GBIF development environment
-      -->
+      <!-- A profile suitable for deployment in the GBIF development environment -->
       <id>dev</id>
       <properties>
         <ganglia.server>130.226.238.237</ganglia.server>
         <ganglia.port>8649</ganglia.port>
-        <density-cube.table>dev_maps_cube</density-cube.table>
-        <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
-        <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
-        <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
-        <hbase.version>0.98.6-cdh5.2.0</hbase.version>
         <!-- cluster -->
         <zookeeper.quorum>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n1.gbif.org:8020</hdfs.namenode>
+        <density-cube.table>dev_maps_cube</density-cube.table>
       </properties>
     </profile>
   </profiles>

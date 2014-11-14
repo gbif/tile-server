@@ -7,8 +7,6 @@ import org.gbif.metrics.tile.DensityColorPalette.ColorRule;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import com.google.common.io.Closeables;
-
 /**
  * This is a test harness useful when developing the PNGWriter.
  * This is not intended to be a unit test but simply an application that can be called
@@ -37,10 +35,9 @@ public class PNGWriterTest {
     if (!d.exists()) {
       d.mkdirs();
     }
-    FileOutputStream fos = null;
 
-    try {
-      fos = new FileOutputStream(new File(d, TARGET_FILE));
+
+    try (FileOutputStream fos = new FileOutputStream(new File(d, TARGET_FILE))){
       DensityTile t =
         DensityTile.builder(0, 0, 0, 16).collect(Layer.OBS_NO_YEAR, 45, -170, 1)
           .collect(Layer.OBS_NO_YEAR, -45, 170, 1000).build();
@@ -53,8 +50,6 @@ public class PNGWriterTest {
       fos.flush();
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      Closeables.closeQuietly(fos);
     }
   }
 }

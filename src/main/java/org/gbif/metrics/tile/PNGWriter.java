@@ -15,7 +15,6 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
 import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 import com.google.common.io.Closer;
 
 /**
@@ -168,15 +167,15 @@ public class PNGWriter {
   }
 
   private static void write(OutputStream os, byte[] r, byte[] g, byte[] b, byte[] a) throws IOException {
-    DataOutputStream dos = null;
-    DeflaterOutputStream dfos = null;
-    Chunk cIHDR = null;
-    Chunk cIEND = null;
-    try {
-      dos = new DataOutputStream(os);
+    try (
+      Chunk cIDAT = new Chunk(IDAT);
+      Chunk cIHDR = new Chunk(IHDR);
+      Chunk cIEND = new Chunk(IEND);
+      DataOutputStream dos = new DataOutputStream(os);
+      DeflaterOutputStream dfos = new DeflaterOutputStream(cIDAT, new Deflater(Deflater.BEST_COMPRESSION))
+    ){
       dos.write(SIGNATURE);
 
-      cIHDR = new Chunk(IHDR);
       cIHDR.writeInt(DensityTile.TILE_SIZE);
       cIHDR.writeInt(DensityTile.TILE_SIZE);
       cIHDR.writeByte(8); // 8 bit per component
@@ -185,9 +184,6 @@ public class PNGWriter {
       cIHDR.writeByte(FILTER_NONE);
       cIHDR.writeByte(INTERLACE_NONE);
       cIHDR.writeTo(dos);
-
-      Chunk cIDAT = new Chunk(IDAT);
-      dfos = new DeflaterOutputStream(cIDAT, new Deflater(Deflater.BEST_COMPRESSION));
 
       int channels = 4;
       int lineLen = DensityTile.TILE_SIZE * channels;
@@ -208,16 +204,8 @@ public class PNGWriter {
       dfos.finish();
       cIDAT.writeTo(dos);
 
-      cIEND = new Chunk(IEND);
-
       cIEND.writeTo(dos);
       dos.flush();
-
-    } finally {
-      Closeables.closeQuietly(cIHDR);
-      Closeables.closeQuietly(cIEND);
-      Closeables.closeQuietly(dfos);
-      Closeables.closeQuietly(dos);
     }
   }
 }

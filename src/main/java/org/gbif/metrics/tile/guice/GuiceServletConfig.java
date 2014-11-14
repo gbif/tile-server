@@ -55,7 +55,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
       modules.add(new ServletModule() {
         @Override
         protected void configureServlets() {
-          serve("/density/*").with(DensityTileRenderer.class);
+          serve("/map/density/*").with(DensityTileRenderer.class);
         }
       });
       return Guice.createInjector(modules);
