@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>tile-server</artifactId>
-  <version>0.13-SNAPSHOT</version>
+  <version>0.13</version>
   <packaging>jar</packaging>
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
@@ -34,7 +34,7 @@
     <connection>scm:git:git@github.com:gbif/tile-server.git</connection>
     <url>https://github.com/gbif/tile-server</url>
     <developerConnection>scm:git:git@github.com:gbif/tile-server.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>tile-server-0.13</tag>
   </scm>
 
   <repositories>
@@ -105,10 +105,8 @@
             <configuration>
               <createDependencyReducedPom>true</createDependencyReducedPom>
               <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.gbif.ws.app.Application</mainClass>
                 </transformer>
               </transformers>
