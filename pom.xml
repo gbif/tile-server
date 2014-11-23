@@ -60,7 +60,7 @@
 
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.1.2</logback.version>
-    <gbif-metrics.version>0.17</gbif-metrics.version>
+    <gbif-metrics.version>0.18</gbif-metrics.version>
     <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -314,6 +314,18 @@
   </dependencies>
 
   <profiles>
+    <profile>
+      <!-- A profile suitable for deployment in the GBIF prod environment -->
+      <id>prod_b</id>
+      <properties>
+        <ganglia.server>130.226.238.237</ganglia.server>
+        <ganglia.port>8649</ganglia.port>
+        <!-- cluster -->
+        <zookeeper.quorum>c1n8.gbif.org:2181,c1n9.gbif.org:2181,c1n10.gbif.org:2181</zookeeper.quorum>
+        <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
+        <density-cube.table>prod_b2_maps_cube</density-cube.table>
+      </properties>
+    </profile>
     <profile>
       <!-- A profile suitable for deployment in the GBIF development environment -->
       <id>dev</id>
