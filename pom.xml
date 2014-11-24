@@ -60,7 +60,7 @@
 
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.1.2</logback.version>
-    <gbif-metrics.version>0.18</gbif-metrics.version>
+    <gbif-metrics.version>0.19-SNAPSHOT</gbif-metrics.version>
     <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -128,10 +128,6 @@
                     <exclude>META-INF/*.RSA</exclude>
                     <exclude>application.properties</exclude>
                     <exclude>hbase-site.xml</exclude>
-                    <exclude>yarn-site.xml</exclude>
-                    <exclude>mapred-site.xml</exclude>
-                    <exclude>core-site.xml</exclude>
-                    <exclude>hdfs-site.xml</exclude>
                   </excludes>
                 </filter>
               </filters>
