@@ -108,6 +108,9 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.gbif.ws.app.Application</mainClass>
+                  <manifestEntries>
+                    <Class-Path>conf/</Class-Path>
+                  </manifestEntries>
                 </transformer>
               </transformers>
               <filters>
@@ -123,13 +126,12 @@
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <!--Exclude configuration file that are not required in the output jar file -->
-                  <artifact>org.gbif:tile-server</artifact>
-                  <excludes>
                     <exclude>application.properties</exclude>
+                    <exclude>hbase-site.xml</exclude>
+                    <exclude>yarn-site.xml</exclude>
+                    <exclude>mapred-site.xml</exclude>
+                    <exclude>core-site.xml</exclude>
+                    <exclude>hdfs-site.xml</exclude>
                   </excludes>
                 </filter>
               </filters>
