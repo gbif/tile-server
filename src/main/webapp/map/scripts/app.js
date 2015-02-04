@@ -206,7 +206,7 @@ function setup_search_url() {
   var type = config.MAP.type
     .replace('TAXON', 'TAXON_KEY'); // map the URLs to the structure the search likes
   config.SEARCH[type] = config.MAP.key;
-  config.SEARCH.SPATIAL_ISSUES=false; // maps do not show records with issues
+  config.SEARCH.HAS_GEOSPATIAL_ISSUE=false; // maps do not show records with issues
   var searchUrl = $.param(
     _.extend(config.SEARCH, {
       GEOMETRY: buildVisibleGeometry(map)
