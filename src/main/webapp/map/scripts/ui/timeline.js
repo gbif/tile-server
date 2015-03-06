@@ -103,7 +103,7 @@ gbif.ui.view.Timeline = Backbone.View.extend({
   toggle: function() {
     //fullscreen
     if (!document.fullscreenElement && !document.mozFullScreenElement &&
-        !document.webkitFullscreenElement && !document.msRequestFullscreen) {
+        !document.webkitFullScreenElement && !document.msRequestFullscreen) {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
       } else if (document.documentElement.mozRequestFullScreen) {
