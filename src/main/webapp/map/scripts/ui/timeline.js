@@ -59,7 +59,7 @@ gbif.ui.view.Timeline = Backbone.View.extend({
     this.model.bind("change:collapsed", this._onChangeCollapsed);
     this.model.bind("change:current_cat", this._onChangeCurrentCat);
 
-    $(document).bind('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
+    $(document).bind('webkitfullscreenchange mozfullscreenchange msfullscreenchange fullscreenchange', function() {
       if(self.model.get("collapsed")) {
         self.model.set("collapsed", false);
       } else {
