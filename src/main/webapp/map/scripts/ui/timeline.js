@@ -102,14 +102,16 @@ gbif.ui.view.Timeline = Backbone.View.extend({
 
   toggle: function() {
     //fullscreen
-    if (!document.fullscreenElement &&
-        !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+    if (!document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msRequestFullscreen) {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
       } else if (document.documentElement.mozRequestFullScreen) {
         document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      } else if (document.documentElement.webkitRequestFullScreen) {
+        document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
       }
     } else {
       if (document.cancelFullScreen) {
@@ -118,6 +120,8 @@ gbif.ui.view.Timeline = Backbone.View.extend({
         document.mozCancelFullScreen();
       } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
       }
     }
   },
@@ -362,7 +366,7 @@ gbif.ui.view.Timeline = Backbone.View.extend({
     this._updateLegendDesc();
 
 		mainLayer.setKey(key_array);
-		
+
     var iframeUrl = $.param(config.MAP);
 
 		// construct the year (where possible) for the search
@@ -618,7 +622,7 @@ gbif.ui.view.Timeline = Backbone.View.extend({
       this.model.set("records", aggr_data[key]);
 
       $(this.$legend_desc).text("Showing all records (" + this.model.get("records") + ")");
-			
+
 			mainLayer.setKey(key);
     }
 
@@ -636,12 +640,12 @@ gbif.ui.view.Timeline = Backbone.View.extend({
 		  case "living": config.SEARCH.BASIS_OF_RECORD = "LIVING_SPECIMEN"; break;
 		  case "fossil": config.SEARCH.BASIS_OF_RECORD = "FOSSIL_SPECIMEN"; break;
 		  case "oth": config.SEARCH.BASIS_OF_RECORD = "UNKNOWN"; break;
-		  default: config.SEARCH = _.omit(config.SEARCH, "BASIS_OF_RECORD"); 
+		  default: config.SEARCH = _.omit(config.SEARCH, "BASIS_OF_RECORD");
 		}
-		
+
 		// only living or fossil need to fire events- the others trigger a slider change, which will message
 		if (this.model.get("current_cat") == "living" || this.model.get("current_cat") == "fossil") {
-		  config.SEARCH = _.omit(config.SEARCH, "YEAR"); // no year filter for living or fossil 
+		  config.SEARCH = _.omit(config.SEARCH, "YEAR"); // no year filter for living or fossil
       parent.postMessage({
         origin: window.name,
         records: this.model.get("records"),
