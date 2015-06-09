@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.gbif</groupId>
     <artifactId>motherpom</artifactId>
-    <version>19</version>
+    <version>23-SNAPSHOT</version>
   </parent>
 
   <artifactId>tile-server</artifactId>
@@ -41,7 +41,7 @@
   </repositories>
 
   <properties>
-    <jdkLevel>1.7</jdkLevel>
+    <jdkLevel>1.8</jdkLevel>
 
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
