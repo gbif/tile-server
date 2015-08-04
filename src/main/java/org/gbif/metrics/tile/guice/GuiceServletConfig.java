@@ -1,6 +1,7 @@
 package org.gbif.metrics.tile.guice;
 import org.gbif.metrics.cube.tile.density.guice.DensityCubeHBaseModule;
 import org.gbif.metrics.tile.DensityTileRenderer;
+import org.gbif.metrics.tile.OccurrenceHeatmapRenderer;
 import org.gbif.utils.file.properties.PropertiesUtil;
 import org.gbif.ws.app.ConfUtils;
 import java.util.List;
@@ -56,6 +57,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
         @Override
         protected void configureServlets() {
           serve("/map/density/*").with(DensityTileRenderer.class);
+          serve("/map/occurrence/*").with(OccurrenceHeatmapRenderer.class);
         }
       });
       return Guice.createInjector(modules);

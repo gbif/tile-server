@@ -61,6 +61,7 @@
     <gbif-microservice.version>0.2</gbif-microservice.version>
     <gbif-common.version>0.17</gbif-common.version>
     <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
+    <solr-lucene.version>5.2.1</solr-lucene.version>
   </properties>
 
   <build>
@@ -293,6 +294,16 @@
           <artifactId>servlet-api-2.5</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-solrj</artifactId>
+      <version>${solr-lucene.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-parsers</artifactId>
+      <version>0.12</version>
     </dependency>
   </dependencies>
 

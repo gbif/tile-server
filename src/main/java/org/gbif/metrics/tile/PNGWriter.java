@@ -1,14 +1,20 @@
 package org.gbif.metrics.tile;
 
+import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
+import org.gbif.metrics.tile.solr.SolrHeatmapRenderer;
+import org.gbif.common.parsers.geospatial.LatLngBoundingBox;
 
+import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.Deflater;
@@ -16,11 +22,15 @@ import java.util.zip.DeflaterOutputStream;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A highly optimized PNG tile writer for a DensityTile.
  */
 public class PNGWriter {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PNGWriter.class);
 
   static class Chunk extends DataOutputStream {
 
@@ -58,6 +68,7 @@ public class PNGWriter {
   private static final byte COMPRESSION_DEFLATE = 0;
   private static final byte FILTER_NONE = 0;
   private static final byte INTERLACE_NONE = 0;
+  private static final int TILE_SIZE = 256;
 
   // This has to come after the rest of the static initialized fields
   static {
@@ -74,7 +85,7 @@ public class PNGWriter {
     } catch (IOException e) {
       // This is not recoverable, and indicates catastrophe
       throw new RuntimeException("Unable to produce blank tile during initialization");
-      
+
     } finally {
       try {
         closer.close();
@@ -208,4 +219,84 @@ public class PNGWriter {
       dos.flush();
     }
   }
+
+  /**
+   * Writes the data to the stream as a PNG.
+   */
+  public static void write(SolrHeatmapRenderer.SolrHeatmapResponse solrHeatmapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
+    throws IOException {
+    // don't waste time setting up PNG if no data
+    if (solrHeatmapResponse.getCountsInts2D() != null && !solrHeatmapResponse.getCountsInts2D().isEmpty()) {
+
+      // arrays for the RGB and alpha channels
+      byte[] r = new byte[TILE_SIZE * TILE_SIZE];
+      byte[] g = new byte[TILE_SIZE * TILE_SIZE];
+      byte[] b = new byte[TILE_SIZE * TILE_SIZE];
+      byte[] a = new byte[TILE_SIZE * TILE_SIZE];
+
+      ArrayList<ArrayList<Integer>> countsInts = solrHeatmapResponse.getCountsInts2D();
+      // determine the pixels covered by the cell at the zoom level, and paint them
+      for (int row = 0; row <  countsInts.size(); row++) {
+        if(countsInts.get(row) != null){
+          for(int column = 0; column < countsInts.get(row).size(); column++) {
+            Integer count = countsInts.get(row).get(column);
+            if(count != null && count > 0) {
+              LatLngBoundingBox box = new LatLngBoundingBox(solrHeatmapResponse.getMinLng(column),
+                                                            solrHeatmapResponse.getMinLat(row),
+                                                            solrHeatmapResponse.getMaxLng(column),
+                                                            solrHeatmapResponse.getMaxLat(row));
+              // only paint if the cell is on the tile
+              //if (intersect(box, cellExtent)) {
+
+              // pixel locations for the edges of the cell
+              int minX = MercatorProjectionUtil.getOffsetX(box.getMinLat(), box.getMinLong(), zoom);
+              int maxX = MercatorProjectionUtil.getOffsetX(box.getMinLat(), box.getMaxLong(), zoom);
+              // note Y inverts here
+              int maxY = MercatorProjectionUtil.getOffsetY(box.getMinLat(), box.getMinLong(), zoom);
+              int minY = MercatorProjectionUtil.getOffsetY(box.getMaxLat(), box.getMaxLong(), zoom);
+
+                minX = minX < 0 ? 0 : minX;
+                maxX = maxX < 0 ? 0 : maxX;
+                minY = minY < 0 ? 0 : minY;
+                maxY = maxY < 0 ? 0 : maxY;
+                minX = minX > TILE_SIZE ? TILE_SIZE : minX;
+                maxX = maxX > TILE_SIZE ? TILE_SIZE : maxX;
+                minY = minY > TILE_SIZE ? TILE_SIZE : minY;
+                maxY = maxY > TILE_SIZE ? TILE_SIZE : maxY;
+
+                //LOG.info("{},{} to {},{}", maxX,maxY,minX,minY);
+                //LOG.info("{} to {}", maxX  - minX , maxY - minY);
+
+
+                 for (int px = minX; px <= maxX; px++) {
+                   for (int py = maxY; py >= minY; py--) {
+                     paint(r,
+                           g,
+                           b,
+                           a,
+                           palette.red(count, zoom),
+                           palette.green(count, zoom),
+                           palette.blue(count, zoom),
+                           palette.alpha(count, zoom),
+                           px + (py * TILE_SIZE));
+                   }
+                 }
+
+              //}
+            }
+          }
+        }
+      }
+      write(out, r, g, b, a);
+
+    } else {
+      // always return a valid image
+      out.write(EMPTY_TILE);
+    }
+  }
+
+  private double perimeter(LatLngBoundingBox box){
+    return (box.getMaxLat() - box.getMinLat()) * 2  + (box.getMaxLong() - box.getMinLong()) * 2;
+  }
+
 }
