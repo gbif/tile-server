@@ -1,26 +1,20 @@
 package org.gbif.metrics.tile;
 
-import org.gbif.metrics.cube.tile.density.DensityCube;
-import org.gbif.metrics.cube.tile.density.DensityTile;
+import org.gbif.api.model.occurrence.search.HeatMapResponse;
+import org.gbif.api.service.occurrence.OccurrenceSearchService;
 import org.gbif.metrics.cube.tile.density.Layer;
-import org.gbif.metrics.tile.solr.SolrHeatmapRenderer;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.urbanairship.datacube.DataCubeIo;
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.Meter;
 import com.yammer.metrics.core.Timer;
@@ -40,9 +34,14 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
   // allow monitoring of cube lookup, rendering speed and the throughput per second
   private final Timer pngRenderTimer = Metrics.newTimer(OccurrenceHeatmapRenderer.class, "pngRenderDuration",
     TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
-  private final Timer tcJsonRenderTimer = Metrics.newTimer(OccurrenceHeatmapRenderer.class, "tileCubeJsonRenderDuration",
-    TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
   private final Meter requests = Metrics.newMeter(OccurrenceHeatmapRenderer.class, "requests", "requests", TimeUnit.SECONDS);
+
+  private final OccurrenceSearchService occurrenceSearchService;
+
+  @Inject
+  public OccurrenceHeatmapRenderer(OccurrenceSearchService occurrenceSearchService){
+    this.occurrenceSearchService = occurrenceSearchService;
+  }
 
 
   @Override
@@ -55,16 +54,17 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
     renderPNG(req, resp);
   }
 
+
   protected void renderPNG(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "image/png");
     try {
-      SolrHeatmapRenderer.SolrHeatmapResponse solrHeatmapResponse =  SolrHeatmapRenderer.uatQuery();
-      if (solrHeatmapResponse != null) {
+      HeatMapResponse heatMapResponse = occurrenceSearchService.searchHeatMap(OccurrenceSearchHeatmapRequestProvider.buildOccurrenceHeatmapSearchRequest(req));
+      if (heatMapResponse != null) {
         int x = getParam(req, "x", 0);
         int y = getParam(req, "y", 0);
         int z= getParam(req, "z", 0);
         // add a header to help in debugging issues
-        resp.setHeader("X-GBIF-Total-Count", solrHeatmapResponse.getCount().toString());
+        resp.setHeader("X-GBIF-Total-Count", heatMapResponse.getCount().toString());
 
         final TimerContext context = pngRenderTimer.time();
         try {
@@ -97,7 +97,7 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
             final Float hue = extractFloat(req, "hue", false);
             p = hue!=null ? new HSBPalette(hue) : new HSBPalette();
           }
-          PNGWriter.write(solrHeatmapResponse, resp.getOutputStream(), z,x,y,p);
+          PNGWriter.write(heatMapResponse, resp.getOutputStream(), z,x,y,p);
         } finally {
           context.stop();
         }

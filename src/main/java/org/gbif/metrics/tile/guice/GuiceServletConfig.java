@@ -1,7 +1,10 @@
 package org.gbif.metrics.tile.guice;
+import org.gbif.checklistbank.ws.client.guice.ChecklistBankWsClientModule;
 import org.gbif.metrics.cube.tile.density.guice.DensityCubeHBaseModule;
 import org.gbif.metrics.tile.DensityTileRenderer;
 import org.gbif.metrics.tile.OccurrenceHeatmapRenderer;
+import org.gbif.occurrence.persistence.guice.OccurrencePersistenceModule;
+import org.gbif.occurrence.search.guice.OccurrenceSearchModule;
 import org.gbif.utils.file.properties.PropertiesUtil;
 import org.gbif.ws.app.ConfUtils;
 import java.util.List;
@@ -41,6 +44,9 @@ public class GuiceServletConfig extends GuiceServletContextListener {
       List<Module> modules = Lists.newArrayList();
       modules.add(new InstrumentationModule());
       modules.add(new MetricsModule(properties));
+      modules.add(new OccurrenceSearchModule(properties));
+      modules.add(new OccurrencePersistenceModule(properties));
+      modules.add(new ChecklistBankWsClientModule(properties, true, true));
       if (TYPE_CSV_MEMORY.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
         LOG.info("Configuration declares a CSV in-memory DataCube");
         int zooms = getInt(properties, PROP_ZOOMS, DEFAULT_ZOOMS);

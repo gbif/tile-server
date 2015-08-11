@@ -1,20 +1,18 @@
 package org.gbif.metrics.tile;
 
+import org.gbif.api.model.occurrence.search.HeatMapResponse;
 import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
-import org.gbif.metrics.tile.solr.SolrHeatmapRenderer;
 import org.gbif.common.parsers.geospatial.LatLngBoundingBox;
 
-import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.Deflater;
@@ -223,10 +221,10 @@ public class PNGWriter {
   /**
    * Writes the data to the stream as a PNG.
    */
-  public static void write(SolrHeatmapRenderer.SolrHeatmapResponse solrHeatmapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
+  public static void write(HeatMapResponse heatMapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
     throws IOException {
     // don't waste time setting up PNG if no data
-    if (solrHeatmapResponse.getCountsInts2D() != null && !solrHeatmapResponse.getCountsInts2D().isEmpty()) {
+    if (heatMapResponse.getCountsInts2D() != null && !heatMapResponse.getCountsInts2D().isEmpty()) {
 
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
@@ -234,17 +232,17 @@ public class PNGWriter {
       byte[] b = new byte[TILE_SIZE * TILE_SIZE];
       byte[] a = new byte[TILE_SIZE * TILE_SIZE];
 
-      ArrayList<ArrayList<Integer>> countsInts = solrHeatmapResponse.getCountsInts2D();
+      List<List<Integer>> countsInts = heatMapResponse.getCountsInts2D();
       // determine the pixels covered by the cell at the zoom level, and paint them
       for (int row = 0; row <  countsInts.size(); row++) {
         if(countsInts.get(row) != null){
           for(int column = 0; column < countsInts.get(row).size(); column++) {
             Integer count = countsInts.get(row).get(column);
             if(count != null && count > 0) {
-              LatLngBoundingBox box = new LatLngBoundingBox(solrHeatmapResponse.getMinLng(column),
-                                                            solrHeatmapResponse.getMinLat(row),
-                                                            solrHeatmapResponse.getMaxLng(column),
-                                                            solrHeatmapResponse.getMaxLat(row));
+              LatLngBoundingBox box = new LatLngBoundingBox(heatMapResponse.getMinLng(column),
+                                                            heatMapResponse.getMinLat(row),
+                                                            heatMapResponse.getMaxLng(column),
+                                                            heatMapResponse.getMaxLat(row));
               // only paint if the cell is on the tile
               //if (intersect(box, cellExtent)) {
 
@@ -294,9 +292,4 @@ public class PNGWriter {
       out.write(EMPTY_TILE);
     }
   }
-
-  private double perimeter(LatLngBoundingBox box){
-    return (box.getMaxLat() - box.getMinLat()) * 2  + (box.getMaxLong() - box.getMinLong()) * 2;
-  }
-
 }
