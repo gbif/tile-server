@@ -128,21 +128,7 @@ public class DensityTileRenderer extends CubeTileRenderer {
     resp.flushBuffer();
   }
 
-  /**
-   * Accumulates the count represented by the tile.
-   */
-  private int accumulate(DensityTile tile) {
-    int total = 0;
-    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
-      for (Integer count : e.getValue().values()) {
-        total += count;
-      }
-    }
-    return total;
-  }
-  
-
-  protected void renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void  renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "application/json");
 
     try {
@@ -172,5 +158,18 @@ public class DensityTileRenderer extends CubeTileRenderer {
     } finally {
       resp.flushBuffer();
     }
+  }
+
+  /**
+   * Accumulates the count represented by the tile.
+   */
+  private int accumulate(DensityTile tile) {
+    int total = 0;
+    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
+      for (Integer count : e.getValue().values()) {
+        total += count;
+      }
+    }
+    return total;
   }
 }

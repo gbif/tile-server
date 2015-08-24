@@ -4,9 +4,12 @@ import org.gbif.api.model.occurrence.search.OccurrenceHeatmapSearchRequest;
 import org.gbif.api.model.occurrence.search.OccurrenceSearchParameter;
 import org.gbif.api.util.SearchTypeValidator;
 import org.gbif.api.util.VocabularyUtils;
-import org.gbif.ws.server.provider.PageableProvider;
+import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
+import org.gbif.metrics.tile.utils.HttpParamsUtils;
 import org.gbif.ws.util.WebserviceParameter;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -49,14 +52,24 @@ public class OccurrenceSearchHeatmapRequestProvider {
         }
       }
     }
-    String heatMapGeom = request.getParameter(PARAM_HEATMAP_GEOM);
-    if(!Strings.isNullOrEmpty(heatMapGeom)){
-      occurrenceHeatmapSearchRequest.setGeometry(heatMapGeom);
-    }
-    String heatMapGridLevel = request.getParameter(PARAM_HEATMAP_GRID_LEVEL);
+
+    occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(request));
+        String heatMapGridLevel = request.getParameter(PARAM_HEATMAP_GRID_LEVEL);
     if(!Strings.isNullOrEmpty(heatMapGridLevel)){
       occurrenceHeatmapSearchRequest.setGridLevel(Integer.parseInt(heatMapGridLevel));
     }
+  }
+
+  /**
+   *
+   * @return a bounding box calculated from the X,Y coordinates
+   */
+  private static String getGeometryFromXY(HttpServletRequest request) {
+    int x = HttpParamsUtils.getIntParam(request, "x", 0);
+    int y = HttpParamsUtils.getIntParam(request, "y", 0);
+    int z = HttpParamsUtils.getIntParam(request, "y", 0);
+    Rectangle rect = MercatorProjectionUtil.getTileRect(x, y, z).getBounds();
+    return "[\""+ rect.getMinX()  + " " + rect.getMinY() + "\" TO \"" + rect.getMaxX() + " " + rect.getMaxY() +  "\"]";
   }
 
   private static OccurrenceSearchParameter findSearchParam(String name) {

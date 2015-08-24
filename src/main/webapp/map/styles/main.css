@@ -880,3 +880,9 @@ strong {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=85);
   opacity: 0.85;
 }
+
+:-ms-fullscreen {
+  width: auto;
+  height: auto;
+  margin: auto;
+}

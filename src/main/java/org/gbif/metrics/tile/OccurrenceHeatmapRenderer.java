@@ -3,6 +3,7 @@ package org.gbif.metrics.tile;
 import org.gbif.api.model.occurrence.search.HeatMapResponse;
 import org.gbif.api.service.occurrence.OccurrenceSearchService;
 import org.gbif.metrics.cube.tile.density.Layer;
+import org.gbif.metrics.tile.utils.HttpParamsUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +29,9 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 @Singleton
 public class OccurrenceHeatmapRenderer extends HttpServlet {
+
+  private static final String TILE_CUBE_AS_JSON_SUFFIX = ".tcjson";
+
   private static final Logger LOG = LoggerFactory.getLogger(OccurrenceHeatmapRenderer.class);
 
 
@@ -51,18 +55,22 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
     resp.setHeader("Access-Control-Allow-Origin", "*");
     resp.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Prototype-Version, X-CSRF-Token");
     resp.setHeader("Cache-Control", "public,max-age=60"); // encourage a 60 second caching by everybody
-    renderPNG(req, resp);
+    if (req.getRequestURI().endsWith(TILE_CUBE_AS_JSON_SUFFIX)) {
+      renderTileCubeAsJson(req, resp);
+    } else {
+      renderPNG(req, resp);
+    }
   }
 
 
   protected void renderPNG(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "image/png");
     try {
+      int x = HttpParamsUtils.getIntParam(req, "x", 0);
+      int y = HttpParamsUtils.getIntParam(req, "y", 0);
+      int z= HttpParamsUtils.getIntParam(req, "z", 0);
       HeatMapResponse heatMapResponse = occurrenceSearchService.searchHeatMap(OccurrenceSearchHeatmapRequestProvider.buildOccurrenceHeatmapSearchRequest(req));
       if (heatMapResponse != null) {
-        int x = getParam(req, "x", 0);
-        int y = getParam(req, "y", 0);
-        int z= getParam(req, "z", 0);
         // add a header to help in debugging issues
         resp.setHeader("X-GBIF-Total-Count", heatMapResponse.getCount().toString());
 
@@ -94,7 +102,7 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
           } else if (req.getParameter("colors") != null) {
             p = DensityColorPaletteFactory.build(req.getParameter("colors"));
           } else if (req.getParameter("saturation") != null) {
-            final Float hue = extractFloat(req, "hue", false);
+            final Float hue = HttpParamsUtils.extractFloat(req, "hue", false);
             p = hue!=null ? new HSBPalette(hue) : new HSBPalette();
           }
           PNGWriter.write(heatMapResponse, resp.getOutputStream(), z,x,y,p);
@@ -115,29 +123,36 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
     resp.flushBuffer();
   }
 
-  protected Float extractFloat(HttpServletRequest req, String key, boolean required) throws IllegalArgumentException {
-    if (req.getParameter(key) != null) {
-      try {
-        return Float.parseFloat(req.getParameter(key));
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Parameter [" + key + "] is invalid.  Supplied: " + req.getParameter(key));
+  protected void  renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setHeader("Content-Type", "application/json");
+
+   /* try {
+      Optional<DensityTile> tile = getTile(req, DensityCube.INSTANCE);
+      if (tile.isPresent()) {
+        resp.setHeader("X-GBIF-Total-Count", String.valueOf(accumulate(tile.get())));
+        final TimerContext context = tcJsonRenderTimer.time();
+        try {
+          resp.setHeader("Content-Encoding", "gzip");
+          GZIPOutputStream os = new GZIPOutputStream(resp.getOutputStream());
+          TileCubesWriter.jsonNotation(tile.get(), os);
+          os.flush();
+
+        } finally {
+          context.stop();
+        }
+      } else {
+        resp.getOutputStream().write(TileCubesWriter.EMPTY_TILE_CUBE);
       }
-    }
-    if (required) {
-      throw new IllegalArgumentException("Parameter [" + key + "] is required");
-    }
-    return null;
+    } catch (IllegalArgumentException e) {
+      // If we couldn't get the content from the request
+      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+    } catch (Exception e) {
+      // We are unable to get or render the tile
+      LOG.error(e.getMessage(), e);
+      resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Tile server is out of action, please try later");
+    } finally {
+      resp.flushBuffer();
+    }         */
   }
 
-  private int getParam(HttpServletRequest request, String param, int defaultVal) {
-    String[] vals = request.getParameterValues(param);
-    if (vals != null && vals.length > 0) {
-      try {
-        return Integer.parseInt(vals[0]);
-      } catch (NumberFormatException e) {
-        return defaultVal;
-      }
-    }
-    return defaultVal;
-  }
 }
