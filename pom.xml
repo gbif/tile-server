@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.gbif</groupId>
     <artifactId>motherpom</artifactId>
-    <version>19</version>
+    <version>23</version>
   </parent>
 
   <artifactId>tile-server</artifactId>
-  <version>0.17-SNAPSHOT</version>
+  <version>0.19-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
@@ -45,12 +45,12 @@
 
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <gbif-metrics.version>0.19</gbif-metrics.version>
+    <gbif-metrics.version>0.23</gbif-metrics.version>
     <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
-    <datacube.version>1.3.1-GIT-20141113-NoMerge</datacube.version>
-    <datacube.classifier>hbase0.98.6-cdh5.2.0-hadoop2.5.0-mr1-cdh5.2.0</datacube.classifier>
+    <datacube.version>1.3.1-GIT-20150629-NoMerge</datacube.version>
+    <datacube.classifier>hbase1.0.0-cdh5.4.2-hadoop2.6.0-mr1-cdh5.4.2</datacube.classifier>
     <hadoop.version>2.5.0-cdh5.4.2</hadoop.version>
     <hbase.version>0.98.6-cdh5.4.2</hbase.version>
     <guava.version>17.0</guava.version>
@@ -58,7 +58,7 @@
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
     <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
-    <gbif-microservice.version>0.2</gbif-microservice.version>
+    <gbif-microservice.version>0.3</gbif-microservice.version>
     <gbif-common.version>0.17</gbif-common.version>
     <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
   </properties>
