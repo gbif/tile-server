@@ -1,5 +1,6 @@
 package org.gbif.metrics.tile;
 
+import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityCube;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
@@ -46,6 +47,15 @@ public class DensityTileRenderer extends CubeTileRenderer {
   private final Timer tcJsonRenderTimer = Metrics.newTimer(DensityTileRenderer.class, "tileCubeJsonRenderDuration",
     TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
   private final Meter requests = Metrics.newMeter(DensityTileRenderer.class, "requests", "requests", TimeUnit.SECONDS);
+
+  public static double pixelYToLatitude(double pixelY, int zoom) {
+    double y = 0.5 - (pixelY / ((long) DensityTile.TILE_SIZE << zoom));
+    return 90 - 360 * Math.atan(Math.exp(-y * 2 * Math.PI)) / Math.PI;
+  }
+
+  public static double pixelXToLongitude(double pixelX, int zoom) {
+    return 360 * ((pixelX / ((long) DensityTile.TILE_SIZE << zoom)) - 0.5);
+  }
 
   @Inject
   public DensityTileRenderer(DataCubeIo<DensityTile> cubeIo) {
@@ -133,20 +143,6 @@ public class DensityTileRenderer extends CubeTileRenderer {
     resp.flushBuffer();
   }
 
-  /**
-   * Accumulates the count represented by the tile.
-   */
-  private int accumulate(DensityTile tile) {
-    int total = 0;
-    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
-      for (Integer count : e.getValue().values()) {
-        total += count;
-      }
-    }
-    return total;
-  }
-
-
   protected void renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "application/json");
 
@@ -229,12 +225,16 @@ public class DensityTileRenderer extends CubeTileRenderer {
     resp.flushBuffer();
   }
 
-  public static double pixelYToLatitude(double pixelY, int zoom) {
-    double y = 0.5 - (pixelY / ((long) DensityTile.TILE_SIZE << zoom));
-    return 90 - 360 * Math.atan(Math.exp(-y * 2 * Math.PI)) / Math.PI;
-  }
-
-  public static double pixelXToLongitude(double pixelX, int zoom) {
-    return 360 * ((pixelX / ((long) DensityTile.TILE_SIZE << zoom)) - 0.5);
+  /**
+   * Accumulates the count represented by the tile.
+   */
+  private int accumulate(DensityTile tile) {
+    int total = 0;
+    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
+      for (Integer count : e.getValue().values()) {
+        total += count;
+      }
+    }
+    return total;
   }
 }
