@@ -26,7 +26,6 @@ public class OccurrenceSearchHeatmapRequestProvider {
   public static OccurrenceHeatmapSearchRequest buildOccurrenceHeatmapSearchRequest(HttpServletRequest request){
     OccurrenceHeatmapSearchRequest occurrenceHeatmapSearchRequest = new OccurrenceHeatmapSearchRequest();
     final String q = request.getParameter(WebserviceParameter.PARAM_QUERY_STRING);
-    final String highlightValue = request.getParameter(WebserviceParameter.PARAM_HIGHLIGHT);
 
     if (!Strings.isNullOrEmpty(q)) {
       occurrenceHeatmapSearchRequest.setQ(q);
@@ -67,9 +66,29 @@ public class OccurrenceSearchHeatmapRequestProvider {
   private static String getGeometryFromXY(HttpServletRequest request) {
     int x = HttpParamsUtils.getIntParam(request, "x", 0);
     int y = HttpParamsUtils.getIntParam(request, "y", 0);
-    int z = HttpParamsUtils.getIntParam(request, "y", 0);
-    Rectangle rect = MercatorProjectionUtil.getTileRect(x, y, z).getBounds();
+    int z = HttpParamsUtils.getIntParam(request, "z", 0);
+    Rectangle rect = getTileRect(x, y, z).getBounds();
     return "[\""+ rect.getMinX()  + " " + rect.getMinY() + "\" TO \"" + rect.getMaxX() + " " + rect.getMaxY() +  "\"]";
+  }
+
+  public static Rectangle2D.Double getTileRect(int x, int y, int zoom) {
+    int tilesAtThisZoom = 1 << zoom;
+    double lngWidth = 360.0 / tilesAtThisZoom; // width in degrees longitude
+    double lng = -180 + (x * lngWidth); // left edge in degrees longitude
+
+    double latHeightMerc = 1.0 / tilesAtThisZoom; // height in "normalized" mercator 0,0 top left
+    double topLatMerc = y * latHeightMerc; // top edge in "normalized" mercator 0,0 top left
+    double bottomLatMerc = topLatMerc + latHeightMerc;
+
+    // convert top and bottom lat in mercator to degrees
+    // note that in fact the coordinates go from about -85 to +85 not -90 to 90!
+    double bottomLat = Math.toDegrees((2 * Math.atan(Math.exp(Math.PI * (1 - (2 * bottomLatMerc))))) - (Math.PI / 2));
+
+    double topLat = Math.toDegrees((2 * Math.atan(Math.exp(Math.PI * (1 - (2 * topLatMerc))))) - (Math.PI / 2));
+
+    double latHeight = topLat - bottomLat;
+
+    return new Rectangle2D.Double(lng, bottomLat, lngWidth, latHeight);
   }
 
   private static OccurrenceSearchParameter findSearchParam(String name) {
