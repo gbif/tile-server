@@ -221,10 +221,12 @@ public class DensityTileRenderer extends CubeTileRenderer {
 
     ObjectNode node = MAPPER.createObjectNode();
     node.put("count", count);
-    node.put("minimumLatitude", minimumLatitude);
-    node.put("minimumLongitude", minimumLongitude);
-    node.put("maximumLatitude", maximumLatitude);
-    node.put("maximumLongitude", maximumLongitude);
+    if (count>0) {
+      node.put("minimumLatitude", minimumLatitude);
+      node.put("minimumLongitude", minimumLongitude);
+      node.put("maximumLatitude", maximumLatitude);
+      node.put("maximumLongitude", maximumLongitude);
+    }
     MAPPER.writeValue(resp.getOutputStream(), node);
     resp.flushBuffer();
   }
