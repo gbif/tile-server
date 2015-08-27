@@ -1,8 +1,14 @@
-package org.gbif.metrics.tile;
+package org.gbif.occurrence.heatmap;
 
-import org.gbif.api.model.occurrence.search.HeatMapResponse;
+import org.gbif.api.model.occurrence.search.HeatmapResponse;
 import org.gbif.api.service.occurrence.OccurrenceSearchService;
+import org.gbif.maps.MetadataProvider;
 import org.gbif.metrics.cube.tile.density.Layer;
+import org.gbif.metrics.tile.ColorPalette;
+import org.gbif.metrics.tile.DensityColorPaletteFactory;
+import org.gbif.metrics.tile.HSBPalette;
+import org.gbif.metrics.tile.NamedPalette;
+import org.gbif.metrics.tile.PNGWriter;
 import org.gbif.metrics.tile.utils.HttpParamsUtils;
 
 import java.io.IOException;
@@ -12,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -30,7 +37,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class OccurrenceHeatmapRenderer extends HttpServlet {
 
-  private static final String TILE_CUBE_AS_JSON_SUFFIX = ".tcjson";
+  private static final String JSON_SUFFIX = ".json";
 
   private static final Logger LOG = LoggerFactory.getLogger(OccurrenceHeatmapRenderer.class);
 
@@ -55,13 +62,12 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
     resp.setHeader("Access-Control-Allow-Origin", "*");
     resp.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Prototype-Version, X-CSRF-Token");
     resp.setHeader("Cache-Control", "public,max-age=60"); // encourage a 60 second caching by everybody
-    if (req.getRequestURI().endsWith(TILE_CUBE_AS_JSON_SUFFIX)) {
-      renderTileCubeAsJson(req, resp);
+    if (req.getRequestURI().endsWith(JSON_SUFFIX)) {
+      renderMetadata(req, resp);
     } else {
       renderPNG(req, resp);
     }
   }
-
 
   protected void renderPNG(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "image/png");
@@ -69,7 +75,8 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
       int x = HttpParamsUtils.getIntParam(req, "x", 0);
       int y = HttpParamsUtils.getIntParam(req, "y", 0);
       int z= HttpParamsUtils.getIntParam(req, "z", 0);
-      HeatMapResponse heatMapResponse = occurrenceSearchService.searchHeatMap(OccurrenceSearchHeatmapRequestProvider.buildOccurrenceHeatmapSearchRequest(req));
+      HeatmapResponse heatMapResponse = occurrenceSearchService.searchHeatMap(OccurrenceSearchHeatmapRequestProvider.buildOccurrenceHeatmapSearchRequest(
+        req));
       if (heatMapResponse != null) {
         // add a header to help in debugging issues
         resp.setHeader("X-GBIF-Total-Count", heatMapResponse.getCount().toString());
@@ -105,7 +112,7 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
             final Float hue = HttpParamsUtils.extractFloat(req, "hue", false);
             p = hue!=null ? new HSBPalette(hue) : new HSBPalette();
           }
-          PNGWriter.write(heatMapResponse, resp.getOutputStream(), z,x,y,p);
+          PNGWriter.write(heatMapResponse, resp.getOutputStream(), z, x, y, p);
         } finally {
           context.stop();
         }
@@ -123,36 +130,12 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
     resp.flushBuffer();
   }
 
-  protected void  renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    resp.setHeader("Content-Type", "application/json");
-
-   /* try {
-      Optional<DensityTile> tile = getTile(req, DensityCube.INSTANCE);
-      if (tile.isPresent()) {
-        resp.setHeader("X-GBIF-Total-Count", String.valueOf(accumulate(tile.get())));
-        final TimerContext context = tcJsonRenderTimer.time();
-        try {
-          resp.setHeader("Content-Encoding", "gzip");
-          GZIPOutputStream os = new GZIPOutputStream(resp.getOutputStream());
-          TileCubesWriter.jsonNotation(tile.get(), os);
-          os.flush();
-
-        } finally {
-          context.stop();
-        }
-      } else {
-        resp.getOutputStream().write(TileCubesWriter.EMPTY_TILE_CUBE);
-      }
-    } catch (IllegalArgumentException e) {
-      // If we couldn't get the content from the request
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-    } catch (Exception e) {
-      // We are unable to get or render the tile
-      LOG.error(e.getMessage(), e);
-      resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Tile server is out of action, please try later");
-    } finally {
-      resp.flushBuffer();
-    }         */
+  /**
+   * Writes the metadata in json format.
+   */
+  private void renderMetadata(HttpServletRequest req, HttpServletResponse resp) throws IOException,ServletException {
+    HeatmapResponse heatMapResponse = occurrenceSearchService.searchHeatMap(OccurrenceSearchHeatmapRequestProvider.buildOccurrenceHeatmapSearchRequest(
+      req));
+    MetadataProvider.renderMetadata(req,resp,heatMapResponse.getCount(),heatMapResponse.getMinY(),heatMapResponse.getMinX(),heatMapResponse.getMaxY(),heatMapResponse.getMaxX());
   }
-
 }

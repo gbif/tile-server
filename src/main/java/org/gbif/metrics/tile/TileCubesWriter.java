@@ -1,6 +1,5 @@
 package org.gbif.metrics.tile;
 
-import org.gbif.api.model.occurrence.search.HeatMapResponse;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
 

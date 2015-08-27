@@ -1,10 +1,9 @@
-package org.gbif.metrics.tile;
+package org.gbif.occurrence.heatmap;
 
 import org.gbif.api.model.occurrence.search.OccurrenceHeatmapSearchRequest;
 import org.gbif.api.model.occurrence.search.OccurrenceSearchParameter;
 import org.gbif.api.util.SearchTypeValidator;
 import org.gbif.api.util.VocabularyUtils;
-import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.tile.utils.HttpParamsUtils;
 import org.gbif.ws.util.WebserviceParameter;
 
@@ -19,13 +18,15 @@ import com.google.common.collect.Lists;
 
 public class OccurrenceSearchHeatmapRequestProvider {
 
+  public static final String POLYGON_PATTERN = "POLYGON((%s))";
+
 
   public static OccurrenceHeatmapSearchRequest buildOccurrenceHeatmapSearchRequest(HttpServletRequest request){
     OccurrenceHeatmapSearchRequest occurrenceHeatmapSearchRequest = new OccurrenceHeatmapSearchRequest();
     final String q = request.getParameter(WebserviceParameter.PARAM_QUERY_STRING);
 
     if (!Strings.isNullOrEmpty(q)) {
-      occurrenceHeatmapSearchRequest.setQ(q);
+      occurrenceHeatmapSearchRequest.getSearchRequest().setQ(q);
     }
     // find search parameter enum based filters
     setSearchParams(occurrenceHeatmapSearchRequest, request);
@@ -42,31 +43,21 @@ public class OccurrenceSearchHeatmapRequestProvider {
       OccurrenceSearchParameter p = findSearchParam(entry.getKey());
       if (p != null) {
         for (String val : removeEmptyParameters(entry.getValue())) {
-          // validate value for certain types
-          SearchTypeValidator.validate(p, val);
-          occurrenceHeatmapSearchRequest.addParameter(p, val);
+          if(OccurrenceSearchParameter.GEOMETRY == p) {
+            String polygon =  String.format(POLYGON_PATTERN,val);
+            occurrenceHeatmapSearchRequest.getSearchRequest().addParameter(p, polygon);
+          } else {
+            SearchTypeValidator.validate(p, val);
+            occurrenceHeatmapSearchRequest.getSearchRequest().addParameter(p, val);
+          }
         }
       }
     }
     int x = HttpParamsUtils.getIntParam(request, "x", 0);
     int y = HttpParamsUtils.getIntParam(request, "y", 0);
     int z = HttpParamsUtils.getIntParam(request, "z", 0);
-    System.out.println("zoom: " + z);
     occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(x, y, z));
-    occurrenceHeatmapSearchRequest.setGridLevel(gridLevel(z));
-  }
-
-  private static int gridLevel(int zoom) {
-    final int minGridLevel = 3;
-    if( zoom < 3){
-      return minGridLevel;
-    } else if (zoom <= 6) {
-      return minGridLevel + 1;
-    } else if (zoom < 11) {
-      return minGridLevel + 2;
-    } else {
-      return minGridLevel + 3;
-    }
+    occurrenceHeatmapSearchRequest.setZoom(z);
   }
 
   /**

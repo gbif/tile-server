@@ -1,6 +1,7 @@
 package org.gbif.metrics.tile;
 
-import org.gbif.api.model.occurrence.search.HeatMapResponse;
+import org.gbif.api.model.occurrence.search.HeatmapResponse;
+import org.gbif.maps.MercatorUtil;
 import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
@@ -28,35 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PNGWriter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PNGWriter.class);
-
-  static class Chunk extends DataOutputStream {
-
-    final CRC32 crc;
-    final ByteArrayOutputStream baos;
-
-    Chunk(int chunkType) throws IOException {
-      this(chunkType, new ByteArrayOutputStream(), new CRC32());
-    }
-
-    private Chunk(int chunkType, ByteArrayOutputStream baos, CRC32 crc) throws IOException {
-      super(new CheckedOutputStream(baos, crc));
-      this.crc = crc;
-      this.baos = baos;
-
-      writeInt(chunkType);
-    }
-
-    public void writeTo(DataOutputStream out) throws IOException {
-      flush();
-      out.writeInt(baos.size() - 4);
-      baos.writeTo(out);
-      out.writeInt((int) crc.getValue());
-    }
-  }
-
   public static final byte[] EMPTY_TILE;
-
+  private static final Logger LOG = LoggerFactory.getLogger(PNGWriter.class);
   // see the PNG specification
   private static final byte[] SIGNATURE = {(byte) 137, 80, 78, 71, 13, 10, 26, 10};
   private static final int IHDR = 0x49484452;
@@ -67,7 +41,6 @@ public class PNGWriter {
   private static final byte FILTER_NONE = 0;
   private static final byte INTERLACE_NONE = 0;
   private static final int TILE_SIZE = 256;
-
   // This has to come after the rest of the static initialized fields
   static {
     ByteArrayOutputStream baos = null;
@@ -221,10 +194,10 @@ public class PNGWriter {
   /**
    * Writes the data to the stream as a PNG.
    */
-  public static void write(HeatMapResponse heatMapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
+  public static void write(HeatmapResponse heatmapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
     throws IOException {
     // don't waste time setting up PNG if no data
-    if (heatMapResponse.getCountsInts2D() != null && !heatMapResponse.getCountsInts2D().isEmpty()) {
+    if (heatmapResponse.getCountsInts2D() != null && !heatmapResponse.getCountsInts2D().isEmpty()) {
 
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
@@ -232,17 +205,19 @@ public class PNGWriter {
       byte[] b = new byte[TILE_SIZE * TILE_SIZE];
       byte[] a = new byte[TILE_SIZE * TILE_SIZE];
 
-      List<List<Integer>> countsInts = heatMapResponse.getCountsInts2D();
+      List<List<Integer>> countsInts = heatmapResponse.getCountsInts2D();
       // determine the pixels covered by the cell at the zoom level, and paint them
       for (int row = 0; row <  countsInts.size(); row++) {
         if(countsInts.get(row) != null){
           for(int column = 0; column < countsInts.get(row).size(); column++) {
             Integer count = countsInts.get(row).get(column);
             if(count != null && count > 0) {
-              LatLngBoundingBox box = new LatLngBoundingBox(heatMapResponse.getMinLng(column),
-                                                            heatMapResponse.getMinLat(row),
-                                                            heatMapResponse.getMaxLng(column),
-                                                            heatMapResponse.getMaxLat(row));
+              LatLngBoundingBox box = new LatLngBoundingBox(heatmapResponse.getMinLng(column),
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(
+                                                              row)),
+                                                            heatmapResponse.getMaxLng(column),
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(
+                                                              row)));
               // only paint if the cell is on the tile
               //if (intersect(box, cellExtent)) {
 
@@ -290,6 +265,31 @@ public class PNGWriter {
     } else {
       // always return a valid image
       out.write(EMPTY_TILE);
+    }
+  }
+
+  static class Chunk extends DataOutputStream {
+
+    final CRC32 crc;
+    final ByteArrayOutputStream baos;
+
+    Chunk(int chunkType) throws IOException {
+      this(chunkType, new ByteArrayOutputStream(), new CRC32());
+    }
+
+    private Chunk(int chunkType, ByteArrayOutputStream baos, CRC32 crc) throws IOException {
+      super(new CheckedOutputStream(baos, crc));
+      this.crc = crc;
+      this.baos = baos;
+
+      writeInt(chunkType);
+    }
+
+    public void writeTo(DataOutputStream out) throws IOException {
+      flush();
+      out.writeInt(baos.size() - 4);
+      baos.writeTo(out);
+      out.writeInt((int) crc.getValue());
     }
   }
 }

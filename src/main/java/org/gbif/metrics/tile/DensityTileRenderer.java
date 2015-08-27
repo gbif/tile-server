@@ -1,5 +1,6 @@
 package org.gbif.metrics.tile;
 
+import org.gbif.maps.MetadataProvider;
 import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityCube;
 import org.gbif.metrics.cube.tile.density.DensityTile;
@@ -176,11 +177,6 @@ public class DensityTileRenderer extends CubeTileRenderer {
   }
 
   protected void renderMetadata(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    // as a tile server, we support cross domain requests
-    resp.setHeader("Access-Control-Allow-Origin", "*");
-    resp.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Prototype-Version, X-CSRF-Token");
-    resp.setHeader("Cache-Control", "public,max-age=60"); // encourage a 60 second caching by everybody
-    resp.setHeader("Content-Type", "application/json");
 
     Optional<DensityTile> tile = getTile(req, DensityCube.INSTANCE);
 
@@ -214,15 +210,13 @@ public class DensityTileRenderer extends CubeTileRenderer {
         }
       }
     }
-
-    ObjectNode node = MAPPER.createObjectNode();
-    node.put("count", count);
-    node.put("minimumLatitude", minimumLatitude);
-    node.put("minimumLongitude", minimumLongitude);
-    node.put("maximumLatitude", maximumLatitude);
-    node.put("maximumLongitude", maximumLongitude);
-    MAPPER.writeValue(resp.getOutputStream(), node);
-    resp.flushBuffer();
+    MetadataProvider.renderMetadata(req,
+                                    resp,
+                                    count,
+                                    minimumLatitude,
+                                    minimumLongitude,
+                                    maximumLatitude,
+                                    maximumLongitude);
   }
 
   /**
