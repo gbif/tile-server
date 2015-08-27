@@ -210,13 +210,7 @@ public class DensityTileRenderer extends CubeTileRenderer {
         }
       }
     }
-    MetadataProvider.renderMetadata(req,
-                                    resp,
-                                    count,
-                                    minimumLatitude,
-                                    minimumLongitude,
-                                    maximumLatitude,
-                                    maximumLongitude);
+    MetadataProvider.renderMetadata(req,resp,count,minimumLatitude,minimumLongitude,maximumLatitude,maximumLongitude);
   }
 
   /**

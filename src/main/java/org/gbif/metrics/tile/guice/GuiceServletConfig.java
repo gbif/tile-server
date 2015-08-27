@@ -37,76 +37,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
   private static final String TYPE_HBASE = "hbase";
   private static final int DEFAULT_ZOOMS = 1; // for some sanity
   private static final int DEFAULT_PIXELS_PER_CLUSTER = 4; // for some sanity
-  @Override
-  protected Injector getInjector() {
-    try {
-      final Properties properties = PropertiesUtil.readFromFile(ConfUtils.getAppConfFile(APPLICATION_PROPERTIES));
-      List<Module> modules = Lists.newArrayList();
-      modules.add(new InstrumentationModule());
-      modules.add(new MetricsModule(properties));
-      modules.add(new OccurrenceSearchModule(properties));
-      modules.add(new OccurrencePersistenceModule(properties));
-      modules.add(new ChecklistBankWsClientModule(properties, true, true));
-      if (TYPE_CSV_MEMORY.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
-        LOG.info("Configuration declares a CSV in-memory DataCube");
-        int zooms = getInt(properties, PROP_ZOOMS, DEFAULT_ZOOMS);
-        int pixelsPerCluster = getInt(properties, PROP_PIXELS_PER_CLUSTER, DEFAULT_PIXELS_PER_CLUSTER);
-        modules.add(new InMemoryTileModule(properties.get(PROP_CSV).toString(), zooms, pixelsPerCluster));
-      } else if (TYPE_HBASE.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
-        LOG.info("Configuration declares an HBase backed DataCube");
-        modules.add(new DensityCubeHBaseModule(properties));
-      } else {
-        throw new RuntimeException(PROP_STORAGE_TYPE + " is not a valid. Use one of " + Joiner.on(",")
-          .join(TYPE_CSV_MEMORY, TYPE_HBASE));
-      }
-      modules.add(new ServletModule() {
-        @Override
-        protected void configureServlets() {
-          serve("/map/density/*").with(DensityTileRenderer.class);
-          serve("/map/occurrence/*").with(OccurrenceHeatmapRenderer.class);
-        }
-      });
-      return Guice.createInjector(modules);
-    } catch(Exception ex){
-      Throwables.propagate(ex);
-    }
-    throw new IllegalStateException("Error initiating web application");
-  }
-  @Override
-  protected Injector getInjector() {
-    try {
-      final Properties properties = PropertiesUtil.readFromFile(ConfUtils.getAppConfFile(APPLICATION_PROPERTIES));
-      List<Module> modules = Lists.newArrayList();
-      modules.add(new InstrumentationModule());
-      modules.add(new MetricsModule(properties));
-      modules.add(new OccurrenceSearchModule(properties));
-      modules.add(new OccurrencePersistenceModule(properties));
-      modules.add(new ChecklistBankWsClientModule(properties, true, true));
-      if (TYPE_CSV_MEMORY.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
-        LOG.info("Configuration declares a CSV in-memory DataCube");
-        int zooms = getInt(properties, PROP_ZOOMS, DEFAULT_ZOOMS);
-        int pixelsPerCluster = getInt(properties, PROP_PIXELS_PER_CLUSTER, DEFAULT_PIXELS_PER_CLUSTER);
-        modules.add(new InMemoryTileModule(properties.get(PROP_CSV).toString(), zooms, pixelsPerCluster));
-      } else if (TYPE_HBASE.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
-        LOG.info("Configuration declares an HBase backed DataCube");
-        modules.add(new DensityCubeHBaseModule(properties));
-      } else {
-        throw new RuntimeException(PROP_STORAGE_TYPE + " is not a valid. Use one of " + Joiner.on(",")
-          .join(TYPE_CSV_MEMORY, TYPE_HBASE));
-      }
-      modules.add(new ServletModule() {
-        @Override
-        protected void configureServlets() {
-          serve("/map/density/*").with(DensityTileRenderer.class);
-          serve("/map/occurrence/*").with(OccurrenceHeatmapRenderer.class);
-        }
-      });
-      return Guice.createInjector(modules);
-    } catch(Exception ex){
-      Throwables.propagate(ex);
-    }
-    throw new IllegalStateException("Error initiating web application");
-  }  /**
+
+  /**
    * Gets an int value from the Properties object.
    * If the key doesn't contain a value, the default value is returned.
    */
@@ -116,5 +48,41 @@ public class GuiceServletConfig extends GuiceServletContextListener {
     } catch (NumberFormatException e1) {
       return defaultValue;
     }
+  }
+
+  @Override
+  protected Injector getInjector() {
+    try {
+      final Properties properties = PropertiesUtil.readFromFile(ConfUtils.getAppConfFile(APPLICATION_PROPERTIES));
+      List<Module> modules = Lists.newArrayList();
+      modules.add(new InstrumentationModule());
+      modules.add(new MetricsModule(properties));
+      modules.add(new OccurrenceSearchModule(properties));
+      modules.add(new OccurrencePersistenceModule(properties));
+      modules.add(new ChecklistBankWsClientModule(properties, true, true));
+      if (TYPE_CSV_MEMORY.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
+        LOG.info("Configuration declares a CSV in-memory DataCube");
+        int zooms = getInt(properties, PROP_ZOOMS, DEFAULT_ZOOMS);
+        int pixelsPerCluster = getInt(properties, PROP_PIXELS_PER_CLUSTER, DEFAULT_PIXELS_PER_CLUSTER);
+        modules.add(new InMemoryTileModule(properties.get(PROP_CSV).toString(), zooms, pixelsPerCluster));
+      } else if (TYPE_HBASE.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
+        LOG.info("Configuration declares an HBase backed DataCube");
+        modules.add(new DensityCubeHBaseModule(properties));
+      } else {
+        throw new RuntimeException(PROP_STORAGE_TYPE + " is not a valid. Use one of " + Joiner.on(",")
+          .join(TYPE_CSV_MEMORY, TYPE_HBASE));
+      }
+      modules.add(new ServletModule() {
+        @Override
+        protected void configureServlets() {
+          serve("/map/density/*").with(DensityTileRenderer.class);
+          serve("/map/occurrence/*").with(OccurrenceHeatmapRenderer.class);
+        }
+      });
+      return Guice.createInjector(modules);
+    } catch(Exception ex){
+      Throwables.propagate(ex);
+    }
+    throw new IllegalStateException("Error initiating web application");
   }
 }

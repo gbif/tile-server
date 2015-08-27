@@ -213,11 +213,9 @@ public class PNGWriter {
             Integer count = countsInts.get(row).get(column);
             if(count != null && count > 0) {
               LatLngBoundingBox box = new LatLngBoundingBox(heatmapResponse.getMinLng(column),
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(
-                                                              row)),
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(row)),
                                                             heatmapResponse.getMaxLng(column),
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(
-                                                              row)));
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)));
               // only paint if the cell is on the tile
               //if (intersect(box, cellExtent)) {
 
