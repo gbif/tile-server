@@ -19,9 +19,6 @@ import com.google.common.collect.Lists;
 
 public class OccurrenceSearchHeatmapRequestProvider {
 
-  private static final String PARAM_HEATMAP_GEOM = "geom";
-  private static final String PARAM_HEATMAP_GRID_LEVEL = "gridLevel";
-
 
   public static OccurrenceHeatmapSearchRequest buildOccurrenceHeatmapSearchRequest(HttpServletRequest request){
     OccurrenceHeatmapSearchRequest occurrenceHeatmapSearchRequest = new OccurrenceHeatmapSearchRequest();
@@ -51,11 +48,24 @@ public class OccurrenceSearchHeatmapRequestProvider {
         }
       }
     }
+    int x = HttpParamsUtils.getIntParam(request, "x", 0);
+    int y = HttpParamsUtils.getIntParam(request, "y", 0);
+    int z = HttpParamsUtils.getIntParam(request, "z", 0);
+    System.out.println("zoom: " + z);
+    occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(x, y, z));
+    occurrenceHeatmapSearchRequest.setGridLevel(gridLevel(z));
+  }
 
-    occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(request));
-        String heatMapGridLevel = request.getParameter(PARAM_HEATMAP_GRID_LEVEL);
-    if(!Strings.isNullOrEmpty(heatMapGridLevel)){
-      occurrenceHeatmapSearchRequest.setGridLevel(Integer.parseInt(heatMapGridLevel));
+  private static int gridLevel(int zoom) {
+    final int minGridLevel = 3;
+    if( zoom < 3){
+      return minGridLevel;
+    } else if (zoom <= 6) {
+      return minGridLevel + 1;
+    } else if (zoom < 11) {
+      return minGridLevel + 2;
+    } else {
+      return minGridLevel + 3;
     }
   }
 
@@ -63,10 +73,7 @@ public class OccurrenceSearchHeatmapRequestProvider {
    *
    * @return a bounding box calculated from the X,Y coordinates
    */
-  private static String getGeometryFromXY(HttpServletRequest request) {
-    int x = HttpParamsUtils.getIntParam(request, "x", 0);
-    int y = HttpParamsUtils.getIntParam(request, "y", 0);
-    int z = HttpParamsUtils.getIntParam(request, "z", 0);
+  private static String getGeometryFromXY(int x, int y, int z) {
     Rectangle rect = getTileRect(x, y, z).getBounds();
     return "[\""+ rect.getMinX()  + " " + rect.getMinY() + "\" TO \"" + rect.getMaxX() + " " + rect.getMaxY() +  "\"]";
   }
