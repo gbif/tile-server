@@ -4,11 +4,11 @@ import org.gbif.api.model.occurrence.search.OccurrenceHeatmapSearchRequest;
 import org.gbif.api.model.occurrence.search.OccurrenceSearchParameter;
 import org.gbif.api.util.SearchTypeValidator;
 import org.gbif.api.util.VocabularyUtils;
+import org.gbif.maps.MercatorUtil;
 import org.gbif.metrics.tile.utils.HttpParamsUtils;
 import org.gbif.ws.util.WebserviceParameter;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -65,28 +65,8 @@ public class OccurrenceSearchHeatmapRequestProvider {
    * @return a bounding box calculated from the X,Y coordinates
    */
   private static String getGeometryFromXY(int x, int y, int z) {
-    Rectangle rect = getTileRect(x, y, z).getBounds();
+    Rectangle rect =  MercatorUtil.getTileRect(x, y, z).getBounds();
     return "[\""+ rect.getMinX()  + " " + rect.getMinY() + "\" TO \"" + rect.getMaxX() + " " + rect.getMaxY() +  "\"]";
-  }
-
-  public static Rectangle2D.Double getTileRect(int x, int y, int zoom) {
-    int tilesAtThisZoom = 1 << zoom;
-    double lngWidth = 360.0 / tilesAtThisZoom; // width in degrees longitude
-    double lng = -180 + (x * lngWidth); // left edge in degrees longitude
-
-    double latHeightMerc = 1.0 / tilesAtThisZoom; // height in "normalized" mercator 0,0 top left
-    double topLatMerc = y * latHeightMerc; // top edge in "normalized" mercator 0,0 top left
-    double bottomLatMerc = topLatMerc + latHeightMerc;
-
-    // convert top and bottom lat in mercator to degrees
-    // note that in fact the coordinates go from about -85 to +85 not -90 to 90!
-    double bottomLat = Math.toDegrees((2 * Math.atan(Math.exp(Math.PI * (1 - (2 * bottomLatMerc))))) - (Math.PI / 2));
-
-    double topLat = Math.toDegrees((2 * Math.atan(Math.exp(Math.PI * (1 - (2 * topLatMerc))))) - (Math.PI / 2));
-
-    double latHeight = topLat - bottomLat;
-
-    return new Rectangle2D.Double(lng, bottomLat, lngWidth, latHeight);
   }
 
   private static OccurrenceSearchParameter findSearchParam(String name) {
