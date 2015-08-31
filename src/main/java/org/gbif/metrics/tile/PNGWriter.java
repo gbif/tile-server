@@ -7,6 +7,7 @@ import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
 import org.gbif.common.parsers.geospatial.LatLngBoundingBox;
 
+import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -120,7 +121,7 @@ public class PNGWriter {
       byte[] a = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
 
       // paint the pixels for each cell in the tile
-      int cellsPerRow = DensityTile.TILE_SIZE / tile.getClusterSize();
+      int cellsPerRow = DensityTile.TILE_SIZE / tile.getClusterSize();   MercatorProjectionUtil s;
       Map<Integer, Integer> cells = mergedGrid(tile.layers(), layers);
       for (Entry<Integer, Integer> e : cells.entrySet()) {
         int cellId = e.getKey();
@@ -191,11 +192,17 @@ public class PNGWriter {
     }
   }
 
+  private static int clip(int value) {
+    return  Math.min(Math.max(value, 0), TILE_SIZE-1);
+  }
+
+
   /**
    * Writes the data to the stream as a PNG.
    */
   public static void write(HeatmapResponse heatmapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
     throws IOException {
+    Rectangle2D.Double tileRect = MercatorUtil.getTileRect(x, y, zoom);
     // don't waste time setting up PNG if no data
     if (heatmapResponse.getCountsInts2D() != null && !heatmapResponse.getCountsInts2D().isEmpty()) {
 
@@ -212,35 +219,33 @@ public class PNGWriter {
           for(int column = 0; column < countsInts.get(row).size(); column++) {
             Integer count = countsInts.get(row).get(column);
             if(count != null && count > 0) {
-              LatLngBoundingBox box = new LatLngBoundingBox(heatmapResponse.getMinLng(column),
+              final Rectangle2D.Double cell = new Rectangle2D.Double(heatmapResponse.getMinLng(column),
                                                             MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(row)),
-                                                            heatmapResponse.getMaxLng(column),
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)));
+                                                            heatmapResponse.getMaxLng(column) - heatmapResponse.getMinLng(column),
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)) - heatmapResponse.getMinLat(row));
               // only paint if the cell is on the tile
-              //if (intersect(box, cellExtent)) {
+              if (tileRect.contains(cell)) {
+                // pixel locations for the edges of the cell
+                int minX = MercatorProjectionUtil.getOffsetX(cell.getMinY(), cell.getMinX(), zoom);
+                int maxX = MercatorProjectionUtil.getOffsetX(cell.getMinY(), cell.getMaxX(), zoom);
+                // note Y inverts here
+                int maxY = MercatorProjectionUtil.getOffsetY(cell.getMinY(), cell.getMinX(), zoom);
+                int minY = MercatorProjectionUtil.getOffsetY(cell.getMaxY(), cell.getMaxX(), zoom);
 
-              // pixel locations for the edges of the cell
-              int minX = MercatorProjectionUtil.getOffsetX(box.getMinLat(), box.getMinLong(), zoom);
-              int maxX = MercatorProjectionUtil.getOffsetX(box.getMinLat(), box.getMaxLong(), zoom);
-              // note Y inverts here
-              int maxY = MercatorProjectionUtil.getOffsetY(box.getMinLat(), box.getMinLong(), zoom);
-              int minY = MercatorProjectionUtil.getOffsetY(box.getMaxLat(), box.getMaxLong(), zoom);
+                minX = clip(minX);
+                maxX = clip(maxX);
+                minY = clip(minY);
+                maxY = clip(maxY);
 
-                minX = minX < 0 ? 0 : minX;
-                maxX = maxX < 0 ? 0 : maxX;
-                minY = minY < 0 ? 0 : minY;
-                maxY = maxY < 0 ? 0 : maxY;
-                minX = minX > TILE_SIZE ? TILE_SIZE : minX;
-                maxX = maxX > TILE_SIZE ? TILE_SIZE : maxX;
-                minY = minY > TILE_SIZE ? TILE_SIZE : minY;
-                maxY = maxY > TILE_SIZE ? TILE_SIZE : maxY;
+                maxX = maxX < minX ? TILE_SIZE  - 1: maxX;
+                maxY = maxY < minY ? TILE_SIZE - 1: maxY;  // this one might be wrong for the inversion thing I don’t get right now
 
                 //LOG.info("{},{} to {},{}", maxX,maxY,minX,minY);
                 //LOG.info("{} to {}", maxX  - minX , maxY - minY);
 
 
                  for (int px = minX; px <= maxX; px++) {
-                   for (int py = maxY; py >= minY; py--) {
+                   for (int py = minY; py <= maxY; py++) {
                      paint(r,
                            g,
                            b,
@@ -253,7 +258,9 @@ public class PNGWriter {
                    }
                  }
 
-              //}
+              }   else {
+                System.out.println("Title " + cell.toString() + " out of " + tileRect.toString());
+              }
             }
           }
         }
