@@ -188,6 +188,22 @@ public class DensityTileRenderer extends CubeTileRenderer {
 
     Optional<DensityTile> tile = getTile(req, DensityCube.INSTANCE);
 
+    // extract the layers from the request (if any)
+    String[] layerStrings = req.getParameterValues("layer");
+    List<Layer> layers = Lists.newArrayList();
+    if (layerStrings != null) {
+      for (String ls : layerStrings) {
+        try {
+          layers.add(Layer.valueOf(ls));
+          LOG.debug("Layer requested: {}", Layer.valueOf(ls));
+        } catch (Exception e) {
+          LOG.warn("Invalid layer supplied, ignoring: " + ls);
+        }
+      }
+    } else {
+      LOG.debug("No layers returned, merging all layers");
+    }
+
     int count = 0;
     // note: set to opposite extremes to allow efficient comparison
     double minimumLatitude = 90.0;
@@ -200,21 +216,25 @@ public class DensityTileRenderer extends CubeTileRenderer {
 
       // scan over all layers, accumulating the total and extracting the extents
       for (Map.Entry<Layer, Map<Integer, Integer>> e : densityTile.layers().entrySet()) {
-        for (Map.Entry<Integer, Integer> pixels : e.getValue().entrySet()) {
 
-          count += pixels.getValue();
+        // Only accumulate the counts if the layer is specified in the request, or none are given
+        if (layers.isEmpty() ||layers.contains(e.getKey())) {
+          for (Map.Entry<Integer, Integer> pixels : e.getValue().entrySet()) {
 
-          // get the pixel and determine the lat and lng for the pixel
-          int pixel = pixels.getKey();
-          int pixelX = pixel % DensityTile.TILE_SIZE;
-          int pixelY = (int) Math.floor(pixel / DensityTile.TILE_SIZE);
-          double lat = pixelYToLatitude(pixelY, extractInt(req, REQ_Z, true));
-          double lng = pixelXToLongitude(pixelX, extractInt(req, REQ_Z, true));
+            count += pixels.getValue();
 
-          minimumLatitude = minimumLatitude < lat ? minimumLatitude : lat;
-          minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
-          maximumLatitude = maximumLatitude > lat ? maximumLatitude : lat;
-          maximumLongitude = maximumLongitude > lng ? maximumLongitude : lng;
+            // get the pixel and determine the lat and lng for the pixel
+            int pixel = pixels.getKey();
+            int pixelX = pixel % DensityTile.TILE_SIZE;
+            int pixelY = (int) Math.floor(pixel / DensityTile.TILE_SIZE);
+            double lat = pixelYToLatitude(pixelY, extractInt(req, REQ_Z, true));
+            double lng = pixelXToLongitude(pixelX, extractInt(req, REQ_Z, true));
+
+            minimumLatitude = minimumLatitude < lat ? minimumLatitude : lat;
+            minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
+            maximumLatitude = maximumLatitude > lat ? maximumLatitude : lat;
+            maximumLongitude = maximumLongitude > lng ? maximumLongitude : lng;
+          }
         }
       }
     }
