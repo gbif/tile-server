@@ -218,6 +218,14 @@ public class PNGWriter {
       LOG.info("Tile boundary in normalized[{}, {}, {},{}]",
                tileBoundarySW.getX(), tileBoundaryNE.getX(), tileBoundarySW.getY(), tileBoundaryNE.getY());
 
+      int mintX = getOffsetX(tileBoundarySW.getX(), zoom);
+      int maxtX = getOffsetX(tileBoundaryNE.getX(), zoom);
+      int mintY = getOffsetY(tileBoundarySW.getY(), y, zoom);
+      int maxtY = getOffsetY(tileBoundaryNE.getY(), y, zoom);
+
+      LOG.info("X:{}-{}  Y:{},{}", mintX, maxtX, mintY, maxtY);
+
+
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
       byte[] g = new byte[TILE_SIZE * TILE_SIZE];
@@ -246,7 +254,7 @@ public class PNGWriter {
               Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
 
               // only paint if the cell falls on the tile (noting again higher Y means further south)
-              if (true || cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
+              if (cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
                 && cellSW.getY() >= tileBoundaryNE.getY() && cellNE.getY() <= tileBoundarySW.getY()) {
 
                 // clip normalized pixel locations to the edges of the cell
@@ -255,11 +263,23 @@ public class PNGWriter {
                 double minYAsNorm = Math.max(cellNE.getY(), tileBoundaryNE.getY());
                 double maxYAsNorm = Math.min(cellSW.getY(), tileBoundarySW.getY());
 
+                //minXAsNorm = cellSW.getX();
+                //maxXAsNorm = cellNE.getX();
+                //minYAsNorm = cellNE.getY();
+                //maxYAsNorm = cellSW.getY();
+
                 // project normalized pixel locations onto offsets within the tile
                 int minX = getOffsetX(minXAsNorm, zoom);
                 int maxX = getOffsetX(maxXAsNorm, zoom);
+                // tiles are indexed 0->255, but if the right of the cell (maxX) is on the tile boundary, this
+                // will be detected (correctly) as the index 0 for the next tile.  Reset that.
+                maxX = (minX > maxX) ? TILE_SIZE : maxX;
+
                 int minY = getOffsetY(minYAsNorm, y, zoom);
                 int maxY = getOffsetY(maxYAsNorm, y, zoom);
+                // tiles are indexed 0->255, but if the bottom of the cell (maxY) is on the tile boundary, this
+                // will be detected (correctly) as the index 0 for the next tile.  Reset that.
+                minY = (minY > maxY) ? TILE_SIZE : maxX;
 
                 //LOG.info("X:{}-{}  Y:{},{}", minX, maxX, minY, maxY);
 
