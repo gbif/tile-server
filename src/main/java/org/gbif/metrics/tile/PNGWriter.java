@@ -7,6 +7,7 @@ import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
 import org.gbif.common.parsers.geospatial.LatLngBoundingBox;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -202,9 +203,20 @@ public class PNGWriter {
    */
   public static void write(HeatmapResponse heatmapResponse, OutputStream out, int zoom, int x, int y, ColorPalette palette)
     throws IOException {
-    Rectangle2D.Double tileRect = MercatorUtil.getTileRect(x, y, zoom);
+
     // don't waste time setting up PNG if no data
     if (heatmapResponse.getCountsInts2D() != null && !heatmapResponse.getCountsInts2D().isEmpty()) {
+
+      // NOTE! MercatorUtil, not MercatorProjectionUtil which is wrong!!!
+      // TODO: Fix MercatorProjectionUtil.getTileRect
+      // tile boundary is is typical lat, lng coordinates
+      Rectangle2D.Double tileBoundary = MercatorUtil.getTileRect(x, y, zoom);
+      LOG.info("Tile boundary[{}, {}, {}, {}]",
+               tileBoundary.getMinX(), tileBoundary.getMaxX(), tileBoundary.getMinY(), tileBoundary.getMaxY());
+      Point2D tileBoundarySW = MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMinY(), tileBoundary.getMinX());
+      Point2D tileBoundaryNE =  MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMaxY(), tileBoundary.getMaxX());
+      LOG.info("Tile boundary in normalized[{}, {}, {},{}]",
+               tileBoundarySW.getX(), tileBoundaryNE.getX(), tileBoundarySW.getY(), tileBoundaryNE.getY());
 
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
@@ -213,58 +225,94 @@ public class PNGWriter {
       byte[] a = new byte[TILE_SIZE * TILE_SIZE];
 
       List<List<Integer>> countsInts = heatmapResponse.getCountsInts2D();
+
+      // TODO: Remove, this is just to help us determine the tile pixel extents
+      int x1 = 128,x2 = 128,y1 = 128,y2 = 128;
+
       // determine the pixels covered by the cell at the zoom level, and paint them
-      for (int row = 0; row <  countsInts.size(); row++) {
+      for (int row = 0; row < countsInts.size(); row++) {
         if(countsInts.get(row) != null){
           for(int column = 0; column < countsInts.get(row).size(); column++) {
             Integer count = countsInts.get(row).get(column);
             if(count != null && count > 0) {
+
               final Rectangle2D.Double cell = new Rectangle2D.Double(heatmapResponse.getMinLng(column),
                                                             MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(row)),
                                                             heatmapResponse.getMaxLng(column) - heatmapResponse.getMinLng(column),
                                                             MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)) - heatmapResponse.getMinLat(row));
-              // only paint if the cell is on the tile
-              if (tileRect.contains(cell)) {
-                // pixel locations for the edges of the cell
-                int minX = MercatorProjectionUtil.getOffsetX(cell.getMinY(), cell.getMinX(), zoom);
-                int maxX = MercatorProjectionUtil.getOffsetX(cell.getMinY(), cell.getMaxX(), zoom);
-                // note Y inverts here
-                int maxY = MercatorProjectionUtil.getOffsetY(cell.getMinY(), cell.getMinX(), zoom);
-                int minY = MercatorProjectionUtil.getOffsetY(cell.getMaxY(), cell.getMaxX(), zoom);
 
-                minX = clip(minX);
-                maxX = clip(maxX);
-                minY = clip(minY);
-                maxY = clip(maxY);
+              // get the extent of the cell in normalized pixelCoords, noting further South becomes maximum y
+              Point2D cellSW = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMinY(), cell.getMinX());
+              Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
 
-                maxX = maxX < minX ? TILE_SIZE  - 1: maxX;
-                maxY = maxY < minY ? TILE_SIZE - 1: maxY;  // this one might be wrong for the inversion thing I don’t get right now
+              // only paint if the cell falls on the tile (noting again higher Y means further south)
+              if (true || cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
+                && cellSW.getY() >= tileBoundaryNE.getY() && cellNE.getY() <= tileBoundarySW.getY()) {
 
-                //LOG.info("{},{} to {},{}", maxX,maxY,minX,minY);
-                //LOG.info("{} to {}", maxX  - minX , maxY - minY);
+                // clip normalized pixel locations to the edges of the cell
+                double minXAsNorm = Math.max(cellSW.getX(), tileBoundarySW.getX());
+                double maxXAsNorm = Math.min(cellNE.getX(), tileBoundaryNE.getX());
+                double minYAsNorm = Math.max(cellNE.getY(), tileBoundaryNE.getY());
+                double maxYAsNorm = Math.min(cellSW.getY(), tileBoundarySW.getY());
 
+                // project normalized pixel locations onto offsets within the tile
+                int minX = getOffsetX(minXAsNorm, zoom);
+                int maxX = getOffsetX(maxXAsNorm, zoom);
+                int minY = getOffsetY(minYAsNorm, y, zoom);
+                int maxY = getOffsetY(maxYAsNorm, y, zoom);
 
-                 for (int px = minX; px <= maxX; px++) {
-                   for (int py = minY; py <= maxY; py++) {
-                     paint(r,
-                           g,
-                           b,
-                           a,
-                           palette.red(count, zoom),
-                           palette.green(count, zoom),
-                           palette.blue(count, zoom),
-                           palette.alpha(count, zoom),
-                           px + (py * TILE_SIZE));
-                   }
+                //LOG.info("X:{}-{}  Y:{},{}", minX, maxX, minY, maxY);
+
+                // TODO: remove
+                x1 = x1<minX ? x1 : minX;
+                x2 = x2>maxX ? x2 : maxX;
+                y1 = y1<minY ? y1 : minY;
+                y2 = y2>maxY ? y2 : maxY;
+
+                // paint the pixels identified
+               for (int px = minX; px <= maxX; px++) {
+                 for (int py = minY; py <= maxY; py++) {
+                   paint(r,
+                         g,
+                         b,
+                         a,
+                         palette.red(count, zoom),
+                         palette.green(count, zoom),
+                         palette.blue(count, zoom),
+                         palette.alpha(count, zoom),
+                         px + (py * TILE_SIZE));
                  }
+               }
+              } else {
+                //LOG.error("CellSW[{}] and CellNE[{}] falls outside the tileSW[{}] tileNE[{}]", cellSW, cellNE, tileBoundarySW, tileBoundaryNE);
+              }
 
-              }   else {
-                System.out.println("Title " + cell.toString() + " out of " + tileRect.toString());
+              // paint a tile perimeter for helping to DEBUG
+              count = 10000000;
+              for (int px = 5; px <= 250; px++) {
+                for (int py = 5; py <= 250; py++) {
+
+                  if (px == 5 || px == 250 || py == 5 || py == 250) {
+                    paint(r,
+                          g,
+                          b,
+                          a,
+                          palette.red(count, zoom),
+                          palette.green(count, zoom),
+                          palette.blue(count, zoom),
+                          palette.alpha(count, zoom),
+                          px + (py * TILE_SIZE));
+                  }
+                }
               }
             }
           }
         }
       }
+
+      // for some reason at Z=1 we see only 0-254 and z=2 0-252 etc.  Something weird.
+      LOG.info("Final X:{}-{}  Y:{},{}", x1, x2, y1, y2);
+
       write(out, r, g, b, a);
 
     } else {
@@ -272,6 +320,26 @@ public class PNGWriter {
       out.write(EMPTY_TILE);
     }
   }
+
+  /**
+   * @return the X pixel offset within the tile
+   */
+  public static int getOffsetX(double x, int zoom) {
+    int scale = 1 << zoom;
+    x *= scale * TILE_SIZE;
+    return (int) (x % TILE_SIZE);
+  }
+
+
+  /**
+   * @return the Y pixel offset within the tile.
+   */
+  public static int getOffsetY(double y, int tileY, int zoom) {
+    int scale = 1 << zoom;
+    y *= scale * TILE_SIZE;
+    return (int) (y - (TILE_SIZE * tileY));
+  }
+
 
   static class Chunk extends DataOutputStream {
 
