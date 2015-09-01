@@ -246,7 +246,7 @@ public class PNGWriter {
               Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
 
               // only paint if the cell falls on the tile (noting again higher Y means further south)
-              if (true || cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
+              if (cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
                 && cellSW.getY() >= tileBoundaryNE.getY() && cellNE.getY() <= tileBoundarySW.getY()) {
 
                 // clip normalized pixel locations to the edges of the cell
