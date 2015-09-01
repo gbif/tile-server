@@ -279,7 +279,7 @@ public class PNGWriter {
                 int maxY = getOffsetY(maxYAsNorm, y, zoom);
                 // tiles are indexed 0->255, but if the bottom of the cell (maxY) is on the tile boundary, this
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
-                minY = (minY > maxY) ? TILE_SIZE : maxX;
+                maxY = (minY > maxY) ? TILE_SIZE : maxY;
 
                 //LOG.info("X:{}-{}  Y:{},{}", minX, maxX, minY, maxY);
 
