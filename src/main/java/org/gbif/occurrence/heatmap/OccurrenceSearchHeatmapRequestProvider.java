@@ -23,6 +23,10 @@ public class OccurrenceSearchHeatmapRequestProvider {
 
   public static OccurrenceHeatmapSearchRequest buildOccurrenceHeatmapSearchRequest(HttpServletRequest request){
     OccurrenceHeatmapSearchRequest occurrenceHeatmapSearchRequest = new OccurrenceHeatmapSearchRequest();
+    //no rows info is required
+    occurrenceHeatmapSearchRequest.getSearchRequest().setLimit(0);
+    occurrenceHeatmapSearchRequest.getSearchRequest().setOffset(0);
+
     final String q = request.getParameter(WebserviceParameter.PARAM_QUERY_STRING);
 
     if (!Strings.isNullOrEmpty(q)) {
