@@ -15,11 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OccurrenceSearchHeatmapRequestProvider {
 
   public static final String POLYGON_PATTERN = "POLYGON((%s))";
-
+  private static final Logger LOG = LoggerFactory.getLogger(OccurrenceSearchHeatmapRequestProvider.class);
 
   public static OccurrenceHeatmapSearchRequest buildOccurrenceHeatmapSearchRequest(HttpServletRequest request){
     OccurrenceHeatmapSearchRequest occurrenceHeatmapSearchRequest = new OccurrenceHeatmapSearchRequest();
@@ -60,7 +62,9 @@ public class OccurrenceSearchHeatmapRequestProvider {
     int x = HttpParamsUtils.getIntParam(request, "x", 0);
     int y = HttpParamsUtils.getIntParam(request, "y", 0);
     int z = HttpParamsUtils.getIntParam(request, "z", 0);
+    LOG.info("Querying for tile in x {} y {} z {}",x,y,z);
     occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(x, y, z));
+    LOG.info("Querying using Geometry",occurrenceHeatmapSearchRequest.getGeometry());
     occurrenceHeatmapSearchRequest.setZoom(z);
   }
 
