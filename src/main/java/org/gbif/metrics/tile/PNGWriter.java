@@ -259,7 +259,7 @@ public class PNGWriter {
                  }
 
               }   else {
-                System.out.println("Title " + cell.toString() + " out of " + tileRect.toString());
+                LOG.info("Title {} out of {}", cell.toString(), tileRect.toString());
               }
             }
           }
