@@ -210,9 +210,9 @@ public class PNGWriter {
       // NOTE! MercatorUtil, not MercatorProjectionUtil which is wrong!!!
       // TODO: Fix MercatorProjectionUtil.getTileRect
       // tile boundary is in typical lat, lng coordinates
-      Rectangle2D.Double tileBoundary = MercatorUtil.getTileRect(x, y, zoom);
-      Point2D tileBoundarySW = MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMinY(), tileBoundary.getMinX());
-      Point2D tileBoundaryNE =  MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMaxY(), tileBoundary.getMaxX());
+      final Rectangle2D.Double tileBoundary = MercatorUtil.getTileRect(x, y, zoom);
+      final Point2D tileBoundarySW = MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMinY(), tileBoundary.getMinX());
+      final Point2D tileBoundaryNE =  MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMaxY(), tileBoundary.getMaxX());
 
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
@@ -230,15 +230,13 @@ public class PNGWriter {
             if (count != null && count > 0) {
 
               final Rectangle2D.Double cell = new Rectangle2D.Double(heatmapResponse.getMinLng(column),
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(row)),
+                                                            heatmapResponse.getMinLat(row),
                                                             heatmapResponse.getMaxLng(column) - heatmapResponse.getMinLng(column),
-                                                            // TODO: there is something not quite right in the top extent of the world, and I think it relates to this
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)) - MercatorUtil.getLatInMercatorLimit(
-                                                              heatmapResponse.getMinLat(row)));
+                                                            heatmapResponse.getMaxLat(row) - heatmapResponse.getMinLat(row));
 
               // get the extent of the cell in normalized pixelCoords, noting further South becomes maximum y
-              Point2D cellSW = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMinY(), cell.getMinX());
-              Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
+              final Point2D cellSW = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMinY(), cell.getMinX());
+              final Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
 
               // only paint if the cell falls on the tile (noting again higher Y means further south).
               if (cellNE.getX() > tileBoundarySW.getX() && cellSW.getX() < tileBoundaryNE.getX()
