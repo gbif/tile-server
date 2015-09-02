@@ -281,6 +281,15 @@ public class PNGWriter {
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
                 maxY = (minY > maxY) ? TILE_SIZE : maxY;
 
+                // Clip the extent to the tile.  At this point e.g. max can be 256px, but tile pixels can only be
+                // addressed at 0 to 255.  If we don't clip, 256 will actually spill over into the second row / column
+                // and result in strange lines.
+                minX = clip(minX);
+                maxX = clip(maxX);
+                minY = clip(minY);
+                maxY = clip(maxY);
+
+
                 //LOG.info("X:{}-{}  Y:{},{}", minX, maxX, minY, maxY);
 
                 // TODO: remove
@@ -289,7 +298,7 @@ public class PNGWriter {
                 y1 = y1<minY ? y1 : minY;
                 y2 = y2>maxY ? y2 : maxY;
 
-                // paint the pixels identified
+               // paint the pixels identified
                for (int px = minX; px <= maxX; px++) {
                  for (int py = minY; py <= maxY; py++) {
                    paint(r,
@@ -307,7 +316,7 @@ public class PNGWriter {
                 //LOG.error("CellSW[{}] and CellNE[{}] falls outside the tileSW[{}] tileNE[{}]", cellSW, cellNE, tileBoundarySW, tileBoundaryNE);
               }
 
-              // paint a tile perimeter for helping to DEBUG
+              // paint some cursors to help in DEBUG
               count = 10000000;
               for (int px = 5; px <= 250; px++) {
                 for (int py = 5; py <= 250; py++) {
