@@ -193,8 +193,8 @@ public class PNGWriter {
     }
   }
 
-  private static int clip(int value) {
-    return  Math.min(Math.max(value, 0), TILE_SIZE-1);
+  private static int clip(int value, int lower, int upper) {
+    return  Math.min(Math.max(value, lower), upper);
   }
 
 
@@ -209,22 +209,10 @@ public class PNGWriter {
 
       // NOTE! MercatorUtil, not MercatorProjectionUtil which is wrong!!!
       // TODO: Fix MercatorProjectionUtil.getTileRect
-      // tile boundary is is typical lat, lng coordinates
+      // tile boundary is in typical lat, lng coordinates
       Rectangle2D.Double tileBoundary = MercatorUtil.getTileRect(x, y, zoom);
-      LOG.info("Tile boundary[{}, {}, {}, {}]",
-               tileBoundary.getMinX(), tileBoundary.getMaxX(), tileBoundary.getMinY(), tileBoundary.getMaxY());
       Point2D tileBoundarySW = MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMinY(), tileBoundary.getMinX());
       Point2D tileBoundaryNE =  MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMaxY(), tileBoundary.getMaxX());
-      LOG.info("Tile boundary in normalized[{}, {}, {},{}]",
-               tileBoundarySW.getX(), tileBoundaryNE.getX(), tileBoundarySW.getY(), tileBoundaryNE.getY());
-
-      int mintX = getOffsetX(tileBoundarySW.getX(), zoom);
-      int maxtX = getOffsetX(tileBoundaryNE.getX(), zoom);
-      int mintY = getOffsetY(tileBoundarySW.getY(), y, zoom);
-      int maxtY = getOffsetY(tileBoundaryNE.getY(), y, zoom);
-
-      LOG.info("X:{}-{}  Y:{},{}", mintX, maxtX, mintY, maxtY);
-
 
       // arrays for the RGB and alpha channels
       byte[] r = new byte[TILE_SIZE * TILE_SIZE];
@@ -234,28 +222,27 @@ public class PNGWriter {
 
       List<List<Integer>> countsInts = heatmapResponse.getCountsInts2D();
 
-      // TODO: Remove, this is just to help us determine the tile pixel extents
-      int x1 = 128,x2 = 128,y1 = 128,y2 = 128;
-
-      // determine the pixels covered by the cell at the zoom level, and paint them
+      // iterate the data structure from SOLR painting cells
       for (int row = 0; row < countsInts.size(); row++) {
-        if(countsInts.get(row) != null){
+        if (countsInts.get(row) != null) {
           for(int column = 0; column < countsInts.get(row).size(); column++) {
             Integer count = countsInts.get(row).get(column);
-            if(count != null && count > 0) {
+            if (count != null && count > 0) {
 
               final Rectangle2D.Double cell = new Rectangle2D.Double(heatmapResponse.getMinLng(column),
                                                             MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMinLat(row)),
                                                             heatmapResponse.getMaxLng(column) - heatmapResponse.getMinLng(column),
-                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)) - heatmapResponse.getMinLat(row));
+                                                            // TODO: there is something not quite right in the top extent of the world, and I think it relates to this
+                                                            MercatorUtil.getLatInMercatorLimit(heatmapResponse.getMaxLat(row)) - MercatorUtil.getLatInMercatorLimit(
+                                                              heatmapResponse.getMinLat(row)));
 
               // get the extent of the cell in normalized pixelCoords, noting further South becomes maximum y
               Point2D cellSW = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMinY(), cell.getMinX());
               Point2D cellNE = MercatorProjectionUtil.toNormalisedPixelCoords(cell.getMaxY(), cell.getMaxX());
 
-              // only paint if the cell falls on the tile (noting again higher Y means further south)
-              if (cellNE.getX() >= tileBoundarySW.getX() && cellSW.getX() <= tileBoundaryNE.getX()
-                && cellSW.getY() >= tileBoundaryNE.getY() && cellNE.getY() <= tileBoundarySW.getY()) {
+              // only paint if the cell falls on the tile (noting again higher Y means further south).
+              if (cellNE.getX() > tileBoundarySW.getX() && cellSW.getX() < tileBoundaryNE.getX()
+                && cellSW.getY() > tileBoundaryNE.getY() && cellNE.getY() < tileBoundarySW.getY()) {
 
                 // clip normalized pixel locations to the edges of the cell
                 double minXAsNorm = Math.max(cellSW.getX(), tileBoundarySW.getX());
@@ -263,40 +250,27 @@ public class PNGWriter {
                 double minYAsNorm = Math.max(cellNE.getY(), tileBoundaryNE.getY());
                 double maxYAsNorm = Math.min(cellSW.getY(), tileBoundarySW.getY());
 
-                //minXAsNorm = cellSW.getX();
-                //maxXAsNorm = cellNE.getX();
-                //minYAsNorm = cellNE.getY();
-                //maxYAsNorm = cellSW.getY();
-
                 // project normalized pixel locations onto offsets within the tile
                 int minX = getOffsetX(minXAsNorm, zoom);
                 int maxX = getOffsetX(maxXAsNorm, zoom);
                 // tiles are indexed 0->255, but if the right of the cell (maxX) is on the tile boundary, this
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
-                maxX = (minX > maxX) ? TILE_SIZE : maxX;
+                maxX = (minX > maxX) ? TILE_SIZE-1 : maxX;
 
                 int minY = getOffsetY(minYAsNorm, y, zoom);
                 int maxY = getOffsetY(maxYAsNorm, y, zoom);
                 // tiles are indexed 0->255, but if the bottom of the cell (maxY) is on the tile boundary, this
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
-                maxY = (minY > maxY) ? TILE_SIZE : maxY;
+                maxY = (minY > maxY) ? TILE_SIZE-1 : maxY;
 
                 // Clip the extent to the tile.  At this point e.g. max can be 256px, but tile pixels can only be
                 // addressed at 0 to 255.  If we don't clip, 256 will actually spill over into the second row / column
-                // and result in strange lines.
-                minX = clip(minX);
-                maxX = clip(maxX);
-                minY = clip(minY);
-                maxY = clip(maxY);
-
-
-                //LOG.info("X:{}-{}  Y:{},{}", minX, maxX, minY, maxY);
-
-                // TODO: remove
-                x1 = x1<minX ? x1 : minX;
-                x2 = x2>maxX ? x2 : maxX;
-                y1 = y1<minY ? y1 : minY;
-                y2 = y2>maxY ? y2 : maxY;
+                // and result in strange lines.  Note the importance of the clipping, as the min values are the left, or
+                // top of the cell, but the max values are the right or bottom.
+                minX = clip(minX, 0, TILE_SIZE-1);
+                maxX = clip(maxX, 1, TILE_SIZE);
+                minY = clip(minY, 0, TILE_SIZE-1);
+                maxY = clip(maxY, 1, TILE_SIZE-1);
 
                // paint the pixels identified
                for (int px = minX; px <= maxX; px++) {
@@ -312,35 +286,33 @@ public class PNGWriter {
                          px + (py * TILE_SIZE));
                  }
                }
-              } else {
-                //LOG.error("CellSW[{}] and CellNE[{}] falls outside the tileSW[{}] tileNE[{}]", cellSW, cellNE, tileBoundarySW, tileBoundaryNE);
-              }
-
-              // paint some cursors to help in DEBUG
-              count = 10000000;
-              for (int px = 5; px <= 250; px++) {
-                for (int py = 5; py <= 250; py++) {
-
-                  if (px == 5 || px == 250 || py == 5 || py == 250) {
-                    paint(r,
-                          g,
-                          b,
-                          a,
-                          palette.red(count, zoom),
-                          palette.green(count, zoom),
-                          palette.blue(count, zoom),
-                          palette.alpha(count, zoom),
-                          px + (py * TILE_SIZE));
-                  }
-                }
               }
             }
           }
         }
       }
 
-      // for some reason at Z=1 we see only 0-254 and z=2 0-252 etc.  Something weird.
-      LOG.info("Final X:{}-{}  Y:{},{}", x1, x2, y1, y2);
+
+      // paint some cursors to help in DEBUG
+      /*
+      int count = 10000000;
+      for (int px = 5; px <= 250; px++) {
+        for (int py = 5; py <= 250; py++) {
+
+          if (px == 5 || px == 250 || py == 5 || py == 250) {
+            paint(r,
+                  g,
+                  b,
+                  a,
+                  palette.red(count, zoom),
+                  palette.green(count, zoom),
+                  palette.blue(count, zoom),
+                  palette.alpha(count, zoom),
+                  px + (py * TILE_SIZE));
+          }
+        }
+      }
+      */
 
       write(out, r, g, b, a);
 

@@ -117,15 +117,24 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
           context.stop();
         }
       } else {
-        resp.getOutputStream().write(PNGWriter.EMPTY_TILE);
+        if (!resp.isCommitted()) {
+          resp.getOutputStream().write(PNGWriter.EMPTY_TILE);
+        }
+
       }
     } catch (IllegalArgumentException e) {
       // If we couldn't get the content from the request
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      if (!resp.isCommitted()) {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      }
+
     } catch (Exception e) {
-      // We are unable to get or render the tile
+      // We are unable to get or render the tile, or the client has terminated the connection
       LOG.error(e.getMessage(), e);
-      resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Tile server is out of action, please try later");
+      if (!resp.isCommitted()) {
+        resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Tile server is out of action, please try later");
+      }
+
     }
     resp.flushBuffer();
   }
