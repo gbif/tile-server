@@ -43,16 +43,20 @@ public class PNGWriter {
   private static final byte FILTER_NONE = 0;
   private static final byte INTERLACE_NONE = 0;
   private static final int TILE_SIZE = 256;
+
+  private static final int TILE_SIZE_1 = TILE_SIZE - 1;
+  private static final int CHANNEL_SIZE = TILE_SIZE * TILE_SIZE;
+
   // This has to come after the rest of the static initialized fields
   static {
     ByteArrayOutputStream baos = null;
     Closer closer = Closer.create();
     try {
       baos = closer.register(new ByteArrayOutputStream());
-      byte[] r = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] g = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] b = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] a = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
+      byte[] r = new byte[CHANNEL_SIZE];
+      byte[] g = new byte[CHANNEL_SIZE];
+      byte[] b = new byte[CHANNEL_SIZE];
+      byte[] a = new byte[CHANNEL_SIZE];
       write(baos, r, g, b, a);
       EMPTY_TILE = baos.toByteArray();
     } catch (IOException e) {
@@ -116,13 +120,13 @@ public class PNGWriter {
     if (tile != null && !tile.layers().isEmpty()) {
 
       // arrays for the RGB and alpha channels
-      byte[] r = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] g = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] b = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
-      byte[] a = new byte[DensityTile.TILE_SIZE * DensityTile.TILE_SIZE];
+      byte[] r = new byte[CHANNEL_SIZE];
+      byte[] g = new byte[CHANNEL_SIZE];
+      byte[] b = new byte[CHANNEL_SIZE];
+      byte[] a = new byte[CHANNEL_SIZE];
 
       // paint the pixels for each cell in the tile
-      int cellsPerRow = DensityTile.TILE_SIZE / tile.getClusterSize();   MercatorProjectionUtil s;
+      int cellsPerRow = DensityTile.TILE_SIZE / tile.getClusterSize();
       Map<Integer, Integer> cells = mergedGrid(tile.layers(), layers);
       for (Entry<Integer, Integer> e : cells.entrySet()) {
         int cellId = e.getKey();
@@ -169,16 +173,18 @@ public class PNGWriter {
       cIHDR.writeByte(INTERLACE_NONE);
       cIHDR.writeTo(dos);
 
-      int channels = 4;
-      int lineLen = DensityTile.TILE_SIZE * channels;
-      byte[] lineOut = new byte[lineLen];
+      //4 == number of channels
+      byte[] lineOut = new byte[DensityTile.TILE_SIZE * 4];
 
       for (int line = 0; line < DensityTile.TILE_SIZE; line++) {
         for (int p = 0; p < DensityTile.TILE_SIZE; p++) {
-          lineOut[p * 4 + 0] = r[(line * DensityTile.TILE_SIZE) + p]; // R
-          lineOut[p * 4 + 1] = g[(line * DensityTile.TILE_SIZE) + p]; // G
-          lineOut[p * 4 + 2] = b[(line * DensityTile.TILE_SIZE) + p]; // B
-          lineOut[p * 4 + 3] = a[(line * DensityTile.TILE_SIZE) + p]; // transparency
+          //next 2 variables were created to avoid repeated calculations
+          final int lineIdx =  p * 4;
+          final int rgbaIdx = (line * DensityTile.TILE_SIZE) + p;
+          lineOut[lineIdx + 0] = r[rgbaIdx]; // R
+          lineOut[lineIdx + 1] = g[rgbaIdx]; // G
+          lineOut[lineIdx + 2] = b[rgbaIdx]; // B
+          lineOut[lineIdx + 3] = a[rgbaIdx]; // transparency
         }
 
         dfos.write(FILTER_NONE);
@@ -215,12 +221,12 @@ public class PNGWriter {
       final Point2D tileBoundaryNE =  MercatorProjectionUtil.toNormalisedPixelCoords(tileBoundary.getMaxY(), tileBoundary.getMaxX());
 
       // arrays for the RGB and alpha channels
-      byte[] r = new byte[TILE_SIZE * TILE_SIZE];
-      byte[] g = new byte[TILE_SIZE * TILE_SIZE];
-      byte[] b = new byte[TILE_SIZE * TILE_SIZE];
-      byte[] a = new byte[TILE_SIZE * TILE_SIZE];
+      byte[] r = new byte[CHANNEL_SIZE];
+      byte[] g = new byte[CHANNEL_SIZE];
+      byte[] b = new byte[CHANNEL_SIZE];
+      byte[] a = new byte[CHANNEL_SIZE];
 
-      List<List<Integer>> countsInts = heatmapResponse.getCountsInts2D();
+      final List<List<Integer>> countsInts = heatmapResponse.getCountsInts2D();
 
       // iterate the data structure from SOLR painting cells
       for (int row = 0; row < countsInts.size(); row++) {
@@ -253,22 +259,22 @@ public class PNGWriter {
                 int maxX = getOffsetX(maxXAsNorm, zoom);
                 // tiles are indexed 0->255, but if the right of the cell (maxX) is on the tile boundary, this
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
-                maxX = (minX > maxX) ? TILE_SIZE-1 : maxX;
+                maxX = (minX > maxX) ? TILE_SIZE_1 : maxX;
 
                 int minY = getOffsetY(minYAsNorm, y, zoom);
                 int maxY = getOffsetY(maxYAsNorm, y, zoom);
                 // tiles are indexed 0->255, but if the bottom of the cell (maxY) is on the tile boundary, this
                 // will be detected (correctly) as the index 0 for the next tile.  Reset that.
-                maxY = (minY > maxY) ? TILE_SIZE-1 : maxY;
+                maxY = (minY > maxY) ? TILE_SIZE_1 : maxY;
 
                 // Clip the extent to the tile.  At this point e.g. max can be 256px, but tile pixels can only be
                 // addressed at 0 to 255.  If we don't clip, 256 will actually spill over into the second row / column
                 // and result in strange lines.  Note the importance of the clipping, as the min values are the left, or
                 // top of the cell, but the max values are the right or bottom.
-                minX = clip(minX, 0, TILE_SIZE-1);
+                minX = clip(minX, 0, TILE_SIZE_1);
                 maxX = clip(maxX, 1, TILE_SIZE);
-                minY = clip(minY, 0, TILE_SIZE-1);
-                maxY = clip(maxY, 1, TILE_SIZE-1);
+                minY = clip(minY, 0, TILE_SIZE_1);
+                maxY = clip(maxY, 1, TILE_SIZE_1);
 
                // paint the pixels identified
                for (int px = minX; px <= maxX; px++) {

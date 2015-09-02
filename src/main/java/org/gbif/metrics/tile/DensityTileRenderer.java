@@ -58,6 +58,19 @@ public class DensityTileRenderer extends CubeTileRenderer {
     return 360 * ((pixelX / ((long) DensityTile.TILE_SIZE << zoom)) - 0.5);
   }
 
+  /**
+   * Accumulates the count represented by the tile.
+   */
+  private static int accumulate(DensityTile tile) {
+    int total = 0;
+    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
+      for (Integer count : e.getValue().values()) {
+        total += count;
+      }
+    }
+    return total;
+  }
+
   @Inject
   public DensityTileRenderer(DataCubeIo<DensityTile> cubeIo) {
     super(cubeIo);
@@ -211,18 +224,5 @@ public class DensityTileRenderer extends CubeTileRenderer {
       }
     }
     MetadataProvider.renderMetadata(req,resp,count,minimumLatitude,minimumLongitude,maximumLatitude,maximumLongitude);
-  }
-
-  /**
-   * Accumulates the count represented by the tile.
-   */
-  private int accumulate(DensityTile tile) {
-    int total = 0;
-    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
-      for (Integer count : e.getValue().values()) {
-        total += count;
-      }
-    }
-    return total;
   }
 }

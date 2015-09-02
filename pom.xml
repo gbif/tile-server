@@ -343,6 +343,19 @@
         <zookeeper.quorum>c1n8.gbif.org:2181,c1n9.gbif.org:2181,c1n10.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
         <density-cube.table>prod_b2_maps_cube</density-cube.table>
+
+        <!-- required by occurrence search -->
+        <occurrence.db.table_name>prod_b2_occurrence</occurrence.db.table_name>
+        <occurrence.db.counter_table_name>prod_b2_occurrence_counter</occurrence.db.counter_table_name>
+        <occurrence.db.max_connection_pool>10</occurrence.db.max_connection_pool>
+        <occurrence.db.id_lookup_table_name>prod_b2_occurrence_lookup</occurrence.db.id_lookup_table_name>
+
+        <zookeeper.quorum>prodmaster1-vh.gbif.org:2181,prodmaster2-vh.gbif.org:2181,prodmaster3-vh.gbif.org:2181/solr</zookeeper.quorum>
+        <occurrence.search.solr.server.type>CLOUD</occurrence.search.solr.server.type>
+        <occurrence.search.solr.collection>prod_occurrence</occurrence.search.solr.collection>
+        <checklistbank.ws.url>http://api.gbif.org/v1/</checklistbank.ws.url>
+        <checklistbank.match.ws.url>http://api.gbif.org/v1/species/match/</checklistbank.match.ws.url>
+        <zookeeper.quorum>prodmaster1-vh.gbif.org:2181,prodmaster2-vh.gbif.org:2181,prodmaster3-vh.gbif.org:2181</zookeeper.quorum>
       </properties>
     </profile>
 
@@ -356,6 +369,19 @@
         <zookeeper.quorum>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</zookeeper.quorum>
         <hdfs.namenode>hdfs://c1n1.gbif.org:8020</hdfs.namenode>
         <density-cube.table>dev_maps_cube</density-cube.table>
+
+        <!-- required by occurrence search -->
+        <occurrence.db.table_name>dev_occurrence</occurrence.db.table_name>
+        <occurrence.db.counter_table_name>dev_occurrence_counter</occurrence.db.counter_table_name>
+        <occurrence.db.max_connection_pool>10</occurrence.db.max_connection_pool>
+        <occurrence.db.id_lookup_table_name>dev_occurrence_lookup</occurrence.db.id_lookup_table_name>
+
+        <occurrence.search.solr.server>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181/solruat</occurrence.search.solr.server>
+        <occurrence.search.solr.server.type>CLOUD</occurrence.search.solr.server.type>
+        <occurrence.search.solr.collection>dev_occurrence</occurrence.search.solr.collection>
+        <checklistbank.ws.url>http://api.gbif-dev.org/v1/</checklistbank.ws.url>
+        <checklistbank.match.ws.url>http://api.gbif-dev.org/v1/species/match/</checklistbank.match.ws.url>
+        <occurrence.db.zookeeper.connection_string>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</occurrence.db.zookeeper.connection_string>
       </properties>
     </profile>
 
@@ -375,6 +401,7 @@
         <occurrence.db.max_connection_pool>10</occurrence.db.max_connection_pool>
         <occurrence.db.id_lookup_table_name>uat_occurrence_lookup</occurrence.db.id_lookup_table_name>
 
+        <!-- required by occurrence search -->
         <occurrence.search.solr.server>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181/solruat</occurrence.search.solr.server>
         <occurrence.search.solr.server.type>CLOUD</occurrence.search.solr.server.type>
         <occurrence.search.solr.collection>uat_occurrence</occurrence.search.solr.collection>

@@ -62,9 +62,9 @@ public class OccurrenceSearchHeatmapRequestProvider {
     int x = HttpParamsUtils.getIntParam(request, "x", 0);
     int y = HttpParamsUtils.getIntParam(request, "y", 0);
     int z = HttpParamsUtils.getIntParam(request, "z", 0);
-    LOG.info("Querying for tile in x {} y {} z {}",x,y,z);
+    LOG.debug("Querying for tile in x {} y {} z {}", x, y, z);
     occurrenceHeatmapSearchRequest.setGeometry(getGeometryFromXY(x, y, z));
-    LOG.info("Querying using Geometry",occurrenceHeatmapSearchRequest.getGeometry());
+    LOG.debug("Querying using Geometry", occurrenceHeatmapSearchRequest.getGeometry());
     occurrenceHeatmapSearchRequest.setZoom(z);
   }
 

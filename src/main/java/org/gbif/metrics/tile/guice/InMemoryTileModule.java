@@ -54,7 +54,7 @@ public class InMemoryTileModule extends AbstractModule {
 
   public InMemoryTileModule(String fileLocation, int numberZooms, int pixelsPerCluster) {
     this.fileLocation = fileLocation;
-    this.numZooms = numberZooms;
+    numZooms = numberZooms;
     this.pixelsPerCluster = pixelsPerCluster;
     ConcurrentMap<BoxedByteArray, byte[]> backingMap = Maps.newConcurrentMap();
     IdService idService = new CachingIdService(4, new MapIdService(), "id");
@@ -64,22 +64,22 @@ public class InMemoryTileModule extends AbstractModule {
       new DataCubeIo<DensityTile>(DensityCube.INSTANCE, densityDbHarness, 1, Long.MAX_VALUE, SyncLevel.FULL_SYNC);
   }
 
+  @Singleton
+  @Provides
+  public DataCubeIo<DensityTile> getDensityCubeIO() {
+    return densityCubeIo;
+  }
+
   @Override
   protected void configure() {
     try {
       loadCSV();
     } catch (FileNotFoundException e) {
-      this.addError(new Message("CSV file not found"));
+      addError(new Message("CSV file not found"));
 
     } catch (Exception e) {
-      this.addError(new Message(e.getMessage()));
+      addError(new Message(e.getMessage()));
     }
-  }
-
-  @Singleton
-  @Provides
-  public DataCubeIo<DensityTile> getDensityCubeIO() {
-    return densityCubeIo;
   }
 
   private void loadCSV() throws FileNotFoundException, IOException, InterruptedException {

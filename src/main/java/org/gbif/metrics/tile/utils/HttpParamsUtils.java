@@ -19,7 +19,7 @@ public class HttpParamsUtils {
   }
 
   public static int getIntParam(HttpServletRequest request, String param, int defaultVal) {
-    String[] vals = request.getParameterValues(param);
+    final String[] vals = request.getParameterValues(param);
     if (vals != null && vals.length > 0) {
       try {
         return Integer.parseInt(vals[0]);
