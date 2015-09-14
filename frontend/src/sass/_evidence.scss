@@ -1,0 +1,65 @@
+@media screen and (min-width: $medium) {
+    .flex {
+        .gbifBasicMap_nav_filters {
+            .gbifBasicMap_nav_evidence{
+                box-shadow: 2px 0px 5px 2px rgba(0, 0, 0, 0.2);
+                position: absolute;
+                bottom: 35px;
+                left: 10px;
+                width: 200px;
+                &:not(.showevidence){
+                    display:none;
+                }
+                h3{
+                    display: block;
+                    background: $primary-accent-color;
+                    color: white;
+                }
+
+                >ul{
+                    display: block;
+                    li{
+                        display: block;
+                        >div{
+                            background: white;
+                            text-align: left;
+                            padding: 8px;
+                        }
+
+                        &:nth-child(4){
+                            border-bottom: 1px solid darken( $primary-background-color, 10% );
+                        }
+
+                        &.undated>div{
+                            display:flex;
+                            flex-direction: column-reverse;
+                            >.gbifBasicMap_description{
+                                margin: 0;
+                                &.showdescription {
+                                    margin: 0em 0em .5em 0em;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div>span:first-child{
+                    &:before{
+                        font-family: "Times New Roman", Times, serif;
+                        font-size: 0.9em;
+                        content: '\25cb';
+                        line-height: 0.9em;
+                        float: left;
+                        width: 1em;
+                    }
+                }
+                .active div>span:first-child {
+                    &:before{
+                        content: '\25cf';
+                    }
+                }
+            }
+        }
+        
+    }
+}

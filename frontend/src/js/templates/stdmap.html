@@ -1,0 +1,91 @@
+<div id="gbifBasicMap" class="gbifBasicMap" onselectstart="return false">
+    <!--[if IE]>
+    <div class="gbifBasicMapWrapper">
+    <![endif]-->
+    <!--[if !IE]> -->
+    <div class="flex gbifBasicMapWrapper" rv-class-touch="navigation.supportsTouch" >
+    <!-- <![endif]-->
+        <div class="gbifBasicMap_mapComponent">
+        
+        <div class="gbifMapComponent">
+            <div class="gbifMapComponent_map"></div>
+            <div class="gbifMapComponent_zoom">
+                <div class="button gbifMapComponent_zoom-in"><i class="icon">+</i></div>
+                <div class="button gbifMapComponent_zoom-out"><i class="icon">-</i></div>
+            </div>
+            <div class="attribution" >{lang.map.attribution}<span></span></div>
+            
+            <div class="button toggle filters-toggle" rv-class-show="true" rv-on-click="navigation.showFilters" rv-on-touchend="navigation.showFilters"><i class="gbifBasicMapIcon gbifBasicMapIcon-filter"></i></div>
+            <div class="button toggle styling-toggle" rv-class-show="true" rv-on-click="navigation.showStyling" rv-on-touchend="navigation.showStyling"><i class="gbifBasicMapIcon gbifBasicMapIcon-style"></i></div>
+            <div class="button toggle fullscreen" rv-title="lang.navigation.fullscreen"><i class="gbifBasicMapIcon gbifBasicMapIcon-fullscreen"></i></div>
+        </div>
+
+        </div>
+        <div rv-if="navigation.displayFilters" class="gbifBasicMap_nav gbifBasicMap_nav_filters" rv-class-show="navigation.filters" rv-class-activedates="filters.dates.showDates">
+            <div class="gbifBasicMap_sidebarHeader" rv-on-click="navigation.toggleEvidenceMouse" rv-on-touchend="navigation.toggleEvidenceTouch">
+                <div><i class="gbifBasicMapIcon gbifBasicMapIcon-filter"></i></div>
+                <h2 rv-text="lang.filters.headline"></h2>
+            </div>
+            <ul>
+                <li class="gbifBasicMap_nav_evidence" rv-class-showevidence="navigation.evidence">
+                    <h3 class="section" rv-text="lang.filters.evidence.headline"></h3>
+                    <ul>
+                        <li class="undated" rv-class-active="filters.dates.undated.active">
+                            <div>
+                                <span>
+                                    <span rv-on-click="filters.undated.toggleUndatedMouse"  rv-on-touchend="filters.undated.toggleUndatedTouch" rv-text="lang.filters.evidence.includeUndated.text"></span>
+                                    <i class="gbifBasicMapIcon gbifBasicMapIcon-info" rv-on-click="filters.undated.toggleVisibilityMouse" rv-on-touchend="filters.undated.toggleVisibilityTouch"></i>
+                                </span>
+                                <span class="comment gbifBasicMap_description" rv-class-showdescription="filters.undated.showDescription"  rv-text="lang.filters.evidence.includeUndated.description"></span>
+                            </div>
+                        </li>
+                        <li rv-each-option="filters.evidence.options | objectList 'id'" rv-class-active="option.active">
+                            <div rv-on-click="filters.evidence.selectMouse" rv-on-touchend="filters.evidence.selectTouch">
+                                <span rv-text="option.text"></span>
+                                <i rv-if="option.comment" class="comment" rv-text="option.comment"></i>
+                            </div>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="gbifBasicMap_nav_dates" rv-if="filters.dates.showDates">
+                    <h3 class="section" rv-text="lang.filters.dates.headline"></h3>
+                    <ul>
+                        <li rv-each-option="filters.dates.options | indexList" rv-class-active="option.active" rv-class-endpoint="option.endpoint">
+                            <div rv-text="option.text" rv-index="option.rv_index" role="button" rv-on-touchstart="filters.dates.touchDragStart" rv-on-touchmove="filters.dates.touchmove" rv-on-mousedown="filters.dates.mouseDragStart" rv-on-mouseenter="filters.dates.mouseenter">
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="gbifBasicMap_nav gbifBasicMap_nav_styling" rv-class-show="navigation.styling">
+            <h2 rv-on-click="navigation.hideAll" rv-text="lang.styling.headline"></h2>
+            <ul>
+                <li class="maptype">
+                    <h3 rv-text="lang.styling.basemap.headline"></h3>
+                    <ul>
+                        <li rv-each-option="styling.maps.options | objectList 'id'" rv-class-active="option.active">
+                            <label>
+                                <input type="radio" rv-value="option.id" rv-checked="styling.maps.selectedValue" name="baselayer" rv-on-click="styling.maps.select">
+                                <div rv-text="option.name"></div>
+                            </label>
+                        </li>
+                    </ul>
+                </li>
+                <li class="pointsize">
+                    <h3 rv-text="lang.styling.pointsize.headline"></h3>
+                    <ul>
+                        <li rv-each-option="styling.size.options" rv-class-active="option.active">
+                            <label>
+                                <input type="radio" rv-value="option.resolution" name="resolution" rv-checked="styling.size.selectedValue" rv-on-click="styling.size.select">
+                                <div rv-text="option.name"></div>
+                            </label>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

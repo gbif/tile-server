@@ -1,0 +1,25 @@
+.gbifBasicMap_mapComponent{
+    height:100%;
+}
+.gbifBasicMap_nav {
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    width: 14em;
+    max-width: 100%;
+    overflow: auto;
+	transition: left 0.3s ease, right 0.3s ease;
+}
+.gbifBasicMap_nav_filters{
+    left:-25em;
+    &.show{
+        left: 0px;
+    }
+}
+
+.gbifBasicMap_nav_styling {
+    right: -25em;
+    &.show{
+        right: 0px;
+    }
+}

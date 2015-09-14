@@ -1,0 +1,50 @@
+/*Reset Styles*/
+/*
+, applet, object, iframe, h4, h5, h6,blockquote, pre,abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,center,legend,
+table, caption, tbody, tfoot, thead, tr, th, td,canvas, details, embed, 
+article, aside, menu, nav, output, ruby, section, summary,
+time, mark, audio, video, button,dl, dt, dd, ol,b, u, figure, figcaption, footer, header, hgroup,
+*/
+div, span, h1, h2, h3, p, a, i,  ul, li, fieldset, form, label, input {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+ol,
+ul {
+    list-style: none;
+}
+
+.gbifBasicMapWrapper{
+    height: 100%;
+    color: $primary-color;
+    background: $primary-background-color;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    height:100%;
+    width:100%;
+    position:absolute;
+    overflow: hidden;
+    font-size: 0.85rem;
+    
+    &.touch{
+        touch-action: manipulation;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: $medium) {
+  .gbifBasicMapWrapper{
+      font-size: 0.85rem;
+      &.touch{
+        font-size: 0.85rem;
+    }
+  }
+}

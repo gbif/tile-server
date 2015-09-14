@@ -1,0 +1,120 @@
+@media screen and (min-width: $medium) {
+    .flex {
+        &.gbifBasicMapWrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        .gbifBasicMap_mapComponent {
+            display: flex;
+            .gbifMapComponent {
+                height: auto;
+                display: flex;
+                .gbifMapComponent_map {
+                    flex: 1 1 100%;
+                    height: auto;
+                }
+            }
+        }
+        .filters-toggle{
+            display:none;
+        }
+        .gbifBasicMap_nav_filters {
+            overflow: visible;
+            border: none;
+            border: 0px solid transparent;
+            position: relative;
+            top: auto;
+            height: auto;
+            width: 100%;
+            max-width: 100%;
+            left: auto;
+            flex: 0 0 auto;
+            display: flex;
+            div{
+                border: 0px solid transparent;
+            }
+            >ul{
+                >li{
+                    border: none;
+                }
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 100%;
+            }
+            h3, h2 {
+                display: none;
+            }
+            .gbifBasicMap_sidebarHeader{
+                height: 1.8em; //TODO hack to match evidence icon and date slider height, find better way
+                background: darken($primary-accent-color, 10%);
+                >div{
+                    padding: 5px 4px;
+                    width: 2em;
+                    background: inherit;
+                    text-align: center;
+                    box-sizing: content-box;
+                    color: darken( $primary-background-color, 8% );
+                    >i{
+                        font-size:1.0em;
+                        display:inline;
+                    }
+                }
+            }
+            .gbifBasicMap_nav_dates {
+                width:100%;
+                margin: 0px;
+                border: 1px solid darken( $primary-background-color, 10% );
+                border-width: 0 0 1px 0;
+                border: none; //does this makes it simpler to decode?
+                ul>li{
+                    height:1.8em;//TODO hack to match evidence icon and date slider height, find better way
+                    overflow: hidden;
+                    div{
+                        width: 100%;
+                        user-select: none;
+                        cursor: pointer;
+                        color: darken( $primary-background-color, 8% );
+                        &:hover{
+                            color: $primary-accent-color;
+                        }
+                    }
+                    &.active{
+                        background-color: $primary-accent-color;
+                        div{
+                            background-color: $primary-accent-color;
+                            color: darken($primary-accent-color, 10%);
+                            &:hover{
+                                cursor: ew-resize;
+                            }
+                        }
+                        &.endpoint>div{
+                            color: $primary-background-color;
+                        }
+                    }
+                }
+            }
+            ul>li>ul {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                li {
+                    flex: 1 0 auto;
+                    div {
+                        font-size: 0.9em;
+                        text-align: center;
+                        padding: 5px 4px;
+                    }
+                }
+            }
+            
+            
+            &:not(.activedates){
+                position:absolute;
+                bottom:0px;
+                left:0px;
+                width:auto;
+            }
+        }
+    }
+}
