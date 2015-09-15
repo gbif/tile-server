@@ -7,7 +7,7 @@
         "brfs": "^1.4.1",
         "browserify": "^11.0.1",
         "browserify-shim": "^3.8.10",
-        "modestmaps": "git://github.com/gbif/modestmaps-js.git#5dd6943c5aa8ec78e85dc1d086749f8ba1e12cae",
+        "modestmaps": "git://github.com/modestmaps/modestmaps-js.git#a688eaf42c0ebbe552e8284f30ae39f098789ce9",
         "rivets": "^0.8.1",
         "sightglass": "^0.2.4",
         "stringify": "^3.1.0",
