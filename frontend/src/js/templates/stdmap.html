@@ -17,7 +17,7 @@
             
             <div class="button toggle filters-toggle" rv-class-show="true" rv-on-click="navigation.showFilters" rv-on-touchend="navigation.showFilters"><i class="gbifBasicMapIcon gbifBasicMapIcon-filter"></i></div>
             <div class="button toggle styling-toggle" rv-class-show="true" rv-on-click="navigation.showStyling" rv-on-touchend="navigation.showStyling"><i class="gbifBasicMapIcon gbifBasicMapIcon-style"></i></div>
-            <div rv-unless="navigation.simplifyInterface" class="button toggle fullscreen" rv-title="lang.navigation.fullscreen"><i class="gbifBasicMapIcon gbifBasicMapIcon-fullscreen"></i></div>
+            <div rv-unless="navigation.hideFullScreenButton" class="button toggle fullscreen" rv-title="lang.navigation.fullscreen"><i class="gbifBasicMapIcon gbifBasicMapIcon-fullscreen"></i></div>
         </div>
 
         </div>
@@ -45,7 +45,6 @@
                                 <i rv-if="option.comment" class="comment" rv-text="option.comment"></i>
                             </div>
                         </li>
-
                     </ul>
                 </li>
                 <li class="gbifBasicMap_nav_dates" rv-if="filters.dates.showDates">

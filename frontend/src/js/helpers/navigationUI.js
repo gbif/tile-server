@@ -8,9 +8,18 @@ module.exports = function (options) {
         context.navigation.evidence = !context.navigation.evidence;
     }
     
+    function supportsFullscreen() {
+        var device = {};
+        device.ie9 = /MSIE 9/i.test(navigator.userAgent);
+        device.ie10 = /MSIE 10/i.test(navigator.userAgent);
+        device.ie11 = /rv:11.0/i.test(navigator.userAgent);
+        return !(device.ie9 || device.ie10 || device.ie11);
+    }
+    
     var nav = {
         supportsTouch: helper.supportsTouch,
         simplifyInterface: options.simplifyInterface,
+        hideFullScreenButton: options.simplifyInterface || !supportsFullscreen(),
         filters: false,
         styling: false,
         evidence: false,
