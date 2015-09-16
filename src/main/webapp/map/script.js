@@ -4877,9 +4877,14 @@ module.exports = {
 
 
 },{}],9:[function(require,module,exports){
-module.exports = {
-    overlayUrl: 'http://api.gbif.org/v1/map/density/tile.png'
-};
+module.exports = (function () {
+	var baseUrlForTesting = document.baseUrlForTesting || '';
+
+    return {
+    	overlayUrl: baseUrlForTesting + 'density/tile.png',
+    	jsonUrlTemplate: baseUrlForTesting + 'density/tile.json?key={key}&resolution=1&x=0&y=0&z=0&type={type}'
+    };
+})();
 
 },{}],10:[function(require,module,exports){
 module.exports = {
@@ -5203,7 +5208,7 @@ module.exports = (function () {
 
 },{"./helper.js":14}],14:[function(require,module,exports){
 module.exports = (function () {
-    var url = 'http://api.gbif.org/v1/map/density/tile.json?key={key}&resolution=1&x=0&y=0&z=0&type={type}',
+    var url = require('../config/overlay.js').jsonUrlTemplate,
         scale = 2,
         supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
@@ -5376,7 +5381,7 @@ module.exports = (function () {
     };
 })();
 
-},{}],15:[function(require,module,exports){
+},{"../config/overlay.js":9}],15:[function(require,module,exports){
 var helper = require('./helper.js'),
     NO_TOUCH = false,
     TOUCH = true;
@@ -5868,10 +5873,8 @@ cw.postMessage({geojson: { "type": "FeatureCollection",
      }}, "*");
 */
 function addGeoJson(evt) {
-    if (evt.origin !== "http://www.gbif.org/") {
-        if (evt.data.geojson) {
-            GBIF.basicMap.addGeoJson(evt.data.geojson);
-        }
+    if (evt.data.geojson) {
+        GBIF.basicMap.addGeoJson(evt.data.geojson);
     }
 }
 

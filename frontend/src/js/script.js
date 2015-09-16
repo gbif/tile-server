@@ -83,10 +83,8 @@ cw.postMessage({geojson: { "type": "FeatureCollection",
      }}, "*");
 */
 function addGeoJson(evt) {
-    if (evt.origin !== "http://www.gbif.org/") {
-        if (evt.data.geojson) {
-            GBIF.basicMap.addGeoJson(evt.data.geojson);
-        }
+    if (evt.data.geojson) {
+        GBIF.basicMap.addGeoJson(evt.data.geojson);
     }
 }
 

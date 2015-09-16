@@ -1,5 +1,5 @@
 module.exports = (function () {
-    var url = 'http://api.gbif.org/v1/map/density/tile.json?key={key}&resolution=1&x=0&y=0&z=0&type={type}',
+    var url = require('../config/overlay.js').jsonUrlTemplate,
         scale = 2,
         supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
