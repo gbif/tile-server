@@ -83,10 +83,12 @@ module.exports = (function () {
             helper.getMetaData(settings, updateExtendAndResolution);
         }
 
-        fullscreen.addFullScreenButton({
-            widget: moduleElement.querySelector('.gbifBasicMap'),
-            button: moduleElement.querySelector('.fullscreen')
-        });
+        if (!navigation.simplifyInterface) {
+            fullscreen.addFullScreenButton({
+                widget: moduleElement.querySelector('.gbifBasicMap'),
+                button: moduleElement.querySelector('.fullscreen')
+            });
+        }
     }
 
     /**
