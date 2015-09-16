@@ -21,7 +21,7 @@
         </div>
 
         </div>
-        <div rv-if="navigation.displayFilters" class="gbifBasicMap_nav gbifBasicMap_nav_filters" rv-class-show="navigation.filters" rv-class-activedates="filters.dates.showDates">
+        <div rv-unless="navigation.simplifyInterface" class="gbifBasicMap_nav gbifBasicMap_nav_filters" rv-class-show="navigation.filters" rv-class-activedates="filters.dates.showDates">
             <div class="gbifBasicMap_sidebarHeader" rv-on-click="navigation.toggleEvidenceMouse" rv-on-touchend="navigation.toggleEvidenceTouch">
                 <div><i class="gbifBasicMapIcon gbifBasicMapIcon-filter"></i></div>
                 <h2 rv-text="lang.filters.headline"></h2>
@@ -74,7 +74,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="pointsize">
+                <li class="pointsize" rv-unless="navigation.simplifyInterface">
                     <h3 rv-text="lang.styling.pointsize.headline"></h3>
                     <ul>
                         <li rv-each-option="styling.size.options" rv-class-active="option.active">

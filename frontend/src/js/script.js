@@ -9,7 +9,7 @@ function getURLParameter(name) {
 function getQuery() {
     //var route = window.location.hash.toUpperCase().slice(1).split('/'); //for hash routing
     var cat = getURLParameter('cat'),
-        displayFilters = getURLParameter('displayfilters'),
+        simplifyInterface = getURLParameter('simplifyInterface'),
         geojson = getURLParameter('geojson'),
         point = getURLParameter('point');
     
@@ -18,7 +18,7 @@ function getQuery() {
     //if a point is supplied it will override the geojson at this point
     if (point) {
         point = point.split(',');
-        displayFilters = displayFilters || 'false'; //when showing a point the default is to hide the filters
+        simplifyInterface = simplifyInterface === null ? true : simplifyInterface; //when showing a point the default is to simplify the interface
         cat = cat || 'none';
         //geojson expects lon,lat
         geojson = {
@@ -28,8 +28,8 @@ function getQuery() {
             ]
         };
     }
-    
-    displayFilters = displayFilters == 'false' ? false : true;
+
+    simplifyInterface = simplifyInterface !== null ? simplifyInterface : false;//== 'true' ? true : false;
 
     return {
         type: getURLParameter('type') || 'TAXON',
@@ -40,7 +40,7 @@ function getQuery() {
         zoom: getURLParameter('zoom') || getURLParameter('default_zoom'),
         style: getURLParameter('style'),
         geoJson: geojson,
-        displayFilters: displayFilters,
+        simplifyInterface: simplifyInterface,
         cat: cat
     };
 }

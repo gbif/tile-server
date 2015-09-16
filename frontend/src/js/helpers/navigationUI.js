@@ -10,7 +10,7 @@ module.exports = function (options) {
     
     var nav = {
         supportsTouch: helper.supportsTouch,
-        displayFilters: options.displayFilters,
+        simplifyInterface: options.simplifyInterface,
         filters: false,
         styling: false,
         evidence: false,
