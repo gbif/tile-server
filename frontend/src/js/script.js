@@ -48,6 +48,7 @@ var settings = getQuery();
 
 GBIF.basicMap.createMap(document.body, settings);
 
+
 // Listen for changes in the map and notify the iframe parent
 GBIF.basicMap.setStateListener(function (state) {
     //the post back message is not in the format descirbed in the current documentation,
@@ -61,27 +62,7 @@ GBIF.basicMap.setStateListener(function (state) {
 
 
 
-/**
-Listen to messages from parent when in iframe
-Example usage:
-var cw = document.getElementById(iframeId).contentWindow;
-cw.postMessage({geojson: { "type": "FeatureCollection",
-    "features": [
-        {"id": "14614","type":"Feature","geometry":{"type":"Point","coordinates":[-122.412483,37.770631]}},
-        {"id": "43151","type":"Feature","geometry":{"type":"Point","coordinates":[-122.434025,37.750259]}},
-        {"id": "14618","type":"Feature","geometry":{"type":"Point","coordinates":[-122.477241,37.780437]}},
-        {"id": "14610","type":"Feature","geometry":{"type":"Point","coordinates":[-122.45424,37.772879]}},
-      { "type": "Feature",
-         "geometry": {
-           "type": "Polygon",
-           "coordinates": [
-             [ [50,50], [50,-50], [-50,-50], [-50,50], [50,50] ]
-             ]
-         }
-     }
-       ]
-     }}, "*");
-*/
+// listen for messages from the parent (in case of embedded in iframe) and listen for instructions to add geojson layer.
 function addGeoJson(evt) {
     if (evt.data.geojson) {
         GBIF.basicMap.addGeoJson(evt.data.geojson);
@@ -94,3 +75,16 @@ if (window.addEventListener) {
 } else {
     window.attachEvent("onmessage", addGeoJson);
 }
+
+
+
+//Prevent scroll on body element, used when embeded as iframe and we do not want to scroll parent page ever.
+function preventscroll(ev) {
+    ev.preventDefault();
+    return false;
+}
+//The joys of browser inconsistencies
+document.body.addEventListener('scroll', preventscroll);
+document.body.addEventListener('mousewheel', preventscroll);
+document.body.addEventListener('DOMMouseScroll', preventscroll);
+document.body.addEventListener('MozMousePixelScroll', preventscroll);
