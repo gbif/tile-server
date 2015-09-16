@@ -29,7 +29,7 @@ function getQuery() {
         };
     }
 
-    simplifyInterface = simplifyInterface !== null ? simplifyInterface : false;//== 'true' ? true : false;
+    simplifyInterface = simplifyInterface !== null ? simplifyInterface : false;
 
     return {
         type: getURLParameter('type') || 'TAXON',
