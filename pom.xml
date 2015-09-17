@@ -70,14 +70,9 @@
         <filtering>true</filtering>
       </resource>
       <resource>
-        <directory>src/main/webapp/map</directory>
+        <directory>src/main/webapp</directory>
         <filtering>true</filtering>
-        <targetPath>webapp/map</targetPath>        
-      </resource>
-      <resource>
-        <directory>src/main/webapp/map2</directory>
-        <filtering>true</filtering>
-        <targetPath>webapp/map2</targetPath>        
+        <targetPath>webapp</targetPath>        
       </resource>
     </resources>
 
