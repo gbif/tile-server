@@ -5337,7 +5337,7 @@ module.exports = (function () {
             case 'TAXON':
                 return 'TAXON_KEY';
             case 'DATASET':
-                return 'DATASET_KEY';
+                return 'DATASET';
             default:
                 return type;
         }

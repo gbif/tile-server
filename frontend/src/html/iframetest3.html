@@ -1,0 +1,878 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie9"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+    __________  __________   ____        __           ____             __        __
+   / ____/ __ )/  _/ ____/  / __ \____ _/ /_____ _   / __ \____  _____/ /_____ _/ /
+  / / __/ __  |/ // /_     / / / / __ `/ __/ __ `/  / /_/ / __ \/ ___/ __/ __ `/ /
+ / /_/ / /_/ // // __/    / /_/ / /_/ / /_/ /_/ /  / ____/ /_/ / /  / /_/ /_/ / /
+ \____/_____/___/_/      /_____/\__,_/\__/\__,_/  /_/    \____/_/   \__/\__,_/_/
+-->
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script id="resources" type="text/plain">
+    enum.rank.BIOVAR=biovar
+    enum.rank.CHEMOFORM=chemoform
+    enum.rank.CHEMOVAR=chemovar
+    enum.rank.CLASS=class
+    enum.rank.CULTIVAR=cultivar
+    enum.rank.CULTIVAR_GROUP=cultivar group
+    enum.rank.DOMAIN=domain
+    enum.rank.FAMILY=family
+    enum.rank.FORM=form
+    enum.rank.FORMA_SPECIALIS=forma specialis
+    enum.rank.GENUS=genus
+    enum.rank.INFORMAL=informal
+    enum.rank.INFRAGENERIC_NAME=infrageneric name
+    enum.rank.INFRAORDER=infraorder
+    enum.rank.INFRASPECIFIC_NAME=infraspecific name
+    enum.rank.INFRASUBSPECIFIC_NAME=infrasubspecific name
+    enum.rank.KINGDOM=kingdom
+    enum.rank.MORPHOVAR=morphovar
+    enum.rank.ORDER=order
+    enum.rank.PATHOVAR=pathovar
+    enum.rank.PHAGOVAR=phagovar
+    enum.rank.PHYLUM=phylum
+    enum.rank.SECTION=section
+    enum.rank.SERIES=series
+    enum.rank.SEROVAR=serovar
+    enum.rank.SPECIES=species
+    enum.rank.STRAIN=strain
+    enum.rank.SUBCLASS=subclass
+    enum.rank.SUBFAMILY=subfamily
+    enum.rank.SUBFORM=subform
+    enum.rank.SUBGENUS=subgenus
+    enum.rank.SUBKINGDOM=subkingdom
+    enum.rank.SUBORDER=suborder
+    enum.rank.SUBPHYLUM=subphylum
+    enum.rank.SUBSECTION=subsection
+    enum.rank.SUBSERIES=subseries
+    enum.rank.SUBSPECIES=subspecies
+    enum.rank.SUBTRIBE=subtribe
+    enum.rank.SUBVARIETY=subvariety
+    enum.rank.SUPERCLASS=superclass
+    enum.rank.SUPERFAMILY=superfamily
+    enum.rank.SUPERORDER=superorder
+    enum.rank.SUPERPHYLUM=superphylum
+    enum.rank.SUPRAGENERIC_NAME=suprageneric name
+    enum.rank.TRIBE=tribe
+    enum.rank.UNKNOWN=Unknown
+    enum.rank.UNRANKED=unranked
+    enum.rank.VARIETY=variety
+  </script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title property="dc:title">Rodentia Bowdich, 1821 - Checklist View</title>
+  <meta name="description" content="">
+  <meta name="author" content="GBIF">
+  <!--
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  -->
+  <link rel="apple-touch-icon" sizes="57x57" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="http://cdn.gbif-uat.org/img/favicon/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="http://cdn.gbif-uat.org/img/favicon/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="http://cdn.gbif-uat.org/img/favicon/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="http://cdn.gbif-uat.org/img/favicon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="http://cdn.gbif-uat.org/img/favicon/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="http://cdn.gbif-uat.org/img/favicon/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="http://cdn.gbif-uat.org/img/favicon/manifest.json">
+  <link rel="shortcut icon" href="http://cdn.gbif-uat.org/img/favicon/favicon.ico">
+  <meta name="apple-mobile-web-app-title" content="GBIF">
+  <meta name="application-name" content="GBIF">
+  <meta name="msapplication-TileColor" content="#509e2f">
+  <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+  <meta name="theme-color" content="#509e2f">
+
+  <link rel="stylesheet" href="http://cdn.gbif-uat.org/css/style.css?v=2"/>
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css" type="text/css" media="all"/>
+  <link rel="stylesheet" type="text/css" media="print" href="http://cdn.gbif-uat.org/css/print.css">
+
+  <script src="/cfg"></script>
+  <script src="http://cdn.gbif-uat.org/js/vendor/modernizr-1.7.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery.cookie.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/menu.js"></script>
+  <!-- we have issues with firefox, not only IE: http://dev.gbif.org/issues/browse/POR-412 -->
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/css_browser_selector.js"></script>
+
+  
+  
+  
+  <meta property="dwc:scientificName" content="Rodentia Bowdich, 1821"/>
+  <meta property="dwc:kingdom" content="Animalia"/>
+  <meta property="dwc:datasetID" content="d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"/>
+  <meta property="dwc:datasetName" content="GBIF Backbone Taxonomy"/>
+  <meta rel="dc:isPartOf" href="/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"/>
+
+
+</head>
+<body class="species">
+
+  <header>
+  <!-- To most pages this will be ignored-->
+  <div id="homepageMap"></div>
+
+
+  <!-- top -->
+  <div id="top">
+    <div class="content">
+
+      <div class="account">
+        <a href="http://www.gbif-uat.org/user/login?destination=species%2F1459" title='Login'>Login</a> or
+        <a href="http://www.gbif-uat.org/user/register" title='Create a new account'>Create a new account</a>
+      </div>
+
+      <div id="logo">
+        <a href="http://www.gbif-uat.org/" class="logo">
+          <svg width="245" height="52">
+            <image xlink:href="http://cdn.gbif-uat.org/img/header/GBIF-2015-full.svg" src="http://cdn.gbif-uat.org/img/header/GBIF-2015-full-ie8-fallback.png" width="245" height="52" title="GBIF.org - Free and open access to biodiversity data" alt="Logo of GBIF" />
+          </svg>
+        </a>
+      </div>
+
+    <nav>
+
+      <ul>
+        <li>
+          <a href="#" title="Data">Data</a>
+          <div class="data">
+            <a href="#"></a>
+            <ul>
+              <li><a href="/occurrence">Explore occurrences</a></li>
+              <li><a href="/dataset">Explore datasets</a></li>
+              <li><a href="/species">Explore species</a></li>
+              <li><a href="/country">Explore by country</a></li>
+              <li><a href="http://www.gbif-uat.org/analytics/global">Explore data trends</a></li>
+              <li class="divider"></li>
+              <li><a href="http://www.gbif-uat.org/publishingdata/summary">Publishing data</a></li>
+              <li><a href="http://www.gbif-uat.org/usingdata/summary">Using data</a></li>
+              <li><a href="/infrastructure/summary">Infrastructure</a></li>
+            </ul>
+          </div>
+        </li>
+
+          <li>
+          <a href="#" title="About GBIF">News</a>
+
+          <div class="news">
+            <a href="#"></a>
+            <ul>
+              <li><a href="http://www.gbif-uat.org/newsroom/summary">GBIF news</a></li>
+              <li><a href="http://www.gbif-uat.org/newsroom/uses">Featured data use</a></li>
+              <li><a href="http://www.gbif-uat.org/newsroom/opportunities">Opportunities</a></li>
+              <li><a href="http://www.gbif-uat.org/newsroom/events">Events</a></li>
+              <li><a href="http://www.gbif-uat.org/newsroom/consultations">Consultations</a></li>
+            </ul>
+          </div>
+
+          </li>
+
+       <li>
+          <a href="#" title="Community">Community</a>
+          <div class="community">
+            <a href="#"></a>
+            <ul>
+                <li><a href="http://www.gbif-uat.org/participation/summary">Participation</a></li>
+                <li><a href="http://www.gbif-uat.org/capacityenhancement/summary">Capacity enhancement</a></li>
+                <li><a href="http://www.gbif-uat.org/resources/summary">Resources</a></li>
+            </ul>
+          </div>
+        </li>
+
+          <li>
+            <a href="#" title="About GBIF">About</a>
+            <div class="about">
+              <a href="#"></a>
+              <ul>
+                <li><a href="http://www.gbif-uat.org/whatisgbif">What is GBIF?</a></li>
+                <li><a href="http://www.gbif-uat.org/resources/keyinformation">Key information</a></li>
+                <li><a href="http://www.gbif-uat.org/governance/governingboard">Governance</a></li>
+                <li><a href="http://www.gbif-uat.org/whoweworkwith">Who we work with</a></li>
+                <li><a href="http://www.gbif-uat.org/contact/contactus">Contact us</a></li>
+              </ul>
+            </div>
+          </li>
+
+
+        <li class="search">
+        <form action="http://www.gbif-uat.org/search/node" method="GET">
+          <span class="input_text">
+              <!-- Global search disabled until implemented later. See issue: http://dev.gbif.org/issues/browse/POR-387 -->
+            <input type="text" name="keys" />
+          </span>
+        </form>
+        </li>
+      </ul>
+
+    </nav>
+    </div>
+  </div>
+  <!-- /top -->
+
+
+  <div id="infoband">
+    <div class="content">
+      
+  <h1>Rodentia Bowdich, 1821</h1>
+  <h3>Order
+    
+    in <a href="/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c">GBIF Backbone Taxonomy</a>
+  </h3>
+  <h3>
+
+    <a href="/species/1">Animalia</a> &#x203A;
+
+    <a href="/species/44">Chordata</a> &#x203A;
+
+    <a href="/species/359">Mammalia</a>  </h3>
+
+  <div class="box">
+    <div class="content">
+      <ul>
+        <li><h4>3,409,735</h4>Occurrences</li>
+          <li class="last"><h4>4,369</h4>Species</li>
+      </ul>
+        <a href="/occurrence/search?taxon_key=1459" title="View Occurrences" class="candy_blue_button"><span>View occurrences</span></a>
+    </div>
+  </div>
+
+
+    </div>
+  </div>
+
+  <div id="tabs">
+    <div class="content">
+      
+  <ul class="">
+    <li class='selected '>
+      <a href="/species/1459" title="Information"><span>Information</span></a>
+    </li>
+  </ul>
+
+    </div>
+  </div>
+
+  </header>
+
+
+  <div id="content">
+
+    
+
+
+
+
+
+
+
+
+<article id="overview" class="">
+  <header></header>
+    <a name="overview"></a>
+  <div class="content">
+    <div class="header">
+        <div  class="left">
+          <h2>Overview</h2>
+        </div>
+    </div>
+<div class="left">
+
+  <div class="col">
+    <h3>Full Name</h3>
+    <p>Rodentia Bowdich, 1821</p>
+      <h3>Common names</h3>
+      <ul>
+          <li>rodents <span class="small">eng</span></li>
+          <li>esquilo <span class="small">por</span></li>
+          <li>glodavci <span class="small">slv</span></li>
+        <li class="more"><a href="/species/1459/vernaculars">more</a></li>
+      </ul>
+
+
+
+  </div>
+
+  <div class="col">
+    <h3>Taxonomic status</h3>
+    <p>
+          Accepted order
+    </p>
+
+      <h3>According to</h3>
+      <p>The Catalogue of Life, 3rd January 2011</p>
+
+
+
+
+
+
+
+  </div>
+
+</div>
+
+<div class="right">
+    <div class="species_image">
+      <a href="#images" class="images"><span><img src="../img/placeholder.png" data-load="http://api.gbif-uat.org/v1/image?url=http%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fb%2Fbd%2FApodemus_sylvaticus_bosmuis.jpg&size=s" /></span></a>
+    </div>
+
+      <dl class="identifier">
+          <dt>GBIF ID</dt>
+          <dd><a href="#" title="GBIF ID 1459">1459</a></dd>
+      </dl>
+
+      <h3>Search links</h3>
+      <ul>
+            <li><a target="_blank" href="http://eol.org/search/?q=Rodentia" title="Encyclopedia of Life">Encyclopedia of Life</a></li>
+            <li><a target="_blank" href="http://www.catalogueoflife.org/col/search/all/key/Rodentia" title="Catalogue of Life">Catalogue of Life</a></li>
+            <li><a target="_blank" href="http://www.biodiversitylibrary.org/name/Rodentia">Biodiversity Heritage Library</a></li>
+      </ul>
+
+
+</div>
+  </div>
+  <footer></footer>
+</article>
+
+
+<a name="map"></a>
+<article class="map">
+  <header></header>
+
+
+  <div class="content">
+    <div class="map">
+      <iframe id="map" name="map" src="test.html?type=TAXON&key=1459&resolution=1" allowfullscreen height="100%" width="100%" frameborder="0"/></iframe>
+    </div>
+    <div class="header">
+      <div class="right"><h2>Georeferenced data</h2></div>
+    </div>
+	<div class="right">
+      <div class="inner">
+          <h3>View records</h3>
+          <p>
+            <a href="/occurrence/search?taxon_key=1459&amp;HAS_COORDINATE=true&amp;HAS_GEOSPATIAL_ISSUE=false">All 2,101,985 </a>
+            |
+            <a href="/occurrence/search?taxon_key=1459&amp;BOUNDING_BOX=90%2C-180%2C-90%2C180&amp;HAS_GEOSPATIAL_ISSUE=false" id='geoOccurrenceSearch'>In viewable area</a>
+          </p>
+
+      </div>
+    </div>
+  </div>
+  <footer></footer>
+</article>
+
+
+
+<article id="taxonomy" class="taxonomies">
+  <header></header>
+    <a name="taxonomy"></a>
+  <div class="content">
+    <div class="header">
+        <div  class="left">
+          <h2>Subordinate taxa</h2>
+        </div>
+        <div class="right">
+          <h2>Classification</h2>
+        </div>
+    </div>
+    <div class="left">
+        <div id="taxonomicChildren">
+          <div class="loadingTaxa"><img src="../img/taxbrowser-loader.gif" alt=""></div>
+          <div class="inner">
+            <div class="sp">
+              <ul>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="right">
+      <dl>
+        <dt>kingdom</dt>
+        <dd>
+              <a href="/species/1">Animalia</a>
+        </dd>
+        <dt>phylum</dt>
+        <dd>
+              <a href="/species/44">Chordata</a>
+        </dd>
+        <dt>class</dt>
+        <dd>
+              <a href="/species/359">Mammalia</a>
+        </dd>
+        <dt>order</dt>
+        <dd>
+              Rodentia
+        </dd>
+        <dt>family</dt>
+        <dd>
+            <a href="/species/search?dataset_key=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&amp;rank=FAMILY&amp;highertaxon_key=1459">90</a>
+        </dd>
+        <dt>genus</dt>
+        <dd>
+            <a href="/species/search?dataset_key=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&amp;rank=GENUS&amp;highertaxon_key=1459">1,576</a>
+        </dd>
+        <dt>species</dt>
+        <dd>
+            <a href="/species/search?dataset_key=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&amp;rank=SPECIES&amp;highertaxon_key=1459">4,369</a>
+        </dd>
+        <dt>&nbsp;</dt>
+        <dd><a href="/species/1459/classification">complete classification</a></dd>
+      </dl>
+    </div>
+  </div>
+  <footer></footer>
+</article>
+
+
+<article id="description" class="">
+  <header></header>
+    <a name="description"></a>
+  <div class="content">
+    <div class="header">
+        <div  class="left">
+          <h2>Description</h2>
+        </div>
+    </div>
+    <div class="left">
+      <div class="inner">
+        <h3>Description</h3>
+        <p></p>
+      </div>
+    </div>
+
+    <div class="right">
+      <h3>Table of Contents</h3>
+          <a class="toclang" href="#" data-lang="ENGLISH">ENG</a>, 
+          <a class="toclang" href="#" data-lang="GERMAN">DEU</a>
+        <br/><br/>
+
+        <ul id="topicsENGLISH" class="topics" class="no_bottom">
+            <li><a class="topic" data-descriptionKeys="2789793 ">Abstract</a></li>
+            <li><a class="topic" data-descriptionKeys="2789794 ">Behavior And Life History</a></li>
+            <li><a class="topic" data-descriptionKeys="2789795 ">Characteristics</a></li>
+            <li><a class="topic" data-descriptionKeys="2789796 ">Classification And Evolution</a></li>
+            <li><a class="topic" data-descriptionKeys="2789797 ">Distribution And Habitat</a></li>
+            <li><a class="topic" data-descriptionKeys="2789798 ">Interaction With Humans</a></li>
+        </ul>
+        <ul id="topicsGERMAN" class="topics" class="no_bottom">
+            <li><a class="topic" data-descriptionKeys="160886 ">Abstract</a></li>
+            <li><a class="topic" data-descriptionKeys="160887 ">Körperbau</a></li>
+            <li><a class="topic" data-descriptionKeys="160888 ">Lebensweise</a></li>
+            <li><a class="topic" data-descriptionKeys="160889 ">Nagetiere Und Menschen</a></li>
+            <li><a class="topic" data-descriptionKeys="160890 ">Systematik Und Stammesgeschichte</a></li>
+            <li><a class="topic" data-descriptionKeys="160891 ">Verbreitung</a></li>
+        </ul>
+    </div>
+  </div>
+  <footer></footer>
+</article>
+
+<article id="images" class="">
+  <header></header>
+    <a name="images"></a>
+  <div class="content">
+    <div class="header">
+    </div>
+    <div class="species_images">
+      <a class="controller previous" href="#" title="Previous image"></a>
+      <a class="controller next" href="#" title="Next image"></a>
+      <div class="scroller">
+        <div class="photos"></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2 class="title">...</h2>
+      <div class="scrollable">
+
+      </div>
+    </div>
+    <div class="counter">1 / 1</div>
+  </div>
+  <footer></footer>
+</article>
+
+<article id="appearsin" class="">
+  <header></header>
+    <a name="appearsin"></a>
+  <div class="content">
+    <div class="header">
+        <div  class="left">
+          <h2>Appears in</h2>
+        </div>
+    </div>
+    <div class="fullwidth">
+      <div class="col">
+        <h3>Occurrence datasets</h3>
+        <ul class="notes">
+              <li>
+                <a title="NMNH occurrence DwC-A" href="/occurrence/search?taxon_key=1459&amp;dataset_key=5df38344-b821-49c2-8174-cf0f29f4df0d">NMNH occurrence DwC-A</a>
+                <span class="note"> in 298,720 occurrences</span>
+              </li>
+              <li>
+                <a title="MSB Mammal Collection (Arctos)" href="/occurrence/search?taxon_key=1459&amp;dataset_key=b15d4952-7d20-46f1-8a3e-556a512b04c5">MSB Mammal Collection (Arctos)</a>
+                <span class="note"> in 193,264 occurrences</span>
+              </li>
+              <li>
+                <a title="MVZ Mammal Collection (Arctos)" href="/occurrence/search?taxon_key=1459&amp;dataset_key=0daed095-478a-4af6-abf5-18acb790fbb2">MVZ Mammal Collection (Arctos)</a>
+                <span class="note"> in 174,112 occurrences</span>
+              </li>
+              <li>
+                <a title="AMNH Mammal Collections" href="/occurrence/search?taxon_key=1459&amp;dataset_key=96ca66b4-f762-11e1-a439-00145eb45e9a">AMNH Mammal Collections</a>
+                <span class="note"> in 145,244 occurrences</span>
+              </li>
+              <li>
+                <a title="Natural History Museum (London) Collection Specimens" href="/occurrence/search?taxon_key=1459&amp;dataset_key=7e380070-f762-11e1-a439-00145eb45e9a">Natural History Museum (London) Collection Specimens</a>
+                <span class="note"> in 127,324 occurrences</span>
+              </li>
+              <li>
+                <a title="Field Museum of Natural History (Zoology) Mammal Collection" href="/occurrence/search?taxon_key=1459&amp;dataset_key=41fc5c40-5e81-496f-9733-6b5681b3b7a5">Field Museum of Natural History (Zoology) Mammal Collec…</a>
+                <span class="note"> in 104,396 occurrences</span>
+              </li>
+              <li class="more"><a href="/species/1459/datasets?type=OCCURRENCE">846 more</a></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Checklists</h3>
+        <ul class="notes">
+              <li><a title="NCBI Taxonomy" href="/species/104059707">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA5390</span>
+              </li>
+              <li><a title="NCBI Taxonomy" href="/species/104059706">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA5389</span>
+              </li>
+              <li><a title="NCBI Taxonomy" href="/species/104059704">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA5388</span>
+              </li>
+              <li><a title="NCBI Taxonomy" href="/species/104059702">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA5168</span>
+              </li>
+              <li><a title="NCBI Taxonomy" href="/species/104059701">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA4204</span>
+              </li>
+              <li><a title="NCBI Taxonomy" href="/species/104059699">NCBI Taxonomy</a>
+                <span class="note">as Rodentia sp. BOLD:AAA4203</span>
+              </li>
+              <li class="more"><a href="/species/1459/datasets?type=CHECKLIST">292 more</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <footer></footer>
+</article>
+
+
+
+
+<article id="legal" class="mono_line">
+  <header></header>
+    <a name="legal"></a>
+  <div class="content">
+    <div class="header">
+        <div  class="left">
+          <h2>Citation and licensing</h2>
+        </div>
+    </div>
+  <div class="fullwidth">
+
+    <h3>Default citation</h3>
+    <p>GBIF Secretariat:
+      GBIF Backbone Taxonomy, 2013-07-01.
+      <br/>Accessed via http://www.gbif-uat.org/species/1459 on 2015-09-17
+    </p>
+
+
+  </div>
+  </div>
+  <footer></footer>
+</article>
+
+
+<article  class="notice">
+  <header></header>
+  <div class="content">
+    <img src="http://cdn.gbif-uat.org/img/icons/notice_icon.png" />
+    <h3>Source information</h3>
+<p>
+  This backbone name usage exists because
+    it was found in another checklist at the time the backbone was built.
+      The primary source name usage  has since been removed from the portal.
+</p>
+  </div>
+  <footer></footer>
+</article>
+
+
+
+<article  class="notice">
+  <header></header>
+  <div class="content">
+    <img src="http://cdn.gbif-uat.org/img/icons/notice_icon.png" />
+    <h3>Record history</h3>
+  <p>
+    This record was last modified in GBIF on Nov 3, 2014.
+      The source was last visited by GBIF on Jul 30, 2015.
+      It was last updated according to the publisher on Feb 8, 2013.
+  </p>
+<p>
+  A record will be modified by GBIF when either the source record has been changed by the publisher, or improvements in the GBIF processing warrant an update.
+</p>
+  </div>
+  <footer></footer>
+</article>
+
+
+  </div>
+
+  <footer>
+    <div id="link_footer">
+      <div class="footer">
+        <ul>
+            <li><h3>JOIN THE COMMUNITY</h3></li>
+            <li><a href="http://community.gbif.org/">Join GBIF Community Site</a></li>
+            <li><a href="http://www.gbif-uat.org/newsroom/summary/#signup">Sign up to GBits newsletter</a></li>
+            <li><a href="http://www.gbif-uat.org/resources/summary">GBIF Online Resource Centre</a></li>
+        </ul>
+
+        <ul>
+            <li><h3>WHO’S PARTICIPATING</h3></li>
+            <li><a href="/participation/list#voting">Countries</a></li>
+            <li><a href="/participation/list#other">Organizations</a></li>
+            <li><a href="/publisher/search">Data publishers</a></li>
+        </ul>
+
+        <ul>
+            <li><h3>KEY DOCUMENTS</h3></li>
+            <li><a href="http://www.gbif-uat.org/disclaimer">Disclaimer</a></li>
+            <li><a href="http://www.gbif-uat.org/disclaimer/datause">Data use agreement</a></li>
+            <li><a href="http://www.gbif-uat.org/disclaimer/datasharing">Data sharing agreement</a></li>
+            <li><a href="http://www.gbif.org/resources/2605">Memorandum of Understanding</a></li>
+            <li><a href="http://www.gbif.org/resources/9221">Annual Report</a></li>
+            <li><a href="http://www.gbif.org/resources/2569">GBIF Strategic Plan</a></li>
+            <li><a href="http://www.gbif.org/resources/2970">GBIF Work Programme</a></li>
+            <li><a href='http://links.gbif.org/travel_guidelines.pdf'>GBIF Travel guidelines</a></li>
+
+        </ul>
+
+        <ul class="last">
+            <li><h3>FOR DEVELOPERS</h3></li>
+            <li><a href="/developer">Portal API</a></li>
+            <li><a href="http://gbif.blogspot.com">Developer blog</a></li>
+            <li><a href="/infrastructure/tools">Tools</a></li>
+        </ul>
+
+      </div>
+    </div>
+    <div id="contact_footer">
+      <div class="footer">
+          <ul>
+              <li><h3>2015 &copy; GBIF</h3></li>
+              <li><div class="logo"></div></li>
+          </ul>
+
+          <ul>
+              <li><h3>GBIF Secretariat</h3></li>
+              <li>Universitetsparken 15</li>
+              <li>DK-2100 Copenhagen Ø</li>
+              <li>DENMARK</li>
+          </ul>
+
+          <ul>
+            <li><h3>Contact</h3></li>
+            <li><strong>Email</strong> info@gbif.org</li>
+            <li><strong>Tel</strong> +45 35 32 14 70</li>
+            <li><strong>Fax</strong> +45 35 32 14 80</li>
+            <li>You can also check the <a href="http://www.gbif-uat.org/contact/directoryofcontacts#secretariat">GBIF Directory</a></li>
+          </ul>
+
+          <ul class="social last">
+              <li><h3>SOCIAL MEDIA</h3></li>
+              <li class="twitter"><i></i><a href="https://twitter.com/GBIF">Follow GBIF on Twitter</a></li>
+              <li class="facebook"><i></i><a href="https://www.facebook.com/gbifnews">Like GBIF on Facebook</a></li>
+              <li class="linkedin"><i></i><a href="http://www.linkedin.com/groups/GBIF-55171">Join GBIF on Linkedin</a></li>
+              <li class="vimeo"><i></i><a href="http://vimeo.com/gbif">View GBIF on Vimeo</a></li>
+          </ul>
+
+        </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript at the bottom for fast page loading -->
+  <!-- scripts concatenated and minified via ant build script  -->
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery-ui-1.8.17.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery.dropkick-1.0.0.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery.uniform.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/mousewheel.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jscrollpane.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/jquery-scrollTo-1.4.2-min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/underscore-min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/helpers.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/widgets.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/graphs.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/app.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/raphael-min.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/resourcebundle.js"></script>
+  <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/moment.min.js"></script>
+  <script type="text/javascript" src="http://dev.gbif.org/issues/s/en_UKkby86d-1988229788/6096/5/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=a2e9eca4"></script>
+  <!-- end scripts-->
+
+  <!--[if lt IE 7 ]>
+  <script src="http://cdn.gbif-uat.org/js/libs/dd_belatedpng.js"></script>
+  <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+  <![endif]-->
+
+  
+         <script type="text/javascript" src="http://api.gbif-uat.org/v1/map/map-events.js"></script>
+         <script type="text/javascript">
+             new GBIFMapListener().subscribe(function(id, searchUrl) {
+               $("#geoOccurrenceSearch").attr("href", "/occurrence/search?" +  searchUrl);
+             });
+         </script>
+
+      <link rel="stylesheet" type="text/css" href="/js/vendor/fancybox/jquery.fancybox.css?v=2.1.4">
+      <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/fancybox/jquery.fancybox.js?v=2.1.4"></script>
+      <link rel="stylesheet" type="text/css" href="/js/vendor/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.5">
+      <script type="text/javascript" src="http://cdn.gbif-uat.org/js/vendor/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+
+      <script type="text/javascript">
+      // taxonomic tree state
+      var $taxoffset= 0, loadedAllChildren=false;
+
+      function renderUsages($ps, data){
+        // hide loading wheel
+        $ps.find(".loadingTaxa").fadeOut("slow");
+        $(data.results).each(function() {
+          var speciesLink = "/species/" + this.key;
+          $htmlContent = '<li spid="' + this.key + '">';
+          $htmlContent += '<span class="sciname"><a href="'+speciesLink+'">' + canonicalOrScientificName(this) + "</a></span>";
+          $htmlContent += '<span class="rank">' + $i18nresources.getString("enum.rank." + (this.rank || "unknown")) + "</span>";
+          if (this.numDescendants>0) {
+            $htmlContent += '<span class="count">' + addCommas(this.numDescendants) + " descendants</span>";
+          }
+          $htmlContent += '</span></li>';
+          $ps.find(".sp ul").append($htmlContent);
+        })
+      };
+
+      // Function for loading and rendering children
+      function loadChildren() {
+        $ps=$("#taxonomicChildren");
+        var $wsUrl = cfg.wsClb + "species/1459/children?offset=" + $taxoffset + "&limit=25";
+        // show loading wheel
+        $ps.find(".loadingTaxa").show();
+        //get the new list of children
+        $.getJSON($wsUrl + '&callback=?', function(data) {
+          renderUsages($ps, data);
+          loadedAllChildren=data.endOfRecords;
+        });
+        $taxoffset += 25;
+      }
+
+      function loadDescription($descriptionKeys){
+        var keys = $descriptionKeys.split(' ');
+        // remove current description
+        $("#description div.inner").empty();
+        $.each(keys, function(index, k) {
+          var key = $.trim(k);
+          if (key) {
+            var $wsUrl = cfg.wsClb + "description/" + key;
+            $.getJSON($wsUrl + '?callback=?', function(data) {
+              $htmlContent = "<h3>"+(data.type || "Description") +"</h3>";
+              $htmlContent += "<p>"+data.description+"</p>";
+              $htmlContent += '<p id="descriptionSrc'+index+'" class="note"><strong>Source</strong>: </p>';
+              if (data.license) {
+                  $htmlContent += '<p class="note"><strong>License</strong>: '+data.license+'</p>';
+              }
+              $("#description div.inner").append($htmlContent);
+              $("#description div.inner").append("<br/><br/>");
+                  $.getJSON(cfg.wsClb + "species/" + data.sourceTaxonKey+ "?callback=?", function(species) {
+                      $.getJSON(cfg.wsReg + "dataset/" + species.datasetKey + "?callback=?", function(dataset) {
+                          $("#descriptionSrc"+index).append('<a href="'+cfg.baseUrl+'/species/'+data.sourceTaxonKey+'">'+dataset.title+'</a>');
+                      });
+                  });
+              if (data.source) {
+                  $("#descriptionSrc"+index).append(data.source);
+              }
+            });
+          }
+        })
+      }
+
+      // show topics for a language
+      function showLanguageTopics(lang){
+          $("#description .topics").hide();
+          $("#topics"+lang).show();
+          $topicLi = $("#topics"+lang + " .topic:first");
+          if ($topicLi.length > 0) {
+            loadDescription($topicLi.attr("data-descriptionKeys"));
+          };
+          // adjust description height to ToC
+          var tocHeight = $("#description div.right").height() - 5;
+          if (tocHeight > 350) {
+            $("#description div.inner").height(tocHeight);
+          }
+      }
+
+      function initDescriptions(){
+            $("#description .topic").click(function(event) {
+              event.preventDefault();
+              loadDescription( $(this).attr("data-descriptionKeys") );
+            });
+            $("#description .toclang").click(function(event) {
+              event.preventDefault();
+              showLanguageTopics($(this).attr("data-lang"));
+            });
+            // show first language ToC,
+            // TODO: try to use in this order: user locale, english, first lang
+            $showLang = "ENGLISH";
+            showLanguageTopics($showLang);
+      }
+
+      $(function() {
+        // taxonomic tree
+        loadChildren();
+        $("#taxonomicChildren .inner").scroll(function(){
+          var triggerHeight = $("#taxonomicChildren .sp").height() - $(this).height() - 100;
+          if (!loadedAllChildren && $("#taxonomicChildren .inner").scrollTop() > triggerHeight){
+            loadChildren();
+          }
+        });
+
+        // description TOC
+        initDescriptions();
+
+        // image slideshow
+        $("#images").speciesSlideshow(1459, 'Rodentia Bowdich, 1821');
+      });
+    </script>
+    <style type="text/css">
+        #images .title {
+          overflow: hidden;
+          max-height: 85px;
+        }
+        #content #images .scrollable {
+          height: 350px;
+        }
+    </style>
+  
+
+</body>
+</html>
