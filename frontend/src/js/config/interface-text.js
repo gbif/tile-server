@@ -25,7 +25,7 @@ module.exports = {
         fullscreen: 'Fullscreen'
     },
     map: {
-        attribution: 'Attribution'
+        attribution: 'Attribution & Disclaimer'
     }
 };
 
