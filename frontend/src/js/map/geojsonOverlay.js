@@ -15,7 +15,9 @@ module.exports = (function () {
         map.parent.appendChild(canvas);
         
         function getAsLocation(point) {
-            return new MM.Location(point[0], point[1]);
+            var lat = Math.max(Math.min(85.0511, point[1]), -85.0511),
+                lng = Math.max(Math.min(180, point[0]), -180);
+            return new MM.Location(lat, lng);
         }
         
         function drawGeometry(ctx, geom) {
@@ -67,7 +69,7 @@ module.exports = (function () {
                         continue;
                     }
                     for (var j = 0; j < coordinates.length; j++) {
-                        var point = new MM.Location(coordinates[j][1], coordinates[j][0]);
+                        var point = getAsLocation(coordinates[j]);
                         geom.push(point);
                         points.push(point);
                     }
