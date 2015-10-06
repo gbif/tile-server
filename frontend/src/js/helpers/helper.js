@@ -137,14 +137,13 @@ module.exports = (function () {
      */
     function buildVisibleGeometry(n, s, e, w) {
         function normalize(c) {
-            c = Math.round(c * 100) / 100;
             while (c < -180) {
                 c += 360;
             }
             while (c > 180) {
                 c -= 360;
             }
-            return c;
+            return c.toFixed(2);
         }
         e = normalize(e);
         w = normalize(w);
