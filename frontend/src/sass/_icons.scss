@@ -1,0 +1,16 @@
+.gbifBasicMapIcon{
+    font-style: normal;
+    font-family: 'gbifBasicMap_icons';
+}
+.gbifBasicMapIcon.gbifBasicMapIcon-filter:before{
+    content: 'f';
+}
+.gbifBasicMapIcon.gbifBasicMapIcon-style:before{
+    content: 's';
+}
+.gbifBasicMapIcon.gbifBasicMapIcon-fullscreen:before{
+    content: 'e';
+}
+.gbifBasicMapIcon.gbifBasicMapIcon-info:before{
+    content: 'i';
+}

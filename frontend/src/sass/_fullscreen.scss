@@ -1,0 +1,31 @@
+&:-webkit-full-screen{
+    :not(.touch).flex .fullscreen{
+        display:none;
+    }
+}
+
+&:-moz-full-screen{
+    :not(.touch).flex .fullscreen{
+        display:none;
+    }
+}
+
+&:-ms-fullscreen{
+    :not(.touch).flex .fullscreen{
+        display:none;
+    }
+}
+
+&:fullscreen{
+    :not(.touch).flex .fullscreen{
+        display:none;
+    }
+}
+
+@media screen and (min-width: $medium) {
+    :not(.touch).flex {
+        .fullscreen{
+            display: block;
+        }
+    }
+}

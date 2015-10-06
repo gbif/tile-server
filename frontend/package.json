@@ -1,0 +1,56 @@
+{
+    "name": "gbif-occurence-map",
+    "version": "0.0.0",
+    "description": "A basic map for showing occurences",
+    "main": "gulpfile.js",
+    "dependencies": {
+        "brfs": "^1.4.1",
+        "browserify": "^11.0.1",
+        "browserify-shim": "^3.8.10",
+        "modestmaps": "git://github.com/modestmaps/modestmaps-js.git#a688eaf42c0ebbe552e8284f30ae39f098789ce9",
+        "rivets": "^0.8.1",
+        "sightglass": "^0.2.4",
+        "stringify": "^3.1.0",
+        "vinyl-source-stream": "^1.1.0",
+        "del": "^1.2.1",
+        "gulp": "^3.9.0",
+        "require-dir": "^0.3.0",
+        "jshint-stylish": "^2.0.1",
+        "gulp-autoprefixer": "^2.3.1",
+        "gulp-uglify": "^1.2.0",
+        "run-sequence": "^1.1.2",
+        "gulp-rename": "^1.2.2",
+        "gulp-sass": "^2.0.4",
+        "gulp-hash-filename": "^1.0.1",
+        "gulp-inject": "^1.5.0",
+        "gulp-jscs": "^2.0.0",
+        "gulp-jscs-stylish": "^1.1.1",
+        "gulp-jshint": "^1.11.2",
+        "gulp-minify-css": "^1.2.0",
+        "gulp-notify": "^2.2.0",
+        "browser-sync": "^2.8.2",
+        "gulp-util": "^3.0.6"
+    },
+    "devDependencies": {
+    },
+    "browserify": {
+        "transform": [
+            "browserify-shim",
+            "brfs"
+        ]
+    },
+    "browser": {
+        "sightglass": "./node_modules/sightglass/index.js",
+        "rivets": "./node_modules/rivets/dist/rivets.js",
+        "modestmaps": "./node_modules/modestmaps/modestmaps.js",
+        "maplib": "./src/js/vendor/maplib.js"
+    },
+    "browserify-shim": {
+        "sightglass": "sightglass",
+        "rivets": "rivets",
+        "modestmaps": "MM"
+    },
+    "scripts": {},
+    "author": "GBIF",
+    "license": "Apache 2.0"
+}

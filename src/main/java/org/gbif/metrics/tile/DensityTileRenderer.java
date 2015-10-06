@@ -1,7 +1,5 @@
 package org.gbif.metrics.tile;
 
-import org.gbif.maps.MetadataProvider;
-import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityCube;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
@@ -48,28 +46,6 @@ public class DensityTileRenderer extends CubeTileRenderer {
   private final Timer tcJsonRenderTimer = Metrics.newTimer(DensityTileRenderer.class, "tileCubeJsonRenderDuration",
     TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
   private final Meter requests = Metrics.newMeter(DensityTileRenderer.class, "requests", "requests", TimeUnit.SECONDS);
-
-  public static double pixelYToLatitude(double pixelY, int zoom) {
-    double y = 0.5 - (pixelY / ((long) DensityTile.TILE_SIZE << zoom));
-    return 90 - 360 * Math.atan(Math.exp(-y * 2 * Math.PI)) / Math.PI;
-  }
-
-  public static double pixelXToLongitude(double pixelX, int zoom) {
-    return 360 * ((pixelX / ((long) DensityTile.TILE_SIZE << zoom)) - 0.5);
-  }
-
-  /**
-   * Accumulates the count represented by the tile.
-   */
-  private static int accumulate(DensityTile tile) {
-    int total = 0;
-    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
-      for (Integer count : e.getValue().values()) {
-        total += count;
-      }
-    }
-    return total;
-  }
 
   @Inject
   public DensityTileRenderer(DataCubeIo<DensityTile> cubeIo) {
@@ -157,6 +133,20 @@ public class DensityTileRenderer extends CubeTileRenderer {
     resp.flushBuffer();
   }
 
+  /**
+   * Accumulates the count represented by the tile.
+   */
+  private int accumulate(DensityTile tile) {
+    int total = 0;
+    for (Entry<Layer, Map<Integer, Integer>> e : tile.layers().entrySet()) {
+      for (Integer count : e.getValue().values()) {
+        total += count;
+      }
+    }
+    return total;
+  }
+
+
   protected void renderTileCubeAsJson(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setHeader("Content-Type", "application/json");
 
@@ -190,8 +180,29 @@ public class DensityTileRenderer extends CubeTileRenderer {
   }
 
   protected void renderMetadata(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // as a tile server, we support cross domain requests
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+    resp.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Prototype-Version, X-CSRF-Token");
+    resp.setHeader("Cache-Control", "public,max-age=60"); // encourage a 60 second caching by everybody
+    resp.setHeader("Content-Type", "application/json");
 
     Optional<DensityTile> tile = getTile(req, DensityCube.INSTANCE);
+
+    // extract the layers from the request (if any)
+    String[] layerStrings = req.getParameterValues("layer");
+    List<Layer> layers = Lists.newArrayList();
+    if (layerStrings != null) {
+      for (String ls : layerStrings) {
+        try {
+          layers.add(Layer.valueOf(ls));
+          LOG.debug("Layer requested: {}", Layer.valueOf(ls));
+        } catch (Exception e) {
+          LOG.warn("Invalid layer supplied, ignoring: " + ls);
+        }
+      }
+    } else {
+      LOG.debug("No layers returned, merging all layers");
+    }
 
     int count = 0;
     // note: set to opposite extremes to allow efficient comparison
@@ -205,24 +216,47 @@ public class DensityTileRenderer extends CubeTileRenderer {
 
       // scan over all layers, accumulating the total and extracting the extents
       for (Map.Entry<Layer, Map<Integer, Integer>> e : densityTile.layers().entrySet()) {
-        for (Map.Entry<Integer, Integer> pixels : e.getValue().entrySet()) {
 
-          count += pixels.getValue();
+        // Only accumulate the counts if the layer is specified in the request, or none are given
+        if (layers.isEmpty() ||layers.contains(e.getKey())) {
+          for (Map.Entry<Integer, Integer> pixels : e.getValue().entrySet()) {
 
-          // get the pixel and determine the lat and lng for the pixel
-          int pixel = pixels.getKey();
-          int pixelX = pixel % DensityTile.TILE_SIZE;
-          int pixelY = (int) Math.floor(pixel / DensityTile.TILE_SIZE);
-          double lat = pixelYToLatitude(pixelY, extractInt(req, REQ_Z, true));
-          double lng = pixelXToLongitude(pixelX, extractInt(req, REQ_Z, true));
+            count += pixels.getValue();
 
-          minimumLatitude = minimumLatitude < lat ? minimumLatitude : lat;
-          minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
-          maximumLatitude = maximumLatitude > lat ? maximumLatitude : lat;
-          maximumLongitude = maximumLongitude > lng ? maximumLongitude : lng;
+            // get the pixel and determine the lat and lng for the pixel
+            int pixel = pixels.getKey();
+            int pixelX = pixel % DensityTile.TILE_SIZE;
+            int pixelY = (int) Math.floor(pixel / DensityTile.TILE_SIZE);
+            double lat = pixelYToLatitude(pixelY, extractInt(req, REQ_Z, true));
+            double lng = pixelXToLongitude(pixelX, extractInt(req, REQ_Z, true));
+
+            minimumLatitude = minimumLatitude < lat ? minimumLatitude : lat;
+            minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
+            maximumLatitude = maximumLatitude > lat ? maximumLatitude : lat;
+            maximumLongitude = maximumLongitude > lng ? maximumLongitude : lng;
+          }
         }
       }
     }
-    MetadataProvider.renderMetadata(req,resp,count,minimumLatitude,minimumLongitude,maximumLatitude,maximumLongitude);
+
+    ObjectNode node = MAPPER.createObjectNode();
+    node.put("count", count);
+    if (count>0) {
+      node.put("minimumLatitude", minimumLatitude);
+      node.put("minimumLongitude", minimumLongitude);
+      node.put("maximumLatitude", maximumLatitude);
+      node.put("maximumLongitude", maximumLongitude);
+    }
+    MAPPER.writeValue(resp.getOutputStream(), node);
+    resp.flushBuffer();
+  }
+
+  public static double pixelYToLatitude(double pixelY, int zoom) {
+    double y = 0.5 - (pixelY / ((long) DensityTile.TILE_SIZE << zoom));
+    return 90 - 360 * Math.atan(Math.exp(-y * 2 * Math.PI)) / Math.PI;
+  }
+
+  public static double pixelXToLongitude(double pixelX, int zoom) {
+    return 360 * ((pixelX / ((long) DensityTile.TILE_SIZE << zoom)) - 0.5);
   }
 }

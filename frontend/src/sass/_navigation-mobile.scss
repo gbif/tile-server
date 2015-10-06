@@ -1,0 +1,152 @@
+.button {
+    width: $icon-button-size;
+    height: $icon-button-size;
+    background-color: $primary-background-color;
+    line-height: $icon-button-size;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+        background-color: darken( $primary-background-color, 10% );
+    }
+}
+.touch .button{
+    width: $icon-button-size-touch;
+    height: $icon-button-size-touch;
+    line-height: $icon-button-size-touch;
+}
+.toggle {
+    border-radius: 100%;
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    &.show {
+        display: inline-block;
+    }
+}
+.icon {
+    line-height: inherit;
+}
+.filters-toggle {
+    left: 0px;
+}
+.styling-toggle {
+    right: 0px;
+}
+
+.fullscreen{
+    left: 0px;
+    top: 60px;
+}
+
+.gbifBasicMap_nav {
+    background-color: $primary-background-color;
+    box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+    .gbifBasicMap_sidebarHeader{
+        i{
+            display:none;
+        }
+    }
+    h3 {
+        color: darken( $primary-background-color, 40% );
+        text-align: center;
+        font-size: .8em;
+        padding: 1px 5px;
+    }
+    h2 {
+        font-size: 1.2em;
+        background: $primary-accent-color;
+        color: $primary-background-color;
+        padding: 10px 20px 10px 10px;
+    }
+    >ul>li {
+        border-bottom: 1px solid darken( $primary-background-color, 10% );
+        label {
+            input {
+                display: none;
+            }
+        }
+        &.gbifBasicMap_nav_dates{
+            li{
+                &.active div:hover{
+                    cursor: ns-resize;
+                }
+            }
+        }
+        &.gbifBasicMap_nav_evidence{
+            >ul>li{
+                &:nth-child(1){
+                    border-bottom: 1px solid darken( $primary-background-color, 10% );
+                }
+            }
+        }
+        >ul>li{
+            div {
+                display: inline-block;
+                width:100%;
+                padding: 7px 20px 7px 10px;
+                //white-space: nowrap;
+                user-select: none;
+                cursor: pointer;
+                border-left: 5px solid transparent;
+                color: darken( $primary-background-color, 20% );
+
+                i.gbifBasicMapIcon-info{
+                    float: right;
+                }
+                
+                .comment{
+                    color: darken( $primary-background-color, 20% );
+                    font-size: 0.8em;
+                    padding-left:5px;
+                    float:none;
+                }
+
+                &:hover {
+                    .comment{
+                        color: darken( $primary-background-color, 50% );
+                    }
+                }
+
+                span.gbifBasicMap_description{
+                    max-height: 0;
+                    overflow: hidden;
+                    display:block;
+                    margin: 0;
+                    transition: all .3s ease;
+                    &.showdescription {
+                        max-height: 50px;
+                        margin: .5em 0 0 0;
+                    }
+                }
+            }
+        }
+        
+        
+        .active div, li.active, input:checked + div {
+            color: $primary-accent-color;
+            border-color: $primary-accent-color;
+            background: darken( $primary-background-color, 5% );
+        }
+    }
+}
+
+
+.touch .gbifBasicMap_nav{
+    /*>ul>li> div{
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }*/
+    .gbifBasicMap_nav_dates>ul>li> div{
+        width:50%;
+    }
+}
+:not(.touch) .gbifBasicMap_nav>ul>li{
+    li:hover, div:hover{
+        background: darken( $primary-background-color, 2% );
+        color: $primary-accent-color;
+        //color: lighten( $primary-accent-color, 20% );
+    }
+}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="robots" content="noindex">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -15,13 +16,16 @@
     <![endif]-->
     
     <!-- style:css -->
-    <link rel="stylesheet" href="css/main.min-cca9fa75b431d9207c0053c7fd089076.css">
+    <link rel="stylesheet" href="css/main.css">
     <!-- endinject -->
 </head>
 
 <body lang="en">
+    <script>
+        document.baseUrlForTesting = 'http://api.gbif.org/v1/map/';
+    </script>
     <!-- inject:js -->
-    <script src="script.min-c93171bba09e9c8c2f3f2a890491bb91.js"></script>
+    <script src="script.js"></script>
     <!-- endinject -->
     
     <script>
