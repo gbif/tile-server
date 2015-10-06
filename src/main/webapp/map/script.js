@@ -4539,7 +4539,9 @@ module.exports = (function () {
     */
     function notifyListener() {
         var extent,
-            state;
+            state,
+            evidenceArray,
+            evidenceFilter = [];
 
         if (!stateListener) {
             return;
@@ -4548,11 +4550,17 @@ module.exports = (function () {
         //TAXON_KEY=1459&HAS_GEOSPATIAL_ISSUE=false&GEOMETRY=-180+-89%2C-180+90%2C180+90%2C180+-89%2C-180+-89&YEAR=*%2C2020
         //DATASET_KEY=75018539-6328-41de-b875-7c2e61dc1635&HAS_GEOSPATIAL_ISSUE=false&GEOMETRY=-180+-82%2C-180+82%2C180+82%2C180+-82%2C-180+-82&BASIS_OF_RECORD=OBSERVATION&YEAR=*%2C2020
         extent = map.getExtent();
+        evidenceArray = filters.evidence.getActiveEvidenceAsArray();
+        if (evidenceArray.length != evidence.all.length) {
+            evidenceArray.forEach(function (e) {
+                e.filterAbbr.forEach(function (abb) {
+                    evidenceFilter.push(abb);
+                });
+            });
+        }
         state = {
             HAS_GEOSPATIAL_ISSUE: false,
-            BASIS_OF_RECORD: filters.evidence.getActiveEvidenceAsArray().map(function (e) {
-                return e.filterAbbr;
-            }),
+            BASIS_OF_RECORD: evidenceFilter,
             GEOMETRY: helper.buildVisibleGeometry(extent.north, extent.south, extent.east, extent.west)
         };
         if (!filters.dates.options[0].active) {
@@ -4813,33 +4821,33 @@ module.exports = {
         sp: {
             text: 'Preserved specimen',
             abbr: 'SP',
-            filterAbbr: 'PRESERVED_SPECIMEN',
+            filterAbbr: ['PRESERVED_SPECIMEN'],
             dated: true
         },
         obs: {
             text: 'Observation',
             abbr: 'OBS',
-            filterAbbr: 'OBSERVATION',
+            filterAbbr: ['OBSERVATION', 'HUMAN_OBSERVATION', 'MACHINE_OBSERVATION'],
             dated: true
         },
         oth: {
-            text: 'Unknown evidence',
+            text: 'Other',
             abbr: 'OTH',
-            filterAbbr: 'UNKNOWN',
+            filterAbbr: ['UNKNOWN', 'MATERIAL_SAMPLE', 'LITERATURE'],
             dated: true
         },
         fossil: {
             text: 'Fossil',
             comment: 'No date',
             abbr: 'FOSSIL',
-            filterAbbr: 'FOSSIL_SPECIMEN',
+            filterAbbr: ['FOSSIL_SPECIMEN'],
             dated: false
         },
         living: {
             text: 'Living specimen',
             comment: 'No date',
             abbr: 'LIVING',
-            filterAbbr: 'LIVING_SPECIMEN',
+            filterAbbr: ['LIVING_SPECIMEN'],
             dated: false
         }
     }
@@ -4880,11 +4888,11 @@ module.exports = {
 
 },{}],9:[function(require,module,exports){
 module.exports = (function () {
-	var baseUrlForTesting = document.baseUrlForTesting || '';
+    var baseUrlForTesting = document.baseUrlForTesting || '';
 
     return {
-    	overlayUrl: baseUrlForTesting + 'density/tile.png',
-    	jsonUrlTemplate: baseUrlForTesting + 'density/tile.json?key={key}&resolution=1&x=0&y=0&z=0&type={type}'
+        overlayUrl: baseUrlForTesting + 'density/tile.png',
+        jsonUrlTemplate: baseUrlForTesting + 'density/tile.json?key={key}&resolution=1&x=0&y=0&z=0&type={type}'
     };
 })();
 
@@ -5348,14 +5356,13 @@ module.exports = (function () {
      */
     function buildVisibleGeometry(n, s, e, w) {
         function normalize(c) {
-            c = Math.round(c * 100) / 100;
             while (c < -180) {
                 c += 360;
             }
             while (c > 180) {
                 c -= 360;
             }
-            return c;
+            return c.toFixed(2);
         }
         e = normalize(e);
         w = normalize(w);

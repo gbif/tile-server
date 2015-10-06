@@ -5,33 +5,33 @@ module.exports = {
         sp: {
             text: 'Preserved specimen',
             abbr: 'SP',
-            filterAbbr: 'PRESERVED_SPECIMEN',
+            filterAbbr: ['PRESERVED_SPECIMEN'],
             dated: true
         },
         obs: {
             text: 'Observation',
             abbr: 'OBS',
-            filterAbbr: 'OBSERVATION',
+            filterAbbr: ['OBSERVATION', 'HUMAN_OBSERVATION', 'MACHINE_OBSERVATION'],
             dated: true
         },
         oth: {
-            text: 'Unknown evidence',
+            text: 'Other',
             abbr: 'OTH',
-            filterAbbr: 'UNKNOWN',
+            filterAbbr: ['UNKNOWN', 'MATERIAL_SAMPLE', 'LITERATURE'],
             dated: true
         },
         fossil: {
             text: 'Fossil',
             comment: 'No date',
             abbr: 'FOSSIL',
-            filterAbbr: 'FOSSIL_SPECIMEN',
+            filterAbbr: ['FOSSIL_SPECIMEN'],
             dated: false
         },
         living: {
             text: 'Living specimen',
             comment: 'No date',
             abbr: 'LIVING',
-            filterAbbr: 'LIVING_SPECIMEN',
+            filterAbbr: ['LIVING_SPECIMEN'],
             dated: false
         }
     }
