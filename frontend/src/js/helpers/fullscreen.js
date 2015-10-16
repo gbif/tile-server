@@ -36,6 +36,9 @@ module.exports = (function () {
         
         
         function enterFullscreen() {
+            if (ga) {
+                ga('send', 'event', 'map', 'fullscreen');
+            }
             launchIntoFullscreen(widget);
         }
 

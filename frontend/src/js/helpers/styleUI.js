@@ -22,6 +22,9 @@ module.exports = function (options) {
     }
     
     function selectMap(event, context) {
+        if (typeof ga !== 'undefined') {
+            ga('send', 'event', 'map_basemap', 'select', context.option.id);
+        }
         context.styling.maps.selectedValue = context.option.id;
         context.map.setBaseMap(context.option);
         docCookies.setItem('settings', JSON.stringify({baseMapId: context.option.id}));//save the prefered basemap in a cookie
@@ -29,6 +32,9 @@ module.exports = function (options) {
     }
     
     function selectResolution(event, context) {
+        if (typeof ga !== 'undefined') {
+            ga('send', 'event', 'map_resolution', 'select', context.option.name, context.option.resolution);
+        }
         context.styling.size.selectedValue = context.option.resolution;
         context.shared.updateOverlay();
     }

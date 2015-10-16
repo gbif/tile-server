@@ -32,7 +32,7 @@ function getQuery() {
     simplifyInterface = simplifyInterface !== null ? simplifyInterface : false;
 
     return {
-        type: getURLParameter('type') || 'TAXON',
+        type: getURLParameter('type'),
         key: getURLParameter('key') || 1,
         resolution: getURLParameter('resolution'),
         lat: getURLParameter('lat'),

@@ -31,7 +31,7 @@ module.exports = (function () {
         helper.extend(options, settings);
         createModels();
         
-        //set evidence to math params or default
+        //set evidence to match params or default
         if (options.cat == 'all') {
             options.cat = evidence.all;
         }
@@ -74,6 +74,10 @@ module.exports = (function () {
         });
         updateOverlay();
         map.addExtentChangeListener(function (extent) {
+            if (typeof ga !== 'undefined') {
+                var maptype = map.hasOverlay()? options.type : 'empty';
+                ga('send', 'event', 'map', 'map_usage', maptype);
+            }
             navigation.hideAll();
             notifyListener(extent);
         });
@@ -149,12 +153,13 @@ module.exports = (function () {
                 params = helper.serialiseObject({
                     key: options.key,
                     layer: createFilter(filters),
-                    type: options.type,
+                    type: options.type || 'TAXON',
                     resolution: styling.size.selectedValue
                 });
             map.setOverlay(overlayUrl + '?x={X}&y={Y}&z={Z}&' + colors + '&' + params);
         }
         filters.dates.showDates = isDatedEvidence(filters);
+
         notifyListener();
     }
 

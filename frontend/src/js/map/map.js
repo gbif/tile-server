@@ -94,6 +94,13 @@ module.exports = (function () {
             overlay.disable();
         }
     }
+
+    function hasOverlay() {
+        if (overlay && overlay.enabled) {
+            return true;
+        }
+        return false;
+    }
     
     function getExtent() {
         return map.getExtent();
@@ -173,6 +180,7 @@ module.exports = (function () {
         setBaseMap: setBaseMap,
         setOverlay: setOverlay,
         removeOverlay: removeOverlay,
+        hasOverlay: hasOverlay,
         getExtent: getExtent,
         setExtent: setExtent,
         addExtentChangeListener: addExtentChangeListener,
