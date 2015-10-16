@@ -158,6 +158,10 @@ module.exports = (function () {
         notifyListener();
     }
 
+    function toggleGeoJsonOverlay() {
+        map.toggleGeoJsonOverlay();
+    }
+
     /**
     Creates layers based on a combination of Basis of Record (evidence) and Dates
     */
@@ -196,7 +200,8 @@ module.exports = (function () {
 
     function createModels() {
         shared = {
-            updateOverlay: updateOverlay
+            updateOverlay: updateOverlay,
+            toggleGeoJsonOverlay: toggleGeoJsonOverlay
         };
         filters = filtersUI(options, shared);
         styling = stylingUI(options);
@@ -213,6 +218,9 @@ module.exports = (function () {
     
     function addGeoJson(collection) {
         map.addGeoJson(collection);
+        if (!navigation.simplifyInterface) {
+            styling.information.show = true;
+        }
     }
     
     return {

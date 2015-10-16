@@ -93,4 +93,3 @@ scrollElement.addEventListener('scroll', preventscroll);
 scrollElement.addEventListener('mousewheel', preventscroll);
 scrollElement.addEventListener('DOMMouseScroll', preventscroll);
 scrollElement.addEventListener('MozMousePixelScroll', preventscroll);
-

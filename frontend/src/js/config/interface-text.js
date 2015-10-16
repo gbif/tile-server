@@ -19,6 +19,10 @@ module.exports = {
         },
         pointsize: {
             headline: 'Point size'
+        },
+        overlay: {
+            headline: 'Context',
+            showGeoJson: 'Show coverage'
         }
     },
     navigation: {

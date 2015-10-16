@@ -84,6 +84,16 @@
                         </li>
                     </ul>
                 </li>
+                <li class="overlay" rv-if="styling.information.show">
+                    <h3 rv-text="lang.styling.overlay.headline"></h3>
+                    <ul>
+                        <li rv-class-active="styling.information.options.geojson.active">
+                            <div rv-on-click="styling.information.options.geojson.click" rv-on-touchend="styling.information.options.geojson.touch">
+                                <span rv-text="lang.styling.overlay.showGeoJson"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

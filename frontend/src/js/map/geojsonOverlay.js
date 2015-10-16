@@ -5,7 +5,8 @@ module.exports = (function () {
         var canvas = document.createElement('canvas'),
             ctx = canvas.getContext('2d'),
             geometries = [],
-            points = [];
+            points = [],
+            hidden;
         
         canvas.style.position = 'absolute';
         canvas.style.left = '0px';
@@ -40,6 +41,9 @@ module.exports = (function () {
         
         function redraw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (hidden) {
+                return;
+            }
             ctx.strokeStyle = 'deepskyblue';
             ctx.shadowColor = 'deepskyblue';
             ctx.shadowBlur = 2;
@@ -90,11 +94,18 @@ module.exports = (function () {
             canvas.height = map.dimensions.y;
             redraw();
         });
+
+        function toggle() {
+            console.log('toggle geojson overlay poly');
+            hidden = !hidden;
+            redraw();
+        }
         
         return {
             add: add,
             clear: clear,
-            fitExtent: fitExtent
+            fitExtent: fitExtent,
+            toggle: toggle
         };
     }
     
@@ -126,10 +137,15 @@ module.exports = (function () {
         function fitExtent() {
             map.setExtent(extent);
         }
+
+        function toggle() {
+            console.log('Marker toggle is not implemented');
+        }
         
         return {
             add: addMarkers,
-            fitExtent: fitExtent
+            fitExtent: fitExtent,
+            toggle: toggle
         };
     }
     

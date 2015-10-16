@@ -1,6 +1,9 @@
 var baselayers = require('../config/baselayers.js'),
     resolution = require('../config/resolution.js'),
-    docCookies = require('./cookie.js');
+    helper = require('./helper.js'),
+    docCookies = require('./cookie.js'),
+    NO_TOUCH = false,
+    TOUCH = true;
 
 module.exports = function (options) {
     /**
@@ -30,6 +33,11 @@ module.exports = function (options) {
         context.shared.updateOverlay();
     }
 
+    function toggleOverlay(event, context) {
+        context.styling.information.options.geojson.active = !context.styling.information.options.geojson.active;
+        context.shared.toggleGeoJsonOverlay();
+    }
+
     var styling = {
         maps: {
             options: baselayers.options,
@@ -40,6 +48,16 @@ module.exports = function (options) {
             options: resolution.options,
             selectedValue: options.resolution || resolution.options[resolution.defaultOption].resolution,
             select: selectResolution
+        },
+        information: {
+            show: false,
+            options: {
+                geojson: {
+                    active: true,
+                    click: helper.ghostClickWrap(toggleOverlay, NO_TOUCH),
+                    touch: helper.ghostClickWrap(toggleOverlay, TOUCH)
+                }
+            }
         }
     };
     return styling;

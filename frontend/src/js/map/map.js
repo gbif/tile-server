@@ -10,7 +10,7 @@ module.exports = (function () {
     var templates = require('./templates/template.js'),
         map,
         overlay,
-        markers,
+        geoJsonOverlays = [],
         mapParent,
         libAttribution = templates.attribution,
         eventlisteners = {extentChanges: []},
@@ -145,6 +145,7 @@ module.exports = (function () {
         //if so add them
         if (poly.length > 0) {
             var polyOverlay = geoJsonOverlay.createPolyOverlay(map);
+            geoJsonOverlays.push(polyOverlay);
             polyOverlay.add(collection);
             if (zoomToExtent) {
                 polyOverlay.fitExtent();
@@ -152,12 +153,19 @@ module.exports = (function () {
         }
         if (points.length > 0) {
             var markerOverlay = geoJsonOverlay.createMarkerOverlay(map);
+            geoJsonOverlays.push(markerOverlay);
             markerOverlay.add(collection);
             if (zoomToExtent) {
                 markerOverlay.fitExtent();
             }
         }
         
+    }
+
+    function toggleGeoJsonOverlay() {
+        geoJsonOverlays.forEach(function (e) {
+            e.toggle();
+        });
     }
 
     return {
@@ -168,6 +176,7 @@ module.exports = (function () {
         getExtent: getExtent,
         setExtent: setExtent,
         addExtentChangeListener: addExtentChangeListener,
-        addGeoJson: addGeoJson
+        addGeoJson: addGeoJson,
+        toggleGeoJsonOverlay: toggleGeoJsonOverlay
     };
 })();
