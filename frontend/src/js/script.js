@@ -80,28 +80,17 @@ if (window.addEventListener) {
 
 //Prevent scroll on body element, used when embeded as iframe and we do not want to scroll parent page ever.
 function preventscroll(ev) {
+    ev.stopPropagation();
     ev.preventDefault();
+    ev.returnValue = false;
     return false;
 }
 
-/*
-var names = ['scroll', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'];
-if (document.attachEvent) {//if IE (and Opera depending on user setting)
-    for (var i = 0; i < names.length; i++) {
-        document.body.attachEvent("on" + names[i], preventscroll);
-        document.body.attachEvent(names[i], preventscroll);
-    }
-} else if (document.addEventListener) {//WC3 browsers
-    for (var i = 0; i < names.length; i++) {
-        document.body.addEventListener(names[i], preventscroll, true);
-        document.body.addEventListener("on" + names[i], preventscroll, true);
-    }
-}
-*/
-
 //The joys of browser inconsistencies
-document.body.addEventListener('scroll', preventscroll);
-document.body.addEventListener('mousewheel', preventscroll);
-document.body.addEventListener('DOMMouseScroll', preventscroll);
-document.body.addEventListener('MozMousePixelScroll', preventscroll);
+var scrollElement = document.querySelector('.gbifBasicMap_mapComponent');
+
+scrollElement.addEventListener('scroll', preventscroll);
+scrollElement.addEventListener('mousewheel', preventscroll);
+scrollElement.addEventListener('DOMMouseScroll', preventscroll);
+scrollElement.addEventListener('MozMousePixelScroll', preventscroll);
 
