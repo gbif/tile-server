@@ -42,8 +42,8 @@ module.exports = (function () {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = 'deepskyblue';
             ctx.shadowColor = 'deepskyblue';
-            ctx.shadowBlur = 10;
-            ctx.lineWidth = 2;
+            ctx.shadowBlur = 2;
+            ctx.lineWidth = 1;
             //ctx.fillStyle = 'transparent';
             ctx.beginPath();
             for (var i = 0; i < geometries.length; i++) {
