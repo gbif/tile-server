@@ -87,7 +87,7 @@ module.exports = function (options, shared) {
             d.dragging = false;
             shared.updateOverlay();
             if (typeof ga !== 'undefined') {
-                ga('send', 'event', 'map_dates', filters.dates.start, filters.dates.end-filters.dates.start);
+                ga('send', 'event', 'map_dates', filters.dates.start, filters.dates.end - filters.dates.start);
             }
         }
     }
@@ -118,7 +118,7 @@ module.exports = function (options, shared) {
     
     function selectEvidence(event, context) {
         if (typeof ga !== 'undefined') {
-            var act = context.option.active? 'deselect' : 'select';
+            var act = context.option.active ? 'deselect' : 'select';
             ga('send', 'event', 'map_evidence', act, context.option.abbr);
         }
         context.option.active = !context.option.active;
@@ -127,7 +127,7 @@ module.exports = function (options, shared) {
     
     function toggleUndated(event, context) {
         if (typeof ga !== 'undefined') {
-            var act = context.filters.dates.undated.active? 'deselect' : 'select';
+            var act = context.filters.dates.undated.active ? 'deselect' : 'select';
             ga('send', 'event', 'map_evidence', act, 'show undated');
         }
         context.filters.dates.undated.active = !context.filters.dates.undated.active;

@@ -299,6 +299,7 @@ time, mark, audio, video, button,dl, dt, dd, ol,b, u, figure, figcaption, footer
           background: inherit;
           text-align: center;
           box-sizing: content-box;
+          cursor: pointer;
           color: #e8e8e8; }
           #gbifBasicMap.gbifBasicMap.gbifBasicMap .flex .gbifBasicMap_nav_filters .gbifBasicMap_sidebarHeader > div > i {
             font-size: 1.0em;

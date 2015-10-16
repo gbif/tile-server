@@ -75,7 +75,7 @@ module.exports = (function () {
         updateOverlay();
         map.addExtentChangeListener(function (extent) {
             if (typeof ga !== 'undefined') {
-                var maptype = map.hasOverlay()? options.type : 'empty';
+                var maptype = map.hasOverlay() ? options.type : 'empty';
                 ga('send', 'event', 'map', 'map_usage', maptype);
             }
             navigation.hideAll();
