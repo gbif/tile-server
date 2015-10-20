@@ -45,6 +45,9 @@ module.exports = (function () {
         moduleElement.innerHTML = moduleElement.innerHTML + templ.html;
         mapParentElement = moduleElement.querySelector('.gbifBasicMap_mapComponent');
         mapElement = mapParentElement.querySelector('.gbifMapComponent_map');
+        if (helper.supportsDisplayValue('flex')){
+            moduleElement.querySelector('.gbifBasicMapWrapper').classList.add('flex');
+        }
         try {
             rivets.bind(moduleElement, {
                 filters: filters,

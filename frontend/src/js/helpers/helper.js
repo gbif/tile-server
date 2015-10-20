@@ -22,10 +22,13 @@ module.exports = (function () {
 
     function addEventListener(element, eventType, func) {
         try {
+            if (element === null) {
+                return;
+            }
             element.addEventListener(eventType, func);
         }
         catch (err) {
-            console.error('Not supported in legacy browsers');
+            console.error('Not supported in legacy browsers. ' + err + " Element: " + element);
         }
     }
 
@@ -121,6 +124,17 @@ module.exports = (function () {
         return pairs.join('&');
     }
 
+    function supportsDisplayValue(val) {
+        // detect CSS display:val support in JavaScript
+        var detector = document.createElement("detect");
+        detector.style.display = val;
+        if (detector.style.display === val) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function apiTranslate(type) {
         switch (type) {
             case 'TAXON':
@@ -167,6 +181,7 @@ module.exports = (function () {
         filterObjToArray: filterObjToArray,
         setFlag: setFlag,
         ghostClickWrap: ghostClickWrap,
-        supportsTouch: supportsTouch
+        supportsTouch: supportsTouch,
+        supportsDisplayValue: supportsDisplayValue
     };
 })();
