@@ -3,6 +3,9 @@
     "version": "0.0.0",
     "description": "A basic map for showing occurences",
     "main": "gulpfile.js",
+    "engines" : {
+        "node" : ">=0.10.3 <=0.12.7"
+    },
     "dependencies": {
         "brfs": "^1.4.1",
         "browserify": "^11.0.1",
