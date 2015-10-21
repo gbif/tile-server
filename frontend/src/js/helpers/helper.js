@@ -126,11 +126,15 @@ module.exports = (function () {
 
     function supportsDisplayValue(val) {
         // detect CSS display:val support in JavaScript
-        var detector = document.createElement("detect");
-        detector.style.display = val;
-        if (detector.style.display === val) {
-            return true;
-        } else {
+        try {
+            var detector = document.createElement("detect");
+            detector.style.display = val;
+            if (detector.style.display === val) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
             return false;
         }
     }

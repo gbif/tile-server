@@ -60,8 +60,6 @@ GBIF.basicMap.setStateListener(function (state) {
     }, '*');
 });
 
-
-
 // listen for messages from the parent (in case of embedded in iframe) and listen for instructions to add geojson layer.
 function addGeoJson(evt) {
     if (evt.data.geojson) {
