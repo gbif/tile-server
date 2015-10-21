@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>tile-server</artifactId>
-  <version>0.21-SNAPSHOT</version>
+  <version>0.22-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
