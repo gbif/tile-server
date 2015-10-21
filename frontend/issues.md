@@ -1,63 +1,64 @@
-#Known issues
+# known issues
 
-Tested in following browsers and operating systems. If no comments, then no issues have been detected.
+_Tested browsers_
 
-##Windows
-IE8 - XP
-have very limited support.
-you can see the map, pan and zoom. 
-But cannot change baselayer and resolution (regression), 
-nor filter or fullscreen (no regression).
+* Chrome mac
+* Chrome win
+* Safari
+* Firefox mac
+* Firefox win
+* Opera mac/win
+* ie8
+* ie9
+* ie10
+* ie11
+* Android chrome
+* iOS Chrome
+* iOS Safari
+* Linux firefox
 
-IE9 - W7
-Only mobile layout and no full screen (no regression).
+## ie8 XP
 
-IE10+IE11 - W7
-No fullscreen (no regression).
+* no timeslider or filters
+* no bounding box (CORS issue)
+* No fullscreen (no regression).
 
-Edge
-Not tested
+## ie9 W7
 
-Chrome - W7
-Firefox - W7
-Opera - W7
+* thin grey lines on border on some zoom levels
+* no bounding box (CORS issue)
+* has mobile layout
+* When in an iframe there is sometimes unwanted lines in the menu . Readable, but ugly.
+* when scrolling menu, you can over scroll into page. annoying.
+* No fullscreen (no regression).
 
-##OSX - Yosimity
-Safari
-iFrame does not react when first loaded. Needs to be reloaded to react. (No regression)
+## ie10 W7
 
-Chrome
+* mobile layout
+* when scrolling menu, you can over scroll into page. annoying.
+* No fullscreen (no regression).
 
-Firefox
-Scrolling a bit slower than other browsers. General FF behavior.
+## ie11 W7
 
-Opera
+* Tiles sometimes missing. unstable and appears on refresh. only happens with map-box tiles. unclear what the reason is and if only in virtual mode. An actual ie11 would be needed to test further.
+
+## Safari - Yosimity
+
+* When clicking back and showing the page again, the iframe is missing 5mm in the right side.
+
+## Firefox
+
+* Scrolling a bit slower than other browsers. General FF behavior.
 
 ##Android
+
 Chrome
 Shows the map. pinch zoom fails hard.
 
-##iOS
-Chrome
-Safari
+# Linux firefox
+zoom speed on linux // Linux  and modest maps issue - rewrite modest maps or linux or agent sniff and emphasize FF scroll
 
+# Other
 
-#No regression
-full screen ie11+ie10 (no regression)
-Safari zoom in iframe disabled until refresh (no regression)
-Fullscreen disabled on point maps // (no regression) it doesn't work on those pages. Seemingly the parent page is preveting it. 
-
-#Seemingly fixed
-relaitve urls for api (naturally) // fixed
-zoom using trackpad scroll beyond iframe - fixed
-firefox zoom touchpad is slow and scrolls page as well - fixed
-point size is meaningless for marker based maps.
-remove button from ie11 and other browsers that does not support standards
-Timeslider wraps to two lines on Firefox Linux - looks silly. - Fixed
-
-#Linux issues
-firefox zoom speed on linux // Linux  and modest maps issue - rewrite modest maps or linux or agent sniff and emphasize FF scroll
-
-
-#Won't fix for now
-Markers and bounding boxes does not wrap (No regression) // won't fix
+## Won't fix for now
+Markers and bounding boxes does not wrap (No regression)
