@@ -59,7 +59,7 @@ GBIF.basicMap.setStateListener(function (state) {
         searchUrl: state
     }, '*');
 });
-
+/*
 // listen for messages from the parent (in case of embedded in iframe) and listen for instructions to add geojson layer.
 function addGeoJson(evt) {
     if (evt.data.geojson) {
@@ -73,7 +73,7 @@ if (window.addEventListener) {
 } else {
     window.attachEvent("onmessage", addGeoJson);
 }
-
+*/
 //GBIF.basicMap.addGeoJson({"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[0,56],[36,56],[36,72],[0,72],[0,56]]]}}]});
 
 //Prevent scroll on body element, used when embeded as iframe and we do not want to scroll parent page ever.
