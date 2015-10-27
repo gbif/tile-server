@@ -37,8 +37,7 @@ mvn -Ptile-server-local-csv jetty:run
 mvn -Ptile-server-local jetty:run
 ````
 
-Then you might consider looking at something like this once started:
-  http://localhost:8080/map/?type=TAXON&key=1&layertype=png&style=dark&resolution=1
+Once started, try [this map](http://localhost:8080/map/?type=TAXON&key=1&layertype=png&style=dark&resolution=1).
 
 ## Acknowledgements
 
