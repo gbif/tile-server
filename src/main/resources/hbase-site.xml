@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
+  <!-- DEVELOPMENT ONLY: This file is excluded from the final build. -->
   <property>
     <name>hbase.rootdir</name>
     <value>${hdfs.namenode}/hbase</value>

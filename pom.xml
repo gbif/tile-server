@@ -67,12 +67,8 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
+        <!-- NB: Filtered resources are excluded by the shade plugin, below -->
         <filtering>true</filtering>
-      </resource>
-      <resource>
-        <directory>src/main/webapp</directory>
-        <filtering>true</filtering>
-        <targetPath>webapp</targetPath>        
       </resource>
     </resources>
 
@@ -295,32 +291,4 @@
       </exclusions>
     </dependency>
   </dependencies>
-
-  <profiles>
-    <profile>
-      <!-- A profile suitable for deployment in the GBIF prod environment -->
-      <id>prod_b</id>
-      <properties>
-        <ganglia.server>130.226.238.237</ganglia.server>
-        <ganglia.port>8649</ganglia.port>
-        <!-- cluster -->
-        <zookeeper.quorum>c1n8.gbif.org:2181,c1n9.gbif.org:2181,c1n10.gbif.org:2181</zookeeper.quorum>
-        <hdfs.namenode>hdfs://c1n8.gbif.org:8020</hdfs.namenode>
-        <density-cube.table>prod_b2_maps_cube</density-cube.table>
-      </properties>
-    </profile>
-    <profile>
-      <!-- A profile suitable for deployment in the GBIF development environment -->
-      <id>dev</id>
-      <properties>
-        <ganglia.server>130.226.238.237</ganglia.server>
-        <ganglia.port>8649</ganglia.port>
-        <!-- cluster -->
-        <zookeeper.quorum>c1n1.gbif.org:2181,c1n2.gbif.org:2181,c1n3.gbif.org:2181</zookeeper.quorum>
-        <hdfs.namenode>hdfs://c1n1.gbif.org:8020</hdfs.namenode>
-        <density-cube.table>dev_maps_cube</density-cube.table>
-      </properties>
-    </profile>
-  </profiles>
 </project>
-
