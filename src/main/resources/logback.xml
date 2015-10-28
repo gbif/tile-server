@@ -15,6 +15,8 @@
   -->
 <configuration>
 
+    <!-- DEVELOPMENT ONLY: This file is excluded from the final build. -->
+
   <contextName>tile-server</contextName>
   <jmxConfigurator/>
 
@@ -32,6 +34,7 @@
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>logs/tile-server.log</file>
+    <append>false</append>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>logs/tile-server.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
       <maxHistory>14</maxHistory>
@@ -59,7 +62,7 @@
   <logger name="com.urbanairship" level="INFO"/>
 
   <root level="WARN">
-    <!--appender-ref ref="CONSOLE"/-->
+    <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
     <appender-ref ref="ERROR_FILE"/>
   </root>

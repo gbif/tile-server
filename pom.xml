@@ -109,6 +109,7 @@
                     <exclude>META-INF/*.RSA</exclude>
                     <exclude>application.properties</exclude>
                     <exclude>hbase-site.xml</exclude>
+                    <exclude>logback.xml</exclude>
                   </excludes>
                 </filter>
               </filters>
