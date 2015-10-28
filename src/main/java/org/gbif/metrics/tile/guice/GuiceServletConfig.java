@@ -49,7 +49,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
         LOG.info("Configuration declares an HBase backed DataCube");
         modules.add(new DensityCubeHBaseModule(properties));
       } else {
-        throw new RuntimeException(PROP_STORAGE_TYPE + " is not a valid. Use one of " + Joiner.on(",")
+        throw new RuntimeException(PROP_STORAGE_TYPE + " is not valid. Use one of " + Joiner.on(", ")
           .join(TYPE_CSV_MEMORY, TYPE_HBASE));
       }
       modules.add(new ServletModule() {
