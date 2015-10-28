@@ -70,6 +70,11 @@
         <!-- NB: Filtered resources are excluded by the shade plugin, below -->
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>src/main/webapp</directory>
+        <filtering>true</filtering>
+        <targetPath>webapp</targetPath>
+      </resource>
     </resources>
 
     <plugins>
