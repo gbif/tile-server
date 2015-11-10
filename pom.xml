@@ -45,7 +45,6 @@
 
     <slf4j.version>1.7.7</slf4j.version>
     <logback.version>1.0.13</logback.version>
-    <gbif-metrics.version>0.23</gbif-metrics.version>
     <servlet-api.version>3.1.0</servlet-api.version>
     <guice.version>3.0</guice.version>
     <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -58,6 +57,7 @@
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
     <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+    <gbif-metrics.version>0.24-SNAPSHOT</gbif-metrics.version>
     <gbif-microservice.version>0.4</gbif-microservice.version>
     <gbif-common.version>0.20</gbif-common.version>
     <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
