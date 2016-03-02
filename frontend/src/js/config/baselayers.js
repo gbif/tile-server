@@ -1,9 +1,10 @@
+var accessToken = 'pk.eyJ1IjoiZ2JpZiIsImEiOiJjaWxhZ2oxNWQwMDBxd3FtMjhzNjRuM2lhIn0.g1IE8EfqwzKTkJ4ptv3zNQ';
 module.exports = {
     defaultOption: 'classic',
     options: {
         'classic': {
             "name": "Classic",
-            "url": "http://{S}tiles.mapbox.com/v3/timrobertson100.map-x2mlizjd/{Z}/{X}/{Y}.png",
+            "url": "https://{S}tiles.mapbox.com/v4/gbif.faa58830/{Z}/{X}/{Y}.png?access_token=" + accessToken,
             "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "palette=yellows_reds",
             "subdomains": ['a.', 'b.', 'c.'],
@@ -11,7 +12,7 @@ module.exports = {
         },
         'dark': {
             "name": "Night",
-            "url": "http://{S}tiles.mapbox.com/v3/timrobertson100.map-c9rscfra/{Z}/{X}/{Y}.png",
+            "url": "http://{S}tiles.mapbox.com/v4/gbif.dec5e9ae/{Z}/{X}/{Y}.png?access_token=" + accessToken,
             "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "saturation=true",
             "subdomains": ['a.', 'b.', 'c.'],
@@ -35,7 +36,7 @@ module.exports = {
         },
         'light': {
             "name": "High contrast",
-            "url": "http://{S}tiles.mapbox.com/v3/timrobertson100.map-s9fg80cf/{Z}/{X}/{Y}.png",
+            "url": "http://{S}tiles.mapbox.com/v4/gbif.e8bcd045/{Z}/{X}/{Y}.png?access_token=" + accessToken,
             "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "colors=%2C%2C%23CC0000FF",
             "subdomains": ['a.', 'b.', 'c.'],

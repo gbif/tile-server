@@ -217,7 +217,7 @@ time, mark, audio, video, button,dl, dt, dd, ol,b, u, figure, figcaption, footer
           overflow: hidden;
           display: block;
           margin: 0;
-          transition: all 0.3s ease; }
+          transition: all .3s ease; }
           #gbifBasicMap.gbifBasicMap.gbifBasicMap .gbifBasicMap_nav > ul > li > ul > li div span.gbifBasicMap_description.showdescription {
             max-height: 50px;
             margin: .5em 0 0 0; }
@@ -391,7 +391,7 @@ time, mark, audio, video, button,dl, dt, dd, ol,b, u, figure, figcaption, footer
             #gbifBasicMap.gbifBasicMap.gbifBasicMap .flex .gbifBasicMap_nav_filters .gbifBasicMap_nav_evidence > ul li.undated > div > .gbifBasicMap_description {
               margin: 0; }
               #gbifBasicMap.gbifBasicMap.gbifBasicMap .flex .gbifBasicMap_nav_filters .gbifBasicMap_nav_evidence > ul li.undated > div > .gbifBasicMap_description.showdescription {
-                margin: 0em 0em 0.5em 0em; }
+                margin: 0em 0em .5em 0em; }
       #gbifBasicMap.gbifBasicMap.gbifBasicMap .flex .gbifBasicMap_nav_filters .gbifBasicMap_nav_evidence div > span:first-child:before {
         font-family: "Times New Roman", Times, serif;
         font-size: 0.9em;

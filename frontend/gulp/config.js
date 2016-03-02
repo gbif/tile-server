@@ -6,6 +6,7 @@ module.exports = {
     dest: dest,
     markup: {
         src: src + "/html/**/*.html",
+        srcProd: [src + "/html/**/*.html", "!" + src + "/html/**/*-test.html"],
         dest: dest
     },
     javascript: {

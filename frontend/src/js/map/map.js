@@ -27,7 +27,7 @@ module.exports = (function () {
         map = new MM.Map(mapElement, baselayer, null, [
             MM.DragHandler(),
             MM.DoubleClickHandler(),
-            MM.MouseWheelHandler().precise(true),
+            MM.MouseWheelHandler(), // MM.MouseWheelHandler(),.precise(true), //for continuous zoom, but seems slow on firefox
             MM.TouchHandler()
         ]);
         
