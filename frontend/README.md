@@ -21,7 +21,7 @@ Or for development `node_modules/.bin/gulp`
 ##Parameters
 
 key|values|Comment|Example
----|------|--------
+---|------|--------|------
 type|TAXON, COUNTRY, DATASET|Always used together with a 'key'|
 key|[int], [iso-abbr], [dataset-id] ||  ?type=TAXON&key=12
 resolution|1,2,4,8||?resolution=8
