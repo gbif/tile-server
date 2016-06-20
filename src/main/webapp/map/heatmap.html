@@ -26,7 +26,7 @@
     if (window.location.href.indexOf('?') > 1) {
       params = '&' + window.location.href.slice(window.location.href.indexOf('?') + 1);
     }
-    map.insertLayerAt(1, new MM.TemplatedLayer('/map/occurrence/occurrence.png?x={X}&y={Y}&z={Z}' + params));
+    map.insertLayerAt(1, new MM.TemplatedLayer('../occurrence/occurrence.png?x={X}&y={Y}&z={Z}' + params));
   </script>
 </body>
 </html>
