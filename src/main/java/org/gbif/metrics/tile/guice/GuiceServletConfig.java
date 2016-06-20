@@ -1,6 +1,8 @@
 package org.gbif.metrics.tile.guice;
 import org.gbif.metrics.cube.tile.density.guice.DensityCubeHBaseModule;
 import org.gbif.metrics.tile.DensityTileRenderer;
+import org.gbif.occurrence.heatmap.OccurrenceHeatmapRenderer;
+import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapsModule;
 import org.gbif.utils.file.properties.PropertiesUtil;
 import org.gbif.ws.app.ConfUtils;
 import java.util.List;
@@ -33,6 +35,19 @@ public class GuiceServletConfig extends GuiceServletContextListener {
   private static final String TYPE_HBASE = "hbase";
   private static final int DEFAULT_ZOOMS = 1; // for some sanity
   private static final int DEFAULT_PIXELS_PER_CLUSTER = 4; // for some sanity
+
+  /**
+   * Gets an int value from the Properties object.
+   * If the key doesn't contain a value, the default value is returned.
+   */
+  private static int getInt(Properties p, String key, int defaultValue) {
+    try {
+      return (p.getProperty(key) == null) ? defaultValue : Integer.parseInt(p.getProperty(key));
+    } catch (NumberFormatException e1) {
+      return defaultValue;
+    }
+  }
+
   @Override
   protected Injector getInjector() {
     try {
@@ -40,6 +55,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
       List<Module> modules = Lists.newArrayList();
       modules.add(new InstrumentationModule());
       modules.add(new MetricsModule(properties));
+      modules.add(new OccurrenceHeatmapsModule(properties));
       if (TYPE_CSV_MEMORY.equals(properties.getProperty(PROP_STORAGE_TYPE))) {
         LOG.info("Configuration declares a CSV in-memory DataCube");
         int zooms = getInt(properties, PROP_ZOOMS, DEFAULT_ZOOMS);
@@ -56,6 +72,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
         @Override
         protected void configureServlets() {
           serve("/map/density/*").with(DensityTileRenderer.class);
+          serve("/map/occurrence/*").with(OccurrenceHeatmapRenderer.class);
         }
       });
       return Guice.createInjector(modules);
@@ -63,16 +80,5 @@ public class GuiceServletConfig extends GuiceServletContextListener {
       Throwables.propagate(ex);
     }
     throw new IllegalStateException("Error initiating web application");
-  }
-  /**
-   * Gets an int value from the Properties object.
-   * If the key doesn't contain a value, the default value is returned.
-   */
-  private static int getInt(Properties p, String key, int defaultValue) {
-    try {
-      return (p.getProperty(key) == null) ? defaultValue : Integer.parseInt(p.getProperty(key));
-    } catch (NumberFormatException e1) {
-      return defaultValue;
-    }
   }
 }
