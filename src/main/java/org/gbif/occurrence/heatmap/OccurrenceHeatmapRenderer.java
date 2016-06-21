@@ -3,7 +3,6 @@ package org.gbif.occurrence.heatmap;
 
 import org.gbif.maps.MercatorUtil;
 import org.gbif.maps.MetadataProvider;
-import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.Layer;
 import org.gbif.metrics.tile.ColorPalette;
 import org.gbif.metrics.tile.DensityColorPaletteFactory;
@@ -16,7 +15,6 @@ import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapRequestProvider;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapResponse;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapsService;
 
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
