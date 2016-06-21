@@ -1,7 +1,9 @@
 package org.gbif.occurrence.heatmap;
 
 
+import org.gbif.maps.MercatorUtil;
 import org.gbif.maps.MetadataProvider;
+import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.Layer;
 import org.gbif.metrics.tile.ColorPalette;
 import org.gbif.metrics.tile.DensityColorPaletteFactory;
@@ -9,10 +11,13 @@ import org.gbif.metrics.tile.HSBPalette;
 import org.gbif.metrics.tile.NamedPalette;
 import org.gbif.metrics.tile.PNGWriter;
 import org.gbif.metrics.tile.utils.HttpParamsUtils;
+import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapRequest;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapRequestProvider;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapResponse;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapsService;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,11 +56,28 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
 
   private final OccurrenceHeatmapsService occurrenceHeatmapsService;
 
+  public static Rectangle2D.Double expand(Rectangle2D.Double rect, double amountX, double amountY)
+  {
+    return new Rectangle2D.Double(
+      rect.getX() - amountX,
+      rect.getY() - amountY,
+      rect.getWidth() + (2*amountX),
+      rect.getHeight() + (2*amountY)
+    );
+  }
+
+  /**
+   * Projects the bounding box from the x,y,z parameters.
+   */
+  private static String getGeom(int x, int y, int z) {
+    Rectangle2D.Double rect = MercatorUtil.getTileRect(x, y, z);
+    return "[" + rect.getMinX() + " " + rect.getMinY() + " TO " + rect.getMaxX() + " " + rect.getMaxY() + "]";
+  }
+
   @Inject
   public OccurrenceHeatmapRenderer(OccurrenceHeatmapsService occurrenceHeatmapsService){
     this.occurrenceHeatmapsService = occurrenceHeatmapsService;
   }
-
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -77,8 +99,10 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
       int x = HttpParamsUtils.getIntParam(req, "x", 0);
       int y = HttpParamsUtils.getIntParam(req, "y", 0);
       int z= HttpParamsUtils.getIntParam(req, "z", 0);
-      OccurrenceHeatmapResponse heatMapResponse = occurrenceHeatmapsService.searchHeatMap(
-        OccurrenceHeatmapRequestProvider.buildOccurrenceHeatmapRequest(req));
+
+      OccurrenceHeatmapRequest heatmapRequest = OccurrenceHeatmapRequestProvider.buildOccurrenceHeatmapRequest(req);
+      heatmapRequest.setGeometry(getGeom(x,y,z));
+      OccurrenceHeatmapResponse heatMapResponse = occurrenceHeatmapsService.searchHeatMap(heatmapRequest);
       if (heatMapResponse != null) {
         // add a header to help in debugging issues
         resp.setHeader("X-GBIF-Total-Count", heatMapResponse.getCount().toString());

@@ -4,6 +4,7 @@ import org.gbif.maps.MercatorUtil;
 import org.gbif.metrics.cube.tile.MercatorProjectionUtil;
 import org.gbif.metrics.cube.tile.density.DensityTile;
 import org.gbif.metrics.cube.tile.density.Layer;
+import org.gbif.occurrence.heatmap.OccurrenceHeatmapRenderer;
 import org.gbif.occurrence.search.heatmap.OccurrenceHeatmapResponse;
 
 import java.awt.geom.Point2D;
