@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.gbif</groupId>
     <artifactId>motherpom</artifactId>
-    <version>35</version>
+    <version>37</version>
   </parent>
 
   <artifactId>tile-server</artifactId>
@@ -21,6 +21,13 @@
     <developerConnection>scm:git:git@github.com:gbif/tile-server.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+  
+  <distributionManagement>
+    <site>
+      <id>gh-pages</id>
+      <url>http://gbif.github.io/tile-server/</url>
+    </site>
+  </distributionManagement>
 
   <repositories>
     <repository>
@@ -49,12 +56,11 @@
     <gbif-metrics.version>0.25</gbif-metrics.version>
     <gbif-microservice.version>0.5</gbif-microservice.version>
     <gbif-occurrence.version>0.46</gbif-occurrence.version>
-    <gbif-parsers.version>0.12</gbif-parsers.version>
     <gbif-api.version>0.39</gbif-api.version>
     <guava.version>19.0</guava.version>
     <guice.version>3.0</guice.version>
-    <hadoop.version>2.5.0-cdh5.4.7</hadoop.version>
-    <hbase.version>0.98.6-cdh5.4.7</hbase.version>
+    <hadoop.version>2.5.0-cdh5.4.10</hadoop.version>
+    <hbase.version>0.98.6-cdh5.4.10</hbase.version>
     <jackson.version>1.9.12</jackson.version>
     <jaxb-api.version>2.2.11</jaxb-api.version>
     <jsp-api-2.1.version>6.1.14</jsp-api-2.1.version>
