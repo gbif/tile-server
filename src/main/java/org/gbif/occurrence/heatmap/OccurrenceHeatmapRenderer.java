@@ -35,7 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A simple tile rendering servlet that sources it's data from a data cube.
+ * A simple tile rendering servlet that sources it's data from SOLR.
+ * This capability is "shoe-horned" into this implementation with the work underway in gbithub.com/gbif/maps being
+ * the long term home.
  */
 @SuppressWarnings("serial")
 @Singleton
@@ -64,11 +66,32 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
   }
 
   /**
-   * Projects the bounding box from the x,y,z parameters.
+   * Provides the bounding box from the x,y,z parameters.
+   * @param projected true for web mercator, false for wgs84 planar (4326)
    */
-  private static String getGeom(int x, int y, int z) {
-    Rectangle2D.Double rect = MercatorUtil.getTileRect(x, y, z);
-    return "[" + rect.getMinX() + " " + rect.getMinY() + " TO " + rect.getMaxX() + " " + rect.getMaxY() + "]";
+  private static String getGeom(int z, int x, int y, boolean projected) {
+    if (projected) {
+      Rectangle2D.Double rect = MercatorUtil.getTileRect(x, y, z);
+      return "[" + rect.getMinX() + " " + rect.getMinY() + " TO " + rect.getMaxX() + " " + rect.getMaxY() + "]";
+    }
+    else return tileBoundaryWGS84(z, x, y);
+  }
+
+  /**
+   * Returns a SOLR search string for the geometry in WGS84 CRS for the tile.
+   */
+  private static String tileBoundaryWGS84(int z, long x, long y) {
+    int tilesPerZoom = 1 << z;
+    double degsPerTile = 360d/tilesPerZoom;
+
+    double minLng = degsPerTile * x - 180;
+    double maxLat = 180 - (degsPerTile * y); // note EPSG:4326 covers only half the space vertically hence 180
+
+    // clip to the world extent
+    maxLat = Math.min(maxLat,90);
+    double minLat = Math.max(maxLat-degsPerTile,-90);
+    return "[" + minLng + " " + minLat + " TO "
+           + (minLng+degsPerTile) + " " + maxLat + "]";
   }
 
   @Inject
@@ -97,8 +120,14 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
       int y = HttpParamsUtils.getIntParam(req, "y", 0);
       int z= HttpParamsUtils.getIntParam(req, "z", 0);
 
+      boolean projected = "EPSG:4326".equalsIgnoreCase(req.getParameter("srs")) ? false : true;
       OccurrenceHeatmapRequest heatmapRequest = OccurrenceHeatmapRequestProvider.buildOccurrenceHeatmapRequest(req);
-      heatmapRequest.setGeometry(getGeom(x,y,z));
+
+      heatmapRequest.setGeometry(getGeom(z, x, y, projected));
+      // Tim note: by testing in production index, we determine that 4 is a sensible performance choice
+      // every 4 zoom levels the grid resolution increases
+      int solrLevel = ((int)(z/4))*4;
+      heatmapRequest.setZoom(solrLevel);
       OccurrenceHeatmapResponse heatMapResponse = occurrenceHeatmapsService.searchHeatMap(heatmapRequest);
       if (heatMapResponse != null) {
         // add a header to help in debugging issues
@@ -135,7 +164,12 @@ public class OccurrenceHeatmapRenderer extends HttpServlet {
             final Float hue = HttpParamsUtils.extractFloat(req, "hue", false);
             p = hue!=null ? new HSBPalette(hue) : new HSBPalette();
           }
-          PNGWriter.write(heatMapResponse, resp.getOutputStream(), z, x, y, p);
+          if (projected) {
+            PNGWriter.write(heatMapResponse, resp.getOutputStream(), z, x, y, p);
+          } else {
+            PNGWriter.writeUnprojected(heatMapResponse, resp.getOutputStream(), z, x, y, p);
+          }
+
         } finally {
           context.stop();
         }
