@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A simple tile rendering servlet that sources it's data from a data cube.
+ * A simple tile rendering servlet that sources its data from a data cube.
  */
 @SuppressWarnings("serial")
 @Singleton
@@ -207,9 +207,11 @@ public class DensityTileRenderer extends CubeTileRenderer {
     int count = 0;
     // note: set to opposite extremes to allow efficient comparison
     double minimumLatitude = 90.0;
-    double minimumLongitude = 180.0;
     double maximumLatitude = -90.0;
+    double minimumLongitude = 180.0;
     double maximumLongitude = -180.0;
+    double minimumLongitudeAcrossIdl = 360.0; // see below
+    double maximumLongitudeAcrossIdl = 0.0;
 
     if (tile.isPresent()) {
       DensityTile densityTile = tile.get();
@@ -231,12 +233,22 @@ public class DensityTileRenderer extends CubeTileRenderer {
             double lng = pixelXToLongitude(pixelX, extractInt(req, REQ_Z, true));
 
             minimumLatitude = minimumLatitude < lat ? minimumLatitude : lat;
-            minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
             maximumLatitude = maximumLatitude > lat ? maximumLatitude : lat;
+            minimumLongitude = minimumLongitude < lng ? minimumLongitude : lng;
             maximumLongitude = maximumLongitude > lng ? maximumLongitude : lng;
+
+            // Calculate also an extent split on 0°, and use this if it's narrower.
+            if (lng < 0) lng += 360;
+            minimumLongitudeAcrossIdl = minimumLongitudeAcrossIdl < lng ? minimumLongitudeAcrossIdl : lng;
+            maximumLongitudeAcrossIdl = maximumLongitudeAcrossIdl > lng ? maximumLongitudeAcrossIdl : lng;
           }
         }
       }
+    }
+
+    if (maximumLongitude - minimumLongitude > maximumLongitudeAcrossIdl - minimumLongitudeAcrossIdl) {
+      minimumLongitude = minimumLongitudeAcrossIdl;
+      maximumLongitude = maximumLongitudeAcrossIdl;
     }
 
     ObjectNode node = MAPPER.createObjectNode();
