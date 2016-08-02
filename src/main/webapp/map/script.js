@@ -5334,7 +5334,7 @@ module.exports = (function () {
         }
         return result;
     }
-    
+
     function setFlag(settings) {
         var key;
         for (key in settings.obj) {
@@ -5344,7 +5344,7 @@ module.exports = (function () {
         }
         return settings.obj;
     }
-    
+
     /**
     Simple wrapper to prevent ghost clicks
     */
@@ -5356,7 +5356,7 @@ module.exports = (function () {
             func.apply(this, arguments);
         };
     }
-    
+
     function serialiseObject(obj, encode) {
         var pairs = [];
 

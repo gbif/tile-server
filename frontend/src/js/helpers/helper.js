@@ -60,9 +60,9 @@ module.exports = (function () {
         callAjax(url, function (response) {
             var data = JSON.parse(response);
             data.minimumLatitude = Math.max(-90, data.minimumLatitude - 2);
-            data.minimumLongitude = Math.max(-180, data.minimumLongitude - 2);
+            data.minimumLongitude -= 2;
             data.maximumLatitude = Math.min(90, data.maximumLatitude + 2);
-            data.maximumLongitude = Math.min(180, data.maximumLongitude + 2);
+            data.maximumLongitude += 2;
             if (!settings.resolution) {
                 data.resolution = getEstimatedResolution(data);
             }
@@ -79,7 +79,7 @@ module.exports = (function () {
         }
         return result;
     }
-    
+
     function setFlag(settings) {
         var key;
         for (key in settings.obj) {
@@ -89,7 +89,7 @@ module.exports = (function () {
         }
         return settings.obj;
     }
-    
+
     /**
     Simple wrapper to prevent ghost clicks
     */
@@ -101,7 +101,7 @@ module.exports = (function () {
             func.apply(this, arguments);
         };
     }
-    
+
     function serialiseObject(obj, encode) {
         var pairs = [];
 
