@@ -2,12 +2,12 @@
 A basic map for usage on gbif.org
 
 ##Tile-server
-When building (either production or default) the destination is `src/main/webapp/map/`.
+When building (either production or default) the destination is `dist`.
 Content of the folder is deleted before build.
 
 Destination can be configured in `frontend/gulp/config.js`
 ```
-var dest = "../src/main/webapp/map"
+var dest = "./src/main/webapp/map"
 ```
 
 ##Install

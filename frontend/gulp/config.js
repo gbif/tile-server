@@ -1,4 +1,4 @@
-var dest = "../src/main/webapp/map",
+var dest = "./dist",
     src = './src';
 
 module.exports = {
