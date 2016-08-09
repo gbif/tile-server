@@ -7,8 +7,9 @@ Content of the folder is deleted before build.
 
 Destination can be configured in `frontend/gulp/config.js`
 ```
-var dest = "./src/main/webapp/map"
+var dest = "./dist"
 ```
+To use in production the content needs to be copied to ```/src/main/webapp/map```
 
 ##Install
 `npm install`
