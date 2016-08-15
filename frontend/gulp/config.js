@@ -1,4 +1,4 @@
-var dest = "./dist",
+var dest = "../src/main/webapp/mapBuild",
     src = './src';
 
 module.exports = {
