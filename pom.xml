@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -55,7 +55,7 @@
     <gbif-common.version>0.28</gbif-common.version>
     <gbif-metrics.version>0.26</gbif-metrics.version>
     <gbif-microservice.version>0.5</gbif-microservice.version>
-    <gbif-occurrence.version>0.53</gbif-occurrence.version>
+    <gbif-occurrence.version>0.55</gbif-occurrence.version>
     <gbif-api.version>0.45</gbif-api.version>
     <guava.version>19.0</guava.version>
     <guice.version>3.0</guice.version>
