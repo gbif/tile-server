@@ -48,7 +48,7 @@ var MM = com.modestmaps = {
         // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
         // can't apply these directly to MM because Chrome needs window
         // to own webkitRequestAnimationFrame (for example)
-        // perhaps we should namespace an alias onto window instead?
+        // perhaps we should namespace an alias onto window instead? 
         // e.g. window.mmRequestAnimationFrame?
         return function(callback) {
             (window.requestAnimationFrame  ||
@@ -238,7 +238,7 @@ var MM = com.modestmaps = {
                    " @" + this.zoom.toFixed(3) + ")";
         },
         // Quickly generate a string representation of this coordinate to
-        // index it in hashes.
+        // index it in hashes. 
         toKey: function() {
             // We've tried to use efficient hash functions here before but we took
             // them out. Contributions welcome but watch out for collisions when the
@@ -375,7 +375,7 @@ var MM = com.modestmaps = {
 
         return new MM.Location(latN / deg2rad, lonN / deg2rad);
     };
-
+    
     // Returns bearing from one point to another
     //
     // * FIXME: bearing is not constant along significant great circle arcs.
@@ -1052,7 +1052,7 @@ var MM = com.modestmaps = {
             lastPinchCenter = null;
 
         function isTouchable () {
-          return 'ontouchstart' in window // works on most browsers
+          return 'ontouchstart' in window // works on most browsers 
               || 'onmsgesturechange' in window; // works on ie10
         }
 
@@ -4464,17 +4464,17 @@ var rivets = require('./vendor/rivets.js'),
         type: 'TAXON',
         key: '1'
     };
-
+    
 module.exports = (function () {
     "use strict";
-
+    
     function createMap(moduleElement, settings) {
         var mapParentElement,
             mapElement,
             baseMap;
         helper.extend(options, settings);
         createModels();
-
+        
         //set evidence to match params or default
         if (options.cat == 'all') {
             options.cat = evidence.all;
@@ -4588,7 +4588,7 @@ module.exports = (function () {
             updateOverlay();
         }
     }
-
+    
     /**
     Stitch together settings for new overlay
     */
@@ -4629,7 +4629,7 @@ module.exports = (function () {
         if (filters.dates.undated.active) {
             years.push(filters.dates.undated);
         }
-
+        
         //combine to create layer anmes used by tile service
         evidence.forEach(function (e) {
             if (e.dated) {
@@ -4663,18 +4663,18 @@ module.exports = (function () {
     function setExtent(extent) {
         map.setExtent(extent);
     }
-
+    
     function setStateListener(cb) {
         stateListener = cb;
     }
-
+    
     function addGeoJson(collection) {
         map.addGeoJson(collection);
         if (!navigation.simplifyInterface) {
             styling.information.show = true;
         }
     }
-
+    
     return {
         createMap: createMap,
         setStateListener: setStateListener,
@@ -5023,7 +5023,7 @@ var helper = require('./helper.js'),
     TOUCH = true;
 
 module.exports = function (options, shared) {
-
+    
     function dragStart(e, c) {
         var diffStart = c.index - filters.dates.start,
             diffEnd = filters.dates.end - c.index;
@@ -5066,7 +5066,7 @@ module.exports = function (options, shared) {
 
         updateActiveDates(filters);
     }
-
+    
     function touchmove(event, context) {
         var d = filters.dates.drag,
             element,
@@ -5077,7 +5077,7 @@ module.exports = function (options, shared) {
             mouseenter(event, {index: index});
         }
     }
-
+    
     function mouseenter(e, c) {
         var d = filters.dates.drag,
             diffStart,
@@ -5098,7 +5098,7 @@ module.exports = function (options, shared) {
             updateActiveDates(filters);
         }
     }
-
+    
     function mouseup(event) {
         var d = filters.dates.drag;
         if (d.dragging) {
@@ -5111,10 +5111,11 @@ module.exports = function (options, shared) {
     }
     helper.addEventListener(window, 'mouseup', mouseup);
     helper.addEventListener(window, 'touchend', mouseup);
-
+    
     function updateActiveDates(filters) {
         var options = filters.dates.options,
             i;
+        filters.dates.undated.active = false;
         for (i = 0; i < options.length; i++) {
             if (i < filters.dates.start) {
                 options[i].active = false;
@@ -5133,7 +5134,7 @@ module.exports = function (options, shared) {
             }
         }
     }
-
+    
     function selectEvidence(event, context) {
         if (typeof ga !== 'undefined') {
             var act = context.option.active ? 'deselect' : 'select';
@@ -5142,7 +5143,7 @@ module.exports = function (options, shared) {
         context.option.active = !context.option.active;
         context.shared.updateOverlay();
     }
-
+    
     function toggleUndated(event, context) {
         if (typeof ga !== 'undefined') {
             var act = context.filters.dates.undated.active ? 'deselect' : 'select';
@@ -5151,18 +5152,18 @@ module.exports = function (options, shared) {
         context.filters.dates.undated.active = !context.filters.dates.undated.active;
         context.shared.updateOverlay();
     }
-
+    
     function toggleEvidenceUndatedDesc(event, context) {
         context.filters.undated.showDescription = !context.filters.undated.showDescription;
         return false;
     }
-
+    
     function getActiveEvidenceAsArray() {
         return helper.filterObjToArray(filters.evidence.options, function (e) {
             return e.active;
         });
     }
-
+    
     filters = {
         undated: {
             toggleUndatedMouse: helper.ghostClickWrap(toggleUndated, NO_TOUCH),
@@ -5200,7 +5201,7 @@ module.exports = function (options, shared) {
 },{"../config/dates.js":6,"../config/evidence.js":7,"./helper.js":14}],13:[function(require,module,exports){
 var helper = require('./helper.js');
 module.exports = (function () {
-
+    
     function launchIntoFullscreen(element) {
         if (element.requestFullscreen) {
             element.requestFullscreen();
@@ -5223,18 +5224,18 @@ module.exports = (function () {
             document.webkitExitFullscreen();
         }
     }
-
-
+    
+    
     function isFullscreen(){
         return !window.screenTop && !window.screenY;
     }
     */
-
+    
     function addFullScreenButton(opt) {
         var widget = opt.widget,
             button = opt.button;
-
-
+        
+        
         function enterFullscreen() {
             if (ga) {
                 ga('send', 'event', 'map', 'fullscreen');
@@ -5242,10 +5243,10 @@ module.exports = (function () {
             launchIntoFullscreen(widget);
         }
 
-
+        
         helper.addEventListener(button, 'click', enterFullscreen);
     }
-
+    
     return {
         addFullScreenButton: addFullScreenButton //{widget, button}
     };
@@ -5450,11 +5451,11 @@ var helper = require('./helper.js'),
     TOUCH = true;
 
 module.exports = function (options) {
-
+    
     function toggleEvidence(event, context) {
         context.navigation.evidence = !context.navigation.evidence;
     }
-
+    
     function supportsFullscreen() {
         var device = {};
         device.ie9 = /MSIE 9/i.test(navigator.userAgent);
@@ -5462,7 +5463,7 @@ module.exports = function (options) {
         device.ie11 = /rv:11.0/i.test(navigator.userAgent);
         return !(device.ie9 || device.ie10 || device.ie11);
     }
-
+    
     var nav = {
         supportsTouch: helper.supportsTouch,
         simplifyInterface: options.simplifyInterface,
@@ -5513,7 +5514,7 @@ module.exports = function (options) {
         }
         return baselayers.defaultOption;
     }
-
+    
     function selectMap(event, context) {
         if (typeof ga !== 'undefined') {
             ga('send', 'event', 'map_basemap', 'select', context.option.id);
@@ -5523,7 +5524,7 @@ module.exports = function (options) {
         docCookies.setItem('settings', JSON.stringify({baseMapId: context.option.id}));//save the prefered basemap in a cookie
         context.shared.updateOverlay(); //since the baselayer defines the color scheme of the overlay
     }
-
+    
     function selectResolution(event, context) {
         if (typeof ga !== 'undefined') {
             ga('send', 'event', 'map_resolution', 'select', context.option.name, context.option.resolution);
@@ -5572,20 +5573,20 @@ module.exports = (function () {
             geometries = [],
             points = [],
             hidden;
-
+        
         canvas.style.position = 'absolute';
         canvas.style.left = '0px';
         canvas.style.top = '0px';
         canvas.width = map.dimensions.x;
         canvas.height = map.dimensions.y;
         map.parent.appendChild(canvas);
-
+        
         function getAsLocation(point) {
             var lat = Math.max(Math.min(85.0511, point[1]), -85.0511),
                 lng = Math.max(Math.min(180, point[0]), -180);
             return new MM.Location(lat, lng);
         }
-
+        
         function drawGeometry(ctx, geom) {
             var p = map.locationPoint(geom[0]),
                 i;
@@ -5598,12 +5599,12 @@ module.exports = (function () {
             //ctx.fill();
             ctx.stroke();
         }
-
+        
         function clear() {
             geometries = [];
             redraw();
         }
-
+        
         function redraw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (hidden) {
@@ -5619,7 +5620,7 @@ module.exports = (function () {
                 drawGeometry(ctx, geometries[i]);
             }
         }
-
+        
         function add(collection) {
             var features = collection.features,
                 len = features.length;
@@ -5647,12 +5648,12 @@ module.exports = (function () {
             }
             redraw();
         }
-
+        
         function fitExtent() {
             map.setExtent(points);
             redraw();
         }
-
+        
         map.addCallback('drawn', redraw);
         map.addCallback('resized', function () {
             canvas.width = map.dimensions.x;
@@ -5665,7 +5666,7 @@ module.exports = (function () {
             hidden = !hidden;
             redraw();
         }
-
+        
         return {
             add: add,
             clear: clear,
@@ -5673,12 +5674,12 @@ module.exports = (function () {
             toggle: toggle
         };
     }
-
+    
     function createMarkerOverlay(map) {
         var markers = new MM.MarkerLayer(),
             extent;
         map.addLayer(markers);
-
+        
         function addMarkers(collection) {
             var features = collection.features,
                 len = features.length;
@@ -5698,7 +5699,7 @@ module.exports = (function () {
                 extent.push(marker.location);
             }
         }
-
+        
         function fitExtent() {
             map.setExtent(extent);
         }
@@ -5706,14 +5707,14 @@ module.exports = (function () {
         function toggle() {
             console.log('Marker toggle is not implemented');
         }
-
+        
         return {
             add: addMarkers,
             fitExtent: fitExtent,
             toggle: toggle
         };
     }
-
+    
     return {
         createPolyOverlay: createPolyOverlay,
         createMarkerOverlay: createMarkerOverlay
@@ -5744,7 +5745,7 @@ module.exports = (function () {
             baselayer;
         mapParent = options.parentElement;
         mapElement = mapParent.querySelector('.gbifMapComponent_map');
-
+        
         //create map
         baselayer = new MM.TemplatedLayer(basemap.url, basemap.subdomains);
         map = new MM.Map(mapElement, baselayer, null, [
@@ -5753,46 +5754,46 @@ module.exports = (function () {
             MM.MouseWheelHandler(), // MM.MouseWheelHandler(),.precise(true), //for continuous zoom, but seems slow on firefox
             MM.TouchHandler()
         ]);
-
+        
         map.setCenterZoom(new MM.Location(options.lat || 0, options.lng || 0), options.zoom || 1);
         map.setZoomRange(0, 14);
-
+        
         //add handlers
         updateAttribution(basemap.attribution);
         addZoomButtonHandlers();
         addExtentListeners();
-
-
+        
+        
         overlay = new MM.TemplatedLayer('');
         map.insertLayerAt(1, overlay);
         if (options.geoJson) {
             addGeoJson(options.geoJson, typeof options.zoom === 'undefined');
         }
     }
-
+    
     function addZoomButtonHandlers() {
         MM.addEvent(mapParent.querySelector('.gbifMapComponent_zoom-in'), "click", function (e) {
             map.zoomIn();
             return MM.cancelEvent(e);
         });
-
+        
         MM.addEvent(mapParent.querySelector('.gbifMapComponent_zoom-out'), "click", function (e) {
             map.zoomOut();
             return MM.cancelEvent(e);
         });
     }
-
+    
     function addExtentListeners() {
         map.addCallback("panned", mapExtentChange);
         map.addCallback("zoomed", mapExtentChange);
         map.addCallback("resized", mapExtentChange);
         map.addCallback("extentset", mapExtentChange);
     }
-
+    
     function updateAttribution(att) {
         mapParent.querySelector('.attribution>span').innerHTML = libAttribution + att;
     }
-
+    
     function setBaseMap(basemap) {
         var layer = new MM.TemplatedLayer(basemap.url, basemap.subdomains);
         if (!map.getLayerAt(0)) {
@@ -5811,7 +5812,7 @@ module.exports = (function () {
             map.setLayerAt(1, overlay);
         }
     }
-
+    
     function removeOverlay() {
         if (overlay) {
             overlay.disable();
@@ -5824,11 +5825,11 @@ module.exports = (function () {
         }
         return false;
     }
-
+    
     function getExtent() {
         return map.getExtent();
     }
-
+    
     function setExtent(ext) {
         var zoom,
             extent = new MM.Extent(
@@ -5839,7 +5840,7 @@ module.exports = (function () {
         zoom = Math.max(Math.min(map.getZoom(), 6), 1);
         map.setZoom(zoom);
     }
-
+    
     function mapExtentChange(map, change) {
         if (changeTimer) {
             clearTimeout (changeTimer);
@@ -5863,7 +5864,7 @@ module.exports = (function () {
         var features = collection.features,
             len = features.length,
             points, poly;
-
+        
         //contains supported feature types?
         points = features.filter(function (e) {
             return e.geometry.type == 'Point';
@@ -5871,7 +5872,7 @@ module.exports = (function () {
         poly = features.filter(function (e) {
             return e.geometry.type == 'Polygon' || e.geometry.type == 'LineString';
         });
-
+        
         //if so add them
         if (poly.length > 0) {
             var polyOverlay = geoJsonOverlay.createPolyOverlay(map);
@@ -5889,7 +5890,7 @@ module.exports = (function () {
                 markerOverlay.fitExtent();
             }
         }
-
+        
     }
 
     function toggleGeoJsonOverlay() {
@@ -5933,7 +5934,7 @@ function getQuery() {
         simplifyInterface = getURLParameter('simplifyInterface'),
         geojson = getURLParameter('geojson'),
         point = getURLParameter('point');
-
+    
     cat = cat ? cat.split(',') : undefined;
     geojson = geojson ? JSON.parse(geojson) : undefined;
     //if a point is supplied it will override the geojson at this point

@@ -97,6 +97,7 @@ module.exports = function (options, shared) {
     function updateActiveDates(filters) {
         var options = filters.dates.options,
             i;
+        filters.dates.undated.active = false;
         for (i = 0; i < options.length; i++) {
             if (i < filters.dates.start) {
                 options[i].active = false;
