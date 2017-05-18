@@ -1,21 +1,20 @@
-var accessToken = 'pk.eyJ1IjoiZ2JpZiIsImEiOiJjaWxhZ2oxNWQwMDBxd3FtMjhzNjRuM2lhIn0.g1IE8EfqwzKTkJ4ptv3zNQ';
 module.exports = {
     defaultOption: 'classic',
     options: {
         'classic': {
             "name": "Classic",
-            "url": "https://{S}tiles.mapbox.com/v4/gbif.faa58830/{Z}/{X}/{Y}.png?access_token=" + accessToken,
-            "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
+            "url": "https://tile.gbif.org/3857/omt/{Z}/{X}/{Y}@1x.png?style=gbif-classic",
+            "attribution": "© <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "palette=yellows_reds",
-            "subdomains": ['a.', 'b.', 'c.'],
+            "subdomains": [],
             "enabled": true
         },
         'dark': {
             "name": "Night",
-            "url": "http://{S}tiles.mapbox.com/v4/gbif.dec5e9ae/{Z}/{X}/{Y}.png?access_token=" + accessToken,
-            "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
+            "url": "https://tile.gbif.org/3857/omt/{Z}/{X}/{Y}@1x.png?style=gbif-dark",
+            "attribution": "© <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "saturation=true",
-            "subdomains": ['a.', 'b.', 'c.'],
+            "subdomains": [],
             "enabled": false
         },
         'ocean': {
@@ -36,16 +35,16 @@ module.exports = {
         },
         'light': {
             "name": "High contrast",
-            "url": "http://{S}tiles.mapbox.com/v4/gbif.e8bcd045/{Z}/{X}/{Y}.png?access_token=" + accessToken,
-            "attribution": "<a href='https://www.mapbox.com/'>Mapbox</a> <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
+            "url": "https://tile.gbif.org/3857/omt/{Z}/{X}/{Y}@1x.png?style=gbif-light",
+            "attribution": "© <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "colors=%2C%2C%23CC0000FF",
-            "subdomains": ['a.', 'b.', 'c.'],
+            "subdomains": [],
             "enabled": false
         },
         'grey-blue': {
             "name": "Roads",
-            "url": "http://2.maps.nlp.nokia.com/maptile/2.1/maptile/newest/normal.day.grey/{Z}/{X}/{Y}/256/png8?app_id=_peU-uCkp-j8ovkzFGNU&app_code=gBoUkAMoxoqIWfxWA5DuMQ",
-            "attribution": "<a href='https://legal.here.com/en/terms/serviceterms/us/'>Nokia</a>",
+            "url": "https://tile.gbif.org/3857/omt/{Z}/{X}/{Y}@1x.png?style=osm-bright",
+            "attribution": "© <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='http://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>",
             "png-render-style": "palette=yellows_reds",
             "subdomains": [],
             "enabled": false

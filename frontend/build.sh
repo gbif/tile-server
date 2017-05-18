@@ -1,1 +1,3 @@
-node_modules/.bin/gulp
+#!/bin/sh
+
+./node_modules/.bin/gulp

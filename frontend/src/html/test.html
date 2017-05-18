@@ -10,11 +10,10 @@
     <meta name="author" content="GBIF">
     <meta name="robots" content="noindex">
     <title>GBIF Map</title>
-    <link rel="shortcut icon" href="img/favicon/favicon_32x32.ico">
     <!--[if IE]>
     <script src="ie/ie8.js"></script>
     <![endif]-->
-    
+
     <!-- style:css -->
     <link rel="stylesheet" href="css/main.css">
     <!-- endinject -->
@@ -22,7 +21,7 @@
 
 <body lang="en">
     <script>
-        document.baseUrlForTesting = 'http://api.gbif.org/v1/map/';
+        document.baseUrlForTesting = '//api.gbif.org/v1/map/';
     </script>
     <!-- inject:js -->
     <script src="script.js"></script>
@@ -33,7 +32,7 @@
             setTimeout(function(){
                 if (evt.data.geojson) {
                     GBIF.basicMap.addGeoJson(evt.data.geojson);
-                }   
+                }
             }, 1500);
         }
         if (window.addEventListener) {
