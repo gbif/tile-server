@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>tile-server</artifactId>
-  <version>0.37</version>
+  <version>0.38-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>tile-server</name>
   <description>A web service that can write map tiles very quickly</description>
@@ -19,7 +19,7 @@
     <connection>scm:git:git@github.com:gbif/tile-server.git</connection>
     <url>https://github.com/gbif/tile-server</url>
     <developerConnection>scm:git:git@github.com:gbif/tile-server.git</developerConnection>
-    <tag>tile-server-0.37</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
