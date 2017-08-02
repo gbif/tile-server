@@ -55,7 +55,7 @@
     <gbif-common.version>0.35</gbif-common.version>
     <gbif-metrics.version>0.26</gbif-metrics.version>
     <gbif-microservice.version>0.7</gbif-microservice.version>
-    <gbif-occurrence.version>0.65</gbif-occurrence.version>
+    <gbif-occurrence.version>0.66</gbif-occurrence.version>
     <gbif-api.version>0.54</gbif-api.version>
     <guava.version>19.0</guava.version>
     <guice.version>3.0</guice.version>
